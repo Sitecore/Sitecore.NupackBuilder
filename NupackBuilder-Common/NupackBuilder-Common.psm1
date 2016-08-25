@@ -211,6 +211,109 @@ Function Add-ThirdPartyComponent(
 
 }
 
+
+Function Add-ThirdPartyPackages()
+{
+	$packages  = [NupackBuilder.Packages]::new()
+
+	# Newtonsoft.Json
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Newtonsoft.Json", "4.5.0.0", "neutral", "30ad4fe6b2a6aeed")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Newtonsoft.Json", "4.5.9", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Newtonsoft.Json", "6.0.0.0", "neutral", "30ad4fe6b2a6aeed")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Newtonsoft.Json", "6.0.8", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	# Lucene.Net
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Lucene.Net", "3.0.3", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	# Lucene.Net.Contrib
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Analyzers", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Lucene.Net.Contrib", "3.0.3", $packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Core", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.FastVectorHighlighter", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Highlighter", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Memory", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Queries", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Regex", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.SimpleFacetedSearch", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Snowball", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.SpellChecker", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#HtmlAgilityPack
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("HtmlAgilityPack", "1.4.6.0", "neutral", "bd319b19eaf3b43a")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("HtmlAgilityPack", "1.4.6", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#YUICompressor.NET
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Yahoo.Yui.Compressor", "2.1.1.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("YUICompressor.NET", "2.1.1", $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Iesi.Collections", "1.0.1.0", "neutral", "aa95f207798dfdb4")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("EcmaScript.NET", "1.0.1.0", "neutral", "null")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#mongocsharpdriver
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Bson", "1.10.0.62", "neutral", "f686731cfb9cc103")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("mongocsharpdriver", "1.10.0", $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Driver", "1.10.0.62", "neutral", "f686731cfb9cc103")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#SolrNet
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("SolrNet", "0.4.0.4001", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("SolrNet", "0.4.0.4001", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#RazorGenerator.Mvc
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("RazorGenerator.Mvc", "2.0.0.0", "neutral", "7b26dc2a43f6a0d4")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("RazorGenerator.Mvc", "2.4.2", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#protobuf-net
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("protobuf-net", "2.0.0.668", "neutral", "257b51d87d2e4d67")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("protobuf-net", "2.0.0.668", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Ninject
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Ninject", "3.2.0.0", "neutral", "c7192dc5380945e7")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Ninject", "3.2.2", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#WebActivatorEx
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("WebActivatorEx", "2.0.0.0", "neutral", "7b26dc2a43f6a0d4")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("WebActivatorEx", "2.0.6", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Markdown
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("MarkdownSharp", "1.14.5.0", "neutral", "eb89951a0d41ab86")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Markdown", "1.14.6", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Facebook
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Facebook", "5.4.1.0", "neutral", "58cb4f2111d1e6de")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Facebook", "5.4.1", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+	return $packages
+}
+
 Function UnZipDLLFiles (
   [Parameter(Mandatory=$true)][string]$installPath,
   [Parameter(Mandatory=$true)][string]$ArchivePath,  

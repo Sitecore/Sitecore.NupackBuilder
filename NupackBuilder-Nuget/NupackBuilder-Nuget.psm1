@@ -145,7 +145,7 @@ Function CreateAssembliesNuspecFile(
 	[Parameter(Mandatory=$true)][string]$uploadAPIKey,
 	[Parameter(Mandatory=$false)][bool]$createFileVersionPackages = $false,
 	[Parameter(Mandatory=$true)][System.Array]$assemblies,
-	[Parameter(Mandatory=$true)][System.Array]$thirdpartycomponents,
+	[Parameter(Mandatory=$true)][NupackBuilder.Packages]$thirdpartycomponents,
 	[Parameter(Mandatory=$false)][bool]$addThirdPartyReferences = $true
 
 )
@@ -262,49 +262,37 @@ Function CreateAssembliesNuspecFile(
 
 						$addeddAssembly = $false
 
-						for ($n=0; $n -lt $thirdpartycomponents.Count; $n++)
+						if(($thirdpartycomponents -ne $null) -and ($thirdpartycomponents.PackageInfos.Count -ne 0))
 						{
-							if($thirdpartycomponents[$n].AssemblyNames.Count -gt 0)
+							$existingPackage = $null
+							$existingPackage = $thirdpartycomponents.FindPackageInfoByAssemblyNameAndAssemblyVersion($assemblyItemName, $assemblyItemVersion)
+							if($existingPackage -ne $null)
 							{
-								if ($thirdpartycomponents[$n].AssemblyNames.Contains($assemblyItemNameDLL)) 
+								# Write-Host "Package found : "$existingPackage.PackageName -ForegroundColor Yellow
+								$objComponent = New-Object System.Object
+								$objComponent | Add-Member -type NoteProperty -name PackageName -value $existingPackage.PackageName
+								$objComponent | Add-Member -type NoteProperty -name Version -value $existingPackage.PackageVersion
+
+
+								$packageNameExists = $false
+								for ($j=0; $j -lt $dependencies.Count; $j++)
 								{
-									for ($i=0; $i -lt $thirdpartycomponents[$n].Versions.Count; $i++)
+									if ($dependencies[$j].PackageName.ToLower() -eq $existingPackage.PackageName.ToLower()) 
 									{
-										if($thirdpartycomponents[$n].Versions[$i].Count -gt 0)
-										{
-											if ($thirdpartycomponents[$n].Versions[$i].Contains($assemblyItemSemVerVersion))
-											{
-												$objComponent = New-Object System.Object
-												$objComponent | Add-Member -type NoteProperty -name PackageName -value $thirdpartycomponents[$n].PackageName
-												$objComponent | Add-Member -type NoteProperty -name Version -value $thirdpartycomponents[$n].Versions[$i]
-											
-												$packageNameExists = $false
-												for ($j=0; $j -lt $dependencies.Count; $j++)
-												{
-													if ($dependencies[$j].PackageName.ToLower() -eq $thirdpartycomponents[$n].PackageName.ToLower()) 
-													{
-														$addeddAssembly = $true
-														$packageNameExists = $true                            
-														$j = $dependencies.Count
-													}
-												}
-					
-												if($packageNameExists -eq $false)
-												{
-													$addeddAssembly = $true
-													$dependencies += $objComponent
-													$i = $thirdpartycomponents[$n].Versions.Count
-													$n = $thirdpartycomponents.Count
-													#Write-Host "$assemblyItemName,FileVersion=$assemblyItemFileVersion, Version=$assemblyItemVersion, ProductVersion=$assemblyItemProductVersion, SemverVersion=$assemblyItemSemVerVersion" -ForegroundColor Yellow
-												}
-												
-											}
-										}
+										$addeddAssembly = $true
+										$packageNameExists = $true                            
+										$j = $dependencies.Count
 									}
+								}
+
+								if($packageNameExists -eq $false)
+								{
+									$addeddAssembly = $true
+									$dependencies += $objComponent
+									#Write-Host "$assemblyItemName,FileVersion=$assemblyItemFileVersion, Version=$assemblyItemVersion, ProductVersion=$assemblyItemProductVersion, SemverVersion=$assemblyItemSemVerVersion" -ForegroundColor Yellow
 								}
 							}
 						}
-
 						if($addeddAssembly -eq $false)
 						{
 							$notIncludedDependencies += "$someName.dll"
@@ -352,6 +340,8 @@ $nuspecMetadata = @"
 if($notIncludedDependencies.Count -gt 0)
 {
 	$joinedNoDep = $notIncludedDependencies -join "," | Out-String 
+	# Write-Host "ModuleName : $moduleName" -ForegroundColor Red
+	# Write-Host "Missing : $joinedNoDep" -ForegroundColor Cyan
 	$nuspecMetadata += $nl + '        <description>Missing assembly dependencies : ' + $joinedNoDep + '</description>' + $nl
 }
 else
