@@ -1,3 +1,121 @@
+$TypeDefinitionSource = @"
+  namespace NupackBuilder
+{
+	using System;
+	using System.Linq;
+
+	public class PackageAssembly
+	{
+		public string AssemblyName { get; protected set; }
+		public string AssemblyVersion { get; protected set; }
+		public string AssemblyCulture { get; protected set; }
+		public string AssemblyPublicKeyToken { get; protected set; }
+
+		public PackageAssembly(string assemblyName, string assemblyVersion, string assemblyCulture, string assemblyPublicKeyToken)
+		{
+			AssemblyName = assemblyName;
+			AssemblyVersion = assemblyVersion;
+			AssemblyCulture = assemblyCulture;
+			AssemblyPublicKeyToken = assemblyPublicKeyToken;
+		}
+	}
+
+	public class PackageInfo
+	{
+		public string PackageName { get; protected set; }
+		public string PackageVersion { get; protected set; }
+
+		public System.Collections.Generic.List<PackageAssembly> PackageAssemblies { get; protected set; }
+
+		public PackageInfo(string packageName, string packageVersion)
+		{
+			PackageAssemblies = new System.Collections.Generic.List<PackageAssembly>();
+			PackageName = packageName;
+			PackageVersion = packageVersion;
+		}
+
+		public PackageInfo(string packageName, string packageVersion, PackageAssembly packageAssembly) : this(packageName, packageVersion)
+		{
+			PackageAssemblies.Add(packageAssembly);
+		}
+
+		public void AddPackageAssembly(PackageAssembly packageAssembly)
+		{
+			PackageAssemblies.Add(packageAssembly);
+		}
+	}
+
+	public class Packages
+	{
+		public System.Collections.Concurrent.ConcurrentDictionary<string, PackageInfo> PackageInfos { get; protected set; }
+
+		public Packages()
+		{
+			PackageInfos = new System.Collections.Concurrent.ConcurrentDictionary<string, PackageInfo>();
+		}
+
+		public void AddPackageInfo(PackageInfo packageInfo)
+		{
+			if (string.IsNullOrEmpty(packageInfo.PackageName) || string.IsNullOrEmpty(packageInfo.PackageVersion))
+			{
+				return;
+			}
+
+			if (!PackageInfos.ContainsKey(packageInfo.PackageName + packageInfo.PackageVersion))
+			{
+				PackageInfos.TryAdd(packageInfo.PackageName + packageInfo.PackageVersion, packageInfo);
+			}
+		}
+
+		public void RemovePackageInfo(PackageInfo packageInfo)
+		{
+			if (string.IsNullOrEmpty(packageInfo.PackageName) || string.IsNullOrEmpty(packageInfo.PackageVersion))
+			{
+				return;
+			}
+
+			if (!PackageInfos.ContainsKey(packageInfo.PackageName + packageInfo.PackageVersion))
+			{
+				return;
+			}
+
+			PackageInfo removePackage;
+			PackageInfos.TryRemove(packageInfo.PackageName + packageInfo.PackageVersion, out removePackage);
+		}
+
+		public void UpdatePackageInfo(PackageInfo packageInfo)
+		{
+			if (string.IsNullOrEmpty(packageInfo.PackageName) || string.IsNullOrEmpty(packageInfo.PackageVersion))
+			{
+				return;
+			}
+
+			if (PackageInfos.ContainsKey(packageInfo.PackageName + packageInfo.PackageVersion))
+			{
+				RemovePackageInfo(packageInfo);
+			}
+
+			AddPackageInfo(packageInfo);
+		}
+
+		public PackageInfo FindPackageInfoByAssemblyNameAndAssemblyVersion(string assemblyName, string assemblyVersion)
+		{
+			var packageInfo = PackageInfos.FirstOrDefault(
+				pInfo =>
+					pInfo.Value.PackageAssemblies.Find(
+						pAssembly =>
+							pAssembly.AssemblyName.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase) &&
+							pAssembly.AssemblyVersion.Equals(assemblyVersion,
+								StringComparison.InvariantCultureIgnoreCase)) != null);
+
+			return packageInfo.Value;
+		}
+	}
+}
+"@
+
+Add-Type -TypeDefinition $TypeDefinitionSource
+
 Function Write-Log(
   [string][Parameter(Mandatory=$True,ValueFromPipeline=$True,ValueFromPipelinebyPropertyName=$True)]$Message,
   [string]$Program = "PowerShell",
