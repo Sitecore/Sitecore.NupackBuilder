@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+*.suo
+/packages
+/NupackBuilder-Samples/packages/7-Zip.CommandLine
+/NupackBuilder-Samples/nuget.exe
+
+/.vs
