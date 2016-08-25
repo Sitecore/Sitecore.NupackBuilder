@@ -33,7 +33,7 @@ Function UploadNugetPackage(
 	[Parameter(Mandatory=$true)][string]$uploadAPIKey
 )
 {
-	$pushargs = ' push "' + $packageFileName + '" -ApiKey "'+$uploadAPIKey+'" -Source "'+$uploadFeed+'" -Timeout 600 -NonInteractive -Verbosity normal'
+	$pushargs = ' push "' + $packageFileName + '" -ApiKey "'+$uploadAPIKey+'" -Source "'+$uploadFeed+'" -Timeout 600 -NonInteractive -Verbosity quiet'
 	$pushcommand = "& '$nugetFullPath'" + $pushargs
 	iex $pushcommand    
 }
@@ -46,7 +46,7 @@ Function DeletePackageFromFeed(
 	[Parameter(Mandatory=$true)][string]$APIKey
 )
 {
-	$deleteargs = ' delete ' + $moduleName + ' ' + $moduleVersion + ' -ApiKey "'+$APIKey+'" -Source "'+$feed+'" -NonInteractive -Verbosity normal'
+	$deleteargs = ' delete ' + $moduleName + ' ' + $moduleVersion + ' -ApiKey "'+$APIKey+'" -Source "'+$feed+'" -NonInteractive -Verbosity quiet'
 	$deletecommand = "& '$nugetFullPath'" + $deleteargs
 	iex $deletecommand
 }
@@ -62,7 +62,7 @@ Function PackNuspecFile(
 		$packageDirectory = $packageDirectory.Substring(0,$packageDirectory.Length-1)
 	}
 
-	$packargs = ' pack "' + $nuspecfilename + '" -OutputDirectory "' + $packageDirectory + '" -NonInteractive -Verbosity normal'
+	$packargs = ' pack "' + $nuspecfilename + '" -OutputDirectory "' + $packageDirectory + '" -NonInteractive -Verbosity quiet'
 	$packcommand = "& '$nugetFullPath'" + $packargs
 	iex $packcommand    
 }
@@ -229,7 +229,7 @@ Function CreateAssembliesNuspecFile(
 					}
 				}
 		
-				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("microsoft.")) -and (!$dep.Name.ToLower().StartsWith("system.")) -and (!$dep.Name.ToLower().StartsWith("system")) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
+				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
 				{
 					# Reporting dependencies
 
@@ -340,8 +340,11 @@ $nuspecMetadata = @"
 if($notIncludedDependencies.Count -gt 0)
 {
 	$joinedNoDep = $notIncludedDependencies -join "," | Out-String 
-	# Write-Host "ModuleName : $moduleName" -ForegroundColor Red
-	# Write-Host "Missing : $joinedNoDep" -ForegroundColor Cyan
+	if($resolveDependencies -eq $true)
+	{
+		Write-Host "ModuleName : $moduleName" -ForegroundColor Red
+		Write-Host "Missing : $joinedNoDep" -ForegroundColor Cyan
+	}
 	$nuspecMetadata += $nl + '        <description>Missing assembly dependencies : ' + $joinedNoDep + '</description>' + $nl
 }
 else

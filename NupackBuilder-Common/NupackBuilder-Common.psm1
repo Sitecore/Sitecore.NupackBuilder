@@ -212,7 +212,7 @@ Function Add-ThirdPartyComponent(
 }
 
 
-Function Add-ThirdPartyPackages()
+Function Add-PlatformThirdPartyPackages()
 {
 	$packages  = [NupackBuilder.Packages]::new()
 
@@ -237,9 +237,9 @@ Function Add-ThirdPartyPackages()
 	$packageInfo.AddPackageAssembly($packageAssembly)
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.FastVectorHighlighter", "3.0.3.0", "neutral", "85089178b9ac3181")
 	$packageInfo.AddPackageAssembly($packageAssembly)
-	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Highlighter", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Highlighter", "2.3.2.1", "neutral", "85089178b9ac3181")
 	$packageInfo.AddPackageAssembly($packageAssembly)
-	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Memory", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Memory", "1.0.0.0", "neutral", "85089178b9ac3181")
 	$packageInfo.AddPackageAssembly($packageAssembly)
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Queries", "3.0.3.0", "neutral", "85089178b9ac3181")
 	$packageInfo.AddPackageAssembly($packageAssembly)
@@ -247,7 +247,7 @@ Function Add-ThirdPartyPackages()
 	$packageInfo.AddPackageAssembly($packageAssembly)
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.SimpleFacetedSearch", "3.0.3.0", "neutral", "85089178b9ac3181")
 	$packageInfo.AddPackageAssembly($packageAssembly)
-	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Snowball", "3.0.3.0", "neutral", "85089178b9ac3181")
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Snowball", "2.0.0.1", "neutral", "85089178b9ac3181")
 	$packageInfo.AddPackageAssembly($packageAssembly)
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.SpellChecker", "3.0.3.0", "neutral", "85089178b9ac3181")
 	$packageInfo.AddPackageAssembly($packageAssembly)
@@ -282,6 +282,10 @@ Function Add-ThirdPartyPackages()
 	$packageInfo = [NupackBuilder.PackageInfo]::new("SolrNet", "0.4.0.4001", $packageAssembly)
 	$packages.AddPackageInfo($packageInfo)
 
+	#$packageAssembly = [NupackBuilder.PackageAssembly]::new("SolrNet", "0.4.0.2002", "neutral", "bc21753e8aa334cb")
+	#$packageInfo = [NupackBuilder.PackageInfo]::new("SolrNet", "0.4.0-beta2", $packageAssembly)
+	#$packages.AddPackageInfo($packageInfo)
+
 	#RazorGenerator.Mvc
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("RazorGenerator.Mvc", "2.0.0.0", "neutral", "7b26dc2a43f6a0d4")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("RazorGenerator.Mvc", "2.4.2", $packageAssembly)
@@ -311,6 +315,106 @@ Function Add-ThirdPartyPackages()
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Facebook", "5.4.1.0", "neutral", "58cb4f2111d1e6de")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("Facebook", "5.4.1", $packageAssembly)
 	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.Mvc
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Mvc", "5.2.3.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Mvc", "5.2.3", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.Razor
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Razor", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Razor", "3.2.3", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.WebApi.Client
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Net.Http.Formatting", "5.2.3.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Client", "5.2.3", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.WebApi.Core
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http", "5.2.3.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Core", "5.2.3", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.WebApi.WebHost
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.WebHost", "5.2.3.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.WebHost", "5.2.3", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.WebPages
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Helpers", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebPages", "3.2.3", $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages.Deployment", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages.Razor", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.Web.Infrastructure
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Web.Infrastructure", "1.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Web.Infrastructure", "1.0.0.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.OData
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.OData", "5.9.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.OData", "5.9.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.OData.Core
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Core", "6.15.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Core", "6.15.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.OData.Edm
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Edm", "6.15.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Edm", "6.15.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.Spatial
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Spatial", "6.15.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Spatial", "6.15.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.Extensions.DependencyInjection.Abstractions
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.DependencyInjection.Abstractions", "1.0.0.0", "neutral", "adb9793829ddae60")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.DependencyInjection.Abstractions", "1.0.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.Extensions.DependencyInjection
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.DependencyInjection", "1.0.0.0", "neutral", "adb9793829ddae60")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.DependencyInjection", "1.0.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.WebApi.Cors
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.Cors", "5.2.3.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Cors", "5.2.3", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#Microsoft.AspNet.Web.Optimization
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Optimization", "1.1.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Web.Optimization", "1.1.3", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#System.IdentityModel.Tokens.Jwt
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.IdentityModel.Tokens.Jwt", "5.0.0.127", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("System.IdentityModel.Tokens.Jwt", "5.0.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.IdentityModel.Tokens.Jwt", "4.0.20622.1351", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("System.IdentityModel.Tokens.Jwt", "4.0.2.206221351", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#CommonServiceLocation
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.ServiceLocation", "1.0.0.0", "neutral", "59d6d24383174ac4")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("CommonServiceLocation", "1.0.0", $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+
 	return $packages
 }
 

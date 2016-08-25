@@ -308,20 +308,7 @@ Function CreatePlatformPackages(
 
 	if(($thirdpartycomponents -eq $null) -or ($thirdpartycomponents.PackageInfos.Count -eq 0))
 	{
-		$thirdpartycomponents = Add-ThirdPartyPackages
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "Newtonsoft.Json" -AssemblyNames @("Newtonsoft.Json.dll") -Versions @("4.5.9", "6.0.8")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "Lucene.Net" -AssemblyNames @("Lucene.Net.dll") -Versions @("3.0.3")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "Lucene.Net.Contrib" -AssemblyNames @("Lucene.Net.Contrib.Analyzers.dll", "Lucene.Net.Contrib.Core.dll", "Lucene.Net.Contrib.FastVectorHighlighter.dll", "Lucene.Net.Contrib.Highlighter.dll", "Lucene.Net.Contrib.Memory.dll", "Lucene.Net.Contrib.Queries.dll", "Lucene.Net.Contrib.Regex.dll", "Lucene.Net.Contrib.SimpleFacetedSearch.dll", "Lucene.Net.Contrib.Snowball.dll", "Lucene.Net.Contrib.SpellChecker.dll") -Versions @("3.0.3")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "HtmlAgilityPack" -AssemblyNames @("HtmlAgilityPack.dll") -Versions @("1.4.6")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "YUICompressor.NET" -AssemblyNames @("Yahoo.Yui.Compressor.dll") -Versions @("2.1.1")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "mongocsharpdriver" -AssemblyNames @("MongoDB.Driver.dll", "MongoDB.Bson.dll") -Versions @("1.10.0")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "SolrNet" -AssemblyNames @("SolrNet.dll") -Versions @("0.4.0.4001")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "RazorGenerator.Mvc" -AssemblyNames @("RazorGenerator.Mvc.dll") -Versions @("2.4.2")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "protobuf-net" -AssemblyNames @("protobuf-net.dll") -Versions @("2.0.0.668")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "Ninject" -AssemblyNames @("Ninject.dll") -Versions @("3.2.2")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "WebActivatorEx" -AssemblyNames @("WebActivatorEx.dll") -Versions @("2.0.6")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "Markdown" -AssemblyNames @("MarkdownSharp.dll") -Versions @("1.14.6")
-		#$thirdpartycomponents += Add-ThirdPartyComponent -PackageName "Facebook" -AssemblyNames @("Facebook.dll") -Versions @("5.4.1")
+		$thirdpartycomponents = Add-PlatformThirdPartyPackages
 	}
 
 	Get-ChildItem $sitecoreRepositoryFolder -Filter "*.zip" | % {
