@@ -30,10 +30,20 @@ Function UploadNugetPackage(
 	[Parameter(Mandatory=$true)][string]$nugetFullPath,
 	[Parameter(Mandatory=$true)][string]$packageFileName,
 	[Parameter(Mandatory=$true)][string]$uploadFeed,
-	[Parameter(Mandatory=$true)][string]$uploadAPIKey
+	[Parameter(Mandatory=$true)][string]$uploadAPIKey,
+	[Parameter(Mandatory=$false)][string]$verbosity = "normal"
+
 )
 {
-	$pushargs = ' push "' + $packageFileName + '" -ApiKey "'+$uploadAPIKey+'" -Source "'+$uploadFeed+'" -Timeout 600 -NonInteractive -Verbosity quiet'
+	switch ($verbosity)
+	{
+		"normal" {$verbosityValue = "normal"}
+		"quiet" {$verbosityValue = "quiet"}
+		"detailed" {$verbosityValue = "detailed"}
+		default {$verbosityValue = "quiet"}
+	} 
+
+	$pushargs = ' push "' + $packageFileName + '" -ApiKey "'+$uploadAPIKey+'" -Source "'+$uploadFeed+'" -Timeout 600 -NonInteractive -Verbosity ' + $verbosityValue
 	$pushcommand = "& '$nugetFullPath'" + $pushargs
 	iex $pushcommand    
 }
@@ -43,10 +53,18 @@ Function DeletePackageFromFeed(
 	[Parameter(Mandatory=$true)][string]$moduleVersion,
 	[Parameter(Mandatory=$true)][string]$nugetFullPath,
 	[Parameter(Mandatory=$true)][string]$feed,
-	[Parameter(Mandatory=$true)][string]$APIKey
+	[Parameter(Mandatory=$true)][string]$APIKey,
+	[Parameter(Mandatory=$false)][string]$verbosity = "normal"
 )
 {
-	$deleteargs = ' delete ' + $moduleName + ' ' + $moduleVersion + ' -ApiKey "'+$APIKey+'" -Source "'+$feed+'" -NonInteractive -Verbosity quiet'
+	switch ($verbosity)
+	{
+		"normal" {$verbosityValue = "normal"}
+		"quiet" {$verbosityValue = "quiet"}
+		"detailed" {$verbosityValue = "detailed"}
+		default {$verbosityValue = "quiet"}
+	}
+	$deleteargs = ' delete ' + $moduleName + ' ' + $moduleVersion + ' -ApiKey "'+$APIKey+'" -Source "'+$feed+'" -NonInteractive -Verbosity ' + $verbosityValue
 	$deletecommand = "& '$nugetFullPath'" + $deleteargs
 	iex $deletecommand
 }
@@ -54,15 +72,23 @@ Function DeletePackageFromFeed(
 Function PackNuspecFile(
 	[Parameter(Mandatory=$true)][string]$nuspecfilename,
 	[Parameter(Mandatory=$true)][string]$packageDirectory,
-	[Parameter(Mandatory=$true)][string]$nugetFullPath
+	[Parameter(Mandatory=$true)][string]$nugetFullPath,
+	[Parameter(Mandatory=$false)][string]$verbosity = "normal"
 )
 {
+	switch ($verbosity)
+	{
+		"normal" {$verbosityValue = "normal"}
+		"quiet" {$verbosityValue = "quiet"}
+		"detailed" {$verbosityValue = "detailed"}
+		default {$verbosityValue = "quiet"}
+	}
 	if($packageDirectory.EndsWith("\"))
 	{
 		$packageDirectory = $packageDirectory.Substring(0,$packageDirectory.Length-1)
 	}
 
-	$packargs = ' pack "' + $nuspecfilename + '" -OutputDirectory "' + $packageDirectory + '" -NonInteractive -Verbosity quiet'
+	$packargs = ' pack "' + $nuspecfilename + '" -OutputDirectory "' + $packageDirectory + '" -NonInteractive -Verbosity ' + $verbosityValue
 	$packcommand = "& '$nugetFullPath'" + $packargs
 	iex $packcommand    
 }
@@ -336,11 +362,11 @@ $nuspecMetadata = @"
 if($notIncludedDependencies.Count -gt 0)
 {
 	$joinedNoDep = $notIncludedDependencies -join "," | Out-String 
-	if($resolveDependencies -eq $true)
-	{
-		Write-Host "ModuleName : $moduleName" -ForegroundColor Red
-		Write-Host "Missing : $joinedNoDep" -ForegroundColor Cyan
-	}
+	#if($resolveDependencies -eq $true)
+	#{
+	#	Write-Host "ModuleName : $moduleName" -ForegroundColor Red
+	#	Write-Host "Missing : $joinedNoDep" -ForegroundColor Cyan
+	#}
 	$nuspecMetadata += $nl + '        <description>Missing assembly dependencies : ' + $joinedNoDep + '</description>' + $nl
 }
 else
