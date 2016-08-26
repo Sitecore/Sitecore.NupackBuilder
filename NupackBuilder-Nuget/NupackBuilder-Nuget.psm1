@@ -195,6 +195,8 @@ Function CreateAssembliesNuspecFile(
 
 	$dependencies = $null
 	$dependencies = @()
+	$frameworkAssemblies = $null
+	$frameworkAssemblies = @()
 	$notIncludedDependencies = $null
 	$notIncludedDependencies = @()
 
@@ -205,7 +207,8 @@ Function CreateAssembliesNuspecFile(
 		foreach($dep in $loadeddependencies)
 		{
 			$someName = $dep.Name
-			if(Test-Path -Path "$readDirectory$someName.dll" )
+			# Cheating for ninject since SOMEONE decided to do both bindingredirect and location redirection of the ninject assembly
+			if((Test-Path -Path "$readDirectory$someName.dll") -or ($dep.Name.ToLower().Equals("ninject"))) 
 			{
 				if($dep.Name.ToLower().StartsWith("sitecore."))
 				{
@@ -231,44 +234,23 @@ Function CreateAssembliesNuspecFile(
 		
 				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
 				{
-					# Reporting dependencies
-
 					## Sorting out the commercial ones
-
 					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")))
 					{
 						$depFileName = $readDirectory + $dep.Name + ".dll"
 
 						#Write-Host $depFileName
-						$assemblyItem = Get-Item -Path $depFileName
-						$assemblyItemFileVersion = $assemblyItem.VersionInfo.FileVersion
-						$assemblyItemProductVersion = $assemblyItem.VersionInfo.ProductVersion
-						$Occurrences = $assemblyItemFileVersion.Split(".").GetUpperBound(0).ToString()
-						switch ($Occurrences)
-						{
-							"2" {$assemblyItemSemVerVersion = $assemblyItemFileVersion}
-							"3" {$assemblyItemSemVerVersion = $assemblyItemFileVersion.Substring(0, $assemblyItemFileVersion.LastIndexOf("."))}
-							default {$assemblyItemSemVerVersion = "0.0.0"}
-						}                    
-
 						$assemblyItemVersion = $dep.Version
-					
 						$assemblyItemName = $dep.Name
-
-						$depbytes   = [System.IO.File]::ReadAllBytes($depFileName)
-						$deploaded  = [System.Reflection.Assembly]::Load($depbytes)
-
 						$assemblyItemNameDLL = "$assemblyItemName.dll"
-
 						$addeddAssembly = $false
 
 						if(($thirdpartycomponents -ne $null) -and ($thirdpartycomponents.PackageInfos.Count -ne 0))
 						{
 							$existingPackage = $null
 							$existingPackage = $thirdpartycomponents.FindPackageInfoByAssemblyNameAndAssemblyVersion($assemblyItemName, $assemblyItemVersion)
-							if($existingPackage -ne $null)
+							if(($existingPackage -ne $null) -and ($existingPackage.PreRelease -ne $true))
 							{
-								# Write-Host "Package found : "$existingPackage.PackageName -ForegroundColor Yellow
 								$objComponent = New-Object System.Object
 								$objComponent | Add-Member -type NoteProperty -name PackageName -value $existingPackage.PackageName
 								$objComponent | Add-Member -type NoteProperty -name Version -value $existingPackage.PackageVersion
@@ -289,7 +271,6 @@ Function CreateAssembliesNuspecFile(
 								{
 									$addeddAssembly = $true
 									$dependencies += $objComponent
-									#Write-Host "$assemblyItemName,FileVersion=$assemblyItemFileVersion, Version=$assemblyItemVersion, ProductVersion=$assemblyItemProductVersion, SemverVersion=$assemblyItemSemVerVersion" -ForegroundColor Yellow
 								}
 							}
 						}
@@ -306,6 +287,21 @@ Function CreateAssembliesNuspecFile(
 				}
 				else
 				{
+					$notIncludedDependencies += "$someName.dll"
+				}
+			}
+			else
+			{
+				# assemblies that are not part of our zip - normally these are referenced through the .NET framework, GAC or abstractions references for the .NET version
+				if(($dep.Name.ToLower().StartsWith("system.")) -or ($dep.Name.ToLower().Equals("windowsbase")) -or ($dep.Name.ToLower().Equals("system")) -or ($dep.Name.ToLower().Equals("mscorlib")) -or ($dep.Name.ToLower().Equals("sysglobl")) -or ($dep.Name.ToLower().StartsWith("microsoft.")))
+				{
+					# It's GAC GAC :-)
+					# We would not add frameworkassemblies, since it is not always needed
+					$frameworkAssemblies += $someName
+				}
+				else
+				{
+					# This is the REAL missing assemblies.
 					$notIncludedDependencies += "$someName.dll"
 				}
 			}
