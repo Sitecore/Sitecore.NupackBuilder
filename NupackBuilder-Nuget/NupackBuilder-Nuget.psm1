@@ -124,8 +124,8 @@ $nuspecMetadata = @"
 		<authors>Sitecore Corporation A/S</authors>
 		<owners>Sitecore Corporation A/S</owners>
 		<iconUrl>http://www.sitecore.net/favicon.ico</iconUrl>   
-		<licenseUrl>https://sdn.sitecore.net/upload/sitecoreeula.pdf</licenseUrl>     
-		<projectUrl>http://dev.sitecore.net/</projectUrl>
+		<licenseUrl>https://doc.sitecore.net/~/media/C23E989268EC4FA588108F839675A5B6.pdf</licenseUrl>     
+		<projectUrl>http://doc.sitecore.net/</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>Description : $moduleName.</description>
 		<summary>Summary : $moduleName.</summary>
@@ -361,8 +361,8 @@ $nuspecMetadata = @"
 		<authors>Sitecore Corporation A/S</authors>
 		<owners>Sitecore Corporation A/S</owners>
 		<iconUrl>http://www.sitecore.net/favicon.ico</iconUrl> 
-		<licenseUrl>https://sdn.sitecore.net/upload/sitecoreeula.pdf</licenseUrl>       
-		<projectUrl>http://dev.sitecore.net/</projectUrl>
+		<licenseUrl>https://doc.sitecore.net/~/media/C23E989268EC4FA588108F839675A5B6.pdf</licenseUrl>       
+		<projectUrl>http://doc.sitecore.net/</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 "@
 if($notIncludedDependencies.Count -gt 0)
