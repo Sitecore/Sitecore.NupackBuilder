@@ -280,6 +280,14 @@ Function Add-PlatformThirdPartyPackages()
 	$packageInfo.AddPackageAssembly($packageAssembly)
 	$packages.AddPackageInfo($packageInfo)
 
+	#mongocsharpdriver 1.8.3
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Bson", "1.8.3.9", "neutral", "f686731cfb9cc103")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("mongocsharpdriver", "1.8.3", $false, $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Driver", "1.8.3.9", "neutral", "f686731cfb9cc103")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
 	#SolrNet 0.4.0.4001
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("SolrNet", "0.4.0.4001", "neutral", "null")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("SolrNet", "0.4.0.4001", $false, $packageAssembly)
