@@ -262,20 +262,19 @@ Function CreateAssembliesNuspecFile(
 					## Sorting out the commercial ones
 					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")))
 					{
-						$depFileName = $readDirectory + $dep.Name + ".dll"
+						$depFileName ="$readDirectory$someName.dll"
 
 						# $assemblyItem = Get-Item -Path $depFileName
 						# $assemblyItemFileVersion = $assemblyItem.VersionInfo.FileVersion
 						# $assemblyItemProductVersion = $assemblyItem.VersionInfo.ProductVersion
-
-
+						$readbytes = $null
+						$deploaded = $null
+						$assemblyName = $null
 						$readbytes   = [System.IO.File]::ReadAllBytes($depFileName)
 						$deploaded  = [System.Reflection.Assembly]::Load($readbytes)
-
-						#Write-Host $depFileName
-						$assemblyItemVersion = $deploaded.Version
-						$assemblyItemName = $deploaded.Name
-						$assemblyItemNameDLL = "$assemblyItemName.dll"
+						$assemblyName = $deploaded.GetName()
+						$assemblyItemVersion = $assemblyName.Version
+						$assemblyItemName = $assemblyName.Name
 						$addeddAssembly = $false
 
 						if(($thirdpartycomponents -ne $null) -and ($thirdpartycomponents.PackageInfos.Count -ne 0))
@@ -369,11 +368,11 @@ $nuspecMetadata = @"
 if($notIncludedDependencies.Count -gt 0)
 {
 	$joinedNoDep = $notIncludedDependencies -join "," | Out-String 
-	#if($resolveDependencies -eq $true)
-	#{
-	#	Write-Host "ModuleName : $moduleName" -ForegroundColor Red
-	#	Write-Host "Missing : $joinedNoDep" -ForegroundColor Cyan
-	#}
+	if($resolveDependencies -eq $true)
+	{
+		Write-Host "ModuleName : $moduleName" -ForegroundColor Red
+		Write-Host "Missing : $joinedNoDep" -ForegroundColor Cyan
+	}
 	$nuspecMetadata += $nl + '        <description>Missing assembly dependencies : ' + $joinedNoDep + '</description>' + $nl
 }
 else
