@@ -371,6 +371,15 @@ Function CreatePlatformPackages(
 		  -NugetFeed $NugetFeed `
 		  -SuppressOutput `
 		  -Filter "*\Website\bin\*.dll"
+		
+		UnZipDLLFiles -installPath $root `
+		  -ArchivePath $archivePath `
+		  -TargetPath $targetDirectory `
+		  -nugetFullPath $nugetExecutable `
+		  -NugetFeed $NugetFeed `
+		  -SuppressOutput `
+		  -Filter "*\Website\bin\social\*.dll" `
+		  -doNotDeleteTargetPath		  
 
 		CreatePlatformNuGetPackages -readDirectory $targetDirectory `
 			-nuspecDirectory $nuspecDirectory `

@@ -469,16 +469,22 @@ Function UnZipDLLFiles (
   [Parameter(Mandatory=$true)][string]$Filter,  
   [switch]$SuppressOutput,
   [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
-  [Parameter(Mandatory=$true)][string]$nugetFullPath
+  [Parameter(Mandatory=$true)][string]$nugetFullPath,
+  [switch]$doNotDeleteTargetPath
 )
 {
+	$deleteTargetPath = $true
+	if($doNotDeleteTargetPath)
+	{
+		$deleteTargetPath = $false
+	}
   
   if (!(Test-Path -Path $ArchivePath))
   {
 	Write-Log -Message "The archive to extract was not found: $ArchivePath" -Level "Error"
   }
 	
-  if((Test-Path -Path $TargetPath ))
+  if(($deleteTargetPath -eq $true) -and (Test-Path -Path $TargetPath ))
   {
 	$child_items = ([array] (Get-ChildItem -Path $TargetPath -Recurse -Force))
 		if ($child_items) {

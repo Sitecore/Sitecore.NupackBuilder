@@ -233,8 +233,7 @@ Function CreateAssembliesNuspecFile(
 		foreach($dep in $loadeddependencies)
 		{
 			$someName = $dep.Name
-			# Cheating for ninject since SOMEONE decided to do both bindingredirect and location redirection of the ninject assembly
-			if((Test-Path -Path "$readDirectory$someName.dll") -or ($dep.Name.ToLower().Equals("ninject"))) 
+			if((Test-Path -Path "$readDirectory$someName.dll")) 
 			{
 				if($dep.Name.ToLower().StartsWith("sitecore."))
 				{
@@ -265,9 +264,17 @@ Function CreateAssembliesNuspecFile(
 					{
 						$depFileName = $readDirectory + $dep.Name + ".dll"
 
+						# $assemblyItem = Get-Item -Path $depFileName
+						# $assemblyItemFileVersion = $assemblyItem.VersionInfo.FileVersion
+						# $assemblyItemProductVersion = $assemblyItem.VersionInfo.ProductVersion
+
+
+						$readbytes   = [System.IO.File]::ReadAllBytes($depFileName)
+						$deploaded  = [System.Reflection.Assembly]::Load($readbytes)
+
 						#Write-Host $depFileName
-						$assemblyItemVersion = $dep.Version
-						$assemblyItemName = $dep.Name
+						$assemblyItemVersion = $deploaded.Version
+						$assemblyItemName = $deploaded.Name
 						$assemblyItemNameDLL = "$assemblyItemName.dll"
 						$addeddAssembly = $false
 
