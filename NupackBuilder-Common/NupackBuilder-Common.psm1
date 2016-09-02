@@ -517,6 +517,8 @@ Function UnZipDLLFiles (
   [string]$pathTo7z = $(Get-7z -installPath $installPath -nugetFullPath $nugetFullPath -NugetFeed $NugetFeed)
   $unzipargs = ' e -r "' + $ArchivePath + '" "' + $Filter + '" -o"' + $TargetPath + '" -y'
   $unzipcommand = "& '$pathTo7z'" + $unzipargs
+
+  Write-Host "$unzipcommand" -ForegroundColor Cyan
   
   if ($SuppressOutput)
   {
