@@ -3,12 +3,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{987a35e3-cf04-4b39-b82e-60a84648c6b0}</ProjectGuid>
+    <ProjectGuid>{ea5fc76e-c6ec-43c8-a231-4cb50264dd49}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>MyApplication</RootNamespace>
     <AssemblyName>MyApplication</AssemblyName>
-    <Name>NupackBuilder-Samples</Name>
-    <ProjectHome />
+    <Name>NupackBuilder-Modules</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -29,10 +28,8 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="BinariesReporting.ps1" />
-    <Compile Include="DeleteAllPackages.ps1" />
-    <Compile Include="GenerateModulePackages.ps1" />
-    <Compile Include="GeneratePlatformPackages.ps1" />
+    <Compile Include="NupackBuilder-Modules.psd1" />
+    <Compile Include="NupackBuilder-Modules.psm1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build" />
