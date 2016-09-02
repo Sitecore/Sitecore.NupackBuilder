@@ -470,6 +470,13 @@ Function Add-PlatformThirdPartyPackages()
 	return $packages
 }
 
+Function Add-ModulesThirdPartyPackages()
+{
+	$packages  = [NupackBuilder.Packages]::new()
+
+	return $packages
+}
+
 Function UnZipDLLFiles (
   [Parameter(Mandatory=$true)][string]$installPath,
   [Parameter(Mandatory=$true)][string]$ArchivePath,  

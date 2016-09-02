@@ -367,7 +367,7 @@ $nuspecMetadata = @"
 "@
 if($notIncludedDependencies.Count -gt 0)
 {
-	$joinedNoDep = $notIncludedDependencies -join "," | Out-String 
+	$joinedNoDep = $notIncludedDependencies -join ", " | Out-String 
 	if($resolveDependencies -eq $true)
 	{
 		Write-Host "ModuleName : $moduleName" -ForegroundColor Red

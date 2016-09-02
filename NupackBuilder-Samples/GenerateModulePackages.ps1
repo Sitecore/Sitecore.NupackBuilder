@@ -58,7 +58,7 @@ if($DisableThirdPartyReferences)
 	$addThirdPartyReferences = $false
 }
 
-CreateModuleNuGetPackages `
+CreateModulePackages `
 	  -NugetFeed $NugetFeed `
 	  -sitecoreRepositoryFolder $SitecoreRepositoryFolder `
 	  -uploadPackages $upload `
