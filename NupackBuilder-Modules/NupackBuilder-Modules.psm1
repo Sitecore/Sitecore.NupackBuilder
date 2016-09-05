@@ -86,10 +86,6 @@ Function CreateModulePackages(
 		$SitecoreVersion = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(" rev. ",".").Replace("rev. ",".").Replace(" rev.",".").Replace(".zip","").Trim()
 		$frameworVersion = "NET45"
 
-		Write-Host "archivePath = $archivePath" -ForegroundColor Red
-
-		Write-Host "targetDirectory = $targetDirectory" -ForegroundColor Red
-
 		UnZipDLLFiles -installPath $root `
 		  -ArchivePath $archivePath `
 		  -TargetPath $targetDirectory `
@@ -100,14 +96,12 @@ Function CreateModulePackages(
 		$packageZipFile = $targetDirectory + 'package.zip'
 		if (Test-Path -Path $packageZipFile)
 		{
-			Write-Host "PackageZipFile = $packageZipFile" -ForegroundColor Red
-
 			UnZipDLLFiles -installPath $root `
 			  -ArchivePath $packageZipFile `
 			  -TargetPath $targetDirectory `
 			  -nugetFullPath $nugetExecutable `
 			  -NugetFeed $NugetFeed `
-			  -Filter "*\files\bin\*.dll" `
+			  -Filter "files\bin\*.dll" `
 			  -doNotDeleteTargetPath
 
 			Remove-Item $packageZipFile -Force | Out-Null
@@ -121,7 +115,7 @@ Function CreateModulePackages(
 			  -TargetPath $targetDirectory `
 			  -nugetFullPath $nugetExecutable `
 			  -NugetFeed $NugetFeed `
-			  -Filter "*\files\bin\*.dll"
+			  -Filter "files\bin\*.dll"
 		}
 	
 	}

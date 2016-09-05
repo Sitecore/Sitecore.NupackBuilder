@@ -8,3 +8,4 @@
 /NupackBuilder-Samples/nuget.exe
 
 /.vs
+/NupackBuilder-Samples/packages/7-Zip.x64

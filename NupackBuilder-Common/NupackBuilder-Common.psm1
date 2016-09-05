@@ -186,15 +186,15 @@ Function Get-7z(
 [Parameter(Mandatory=$true)][string]$nugetFullPath
 )
 {
-	if (!(Test-Path -Path "$installPath\packages\7-Zip.CommandLine\tools\7za.exe"))
+	if (!(Test-Path -Path "$installPath\packages\7-Zip.x64\tools\7z.exe"))
 	{
-		$nugetArgs = ' install 7-Zip.CommandLine -ExcludeVersion -o "' + $installPath + '\packages" -Source "' + $NugetFeed + '"'
+		$nugetArgs = ' install 7-Zip.x64 -ExcludeVersion -o "' + $installPath + '\packages" -Source "' + $NugetFeed + '"'
 		$nugetCommand = "& '$nugetFullPath'" + $nugetArgs
-		Write-Log -Message "Installing 7-Zip.CommandLine nuget package to $installPath\packages ..." -Program "nuget"
+		Write-Log -Message "Installing 7-Zip.x64 nuget package to $installPath\packages ..." -Program "nuget"
 		iex $nugetCommand -Verbose | Out-Null
-		Write-Log -Message "Done installing 7-Zip.CommandLine nuget package to $installPath\packages ..." -Program "nuget"
+		Write-Log -Message "Done installing 7-Zip.x64 nuget package to $installPath\packages ..." -Program "nuget"
 	}
-	return "$installPath\packages\7-Zip.CommandLine\tools\7za.exe"
+	return "$installPath\packages\7-Zip.x64\tools\7z.exe"
 }
 
 Function Add-ThirdPartyComponent(
@@ -475,6 +475,22 @@ Function Add-ModulesThirdPartyPackages()
 	$packages  = [NupackBuilder.Packages]::new()
 
 	return $packages
+}
+
+Function UnzipDLLFilesFromPackageZip(
+  [Parameter(Mandatory=$true)][string]$installPath,
+  [Parameter(Mandatory=$true)][string]$ArchivePath,  
+  [Parameter(Mandatory=$true)][string]$TargetPath, 
+  [Parameter(Mandatory=$true)][string]$Filter,  
+  [Parameter(Mandatory=$true)][string]$nugetFullPath,
+  [switch]$doNotDeleteTargetPath
+)
+{
+	$deleteTargetPath = $true
+	if($doNotDeleteTargetPath)
+	{
+		$deleteTargetPath = $false
+	}
 }
 
 Function UnZipDLLFiles (
