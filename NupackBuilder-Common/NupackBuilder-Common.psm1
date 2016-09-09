@@ -376,6 +376,26 @@ Function Add-ModulePlatformSupportInfo()
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 151127 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.151127", "8.0.151127", "8.0.160115", $false, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
+	#Web Forms For Marketers 8.1 rev. 151008 Initial NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 151008 Initial NOT SC PACKAGE", "Web Forms for Marketers", "8.1.151008", "8.1.151003", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms For Marketers 8.1 rev. 151217 Update-1 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 151217 Update-1 NOT SC PACKAGE", "Web Forms for Marketers", "8.1.151217", "8.1.151207", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms For Marketers 8.1 rev. 160304 Update-2 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 160304 Update-2 NOT SC PACKAGE", "Web Forms for Marketers", "8.1.160304", "8.1.160302", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms for Marketers 8.1 rev. 160523 NOT SC PACKAGE-
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.1 rev. 160523 NOT SC PACKAGE-", "Web Forms for Marketers", "8.1.160523", "8.1.160519", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms for Marketers 8.2 rev. 160801 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.2 rev. 160801 NOT SC PACKAGE", "Web Forms for Marketers", "8.2.160801", "8.2.160729", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
 	return $modules
 }
 

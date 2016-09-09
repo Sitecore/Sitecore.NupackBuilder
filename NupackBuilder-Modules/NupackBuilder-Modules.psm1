@@ -214,18 +214,19 @@ Function CreateModulePackages(
 							
 							  Remove-Item $packageZipFile -Force | Out-Null
 						}
-						else
-						{
+						
+						#else
+						#{
 							#no package.zip inside the zip file and not a Sitecore package but have bin folder
-							UnZipDLLFiles -installPath $root `
-							  -ArchivePath $subarchivePath `
-							  -TargetPath $targetDirectory `
-							  -nugetFullPath $nugetExecutable `
-							  -NugetFeed $NugetFeed `
-							  -Filter "bin\*.dll" `
-							  -SuppressOutput `
-							  -doNotDeleteTargetPath
-						}
+						#	UnZipDLLFiles -installPath $root `
+						#	  -ArchivePath $subarchivePath `
+						#	  -TargetPath $targetDirectory `
+						#	  -nugetFullPath $nugetExecutable `
+						#	  -NugetFeed $NugetFeed `
+						#	  -Filter "bin\*.dll" `
+						#	  -SuppressOutput `
+						#	  -doNotDeleteTargetPath
+						#}
 
 						Remove-Item $subarchivePath -Force | Out-Null
 					}
@@ -268,7 +269,7 @@ Function CreateModulePackages(
 							switch ($frameworkName)
 							{
 								".NETFramework,Version=v4.5" {
-										$frameworVersion = "NET452"
+										$frameworVersion = "NET45"
 										$createFileVersionPackages = $false
 									  }	
 								".NETFramework,Version=v4.5.2" {
