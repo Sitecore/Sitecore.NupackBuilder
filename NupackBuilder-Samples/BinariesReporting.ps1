@@ -78,20 +78,20 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 	$name    = $loaded.ManifestModule
 	$loaded.GetReferencedAssemblies() | % {
 		$toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe
-		#if($_.FullName.ToLower().StartsWith("sitecore."))
-		#{
+		if($_.FullName.ToLower().StartsWith("sitecore."))
+		{
 			$matchValue = $_.Name
 			$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
 
 			if($assembly -ne $null)
 			{
-				if($_.Version -ne $assembly.AssemblyVersion)
-				{
+				#if($_.Version -ne $assembly.AssemblyVersion)
+				#{
 					$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
-				}
+				#}
 			}         
 				
-		#}
+		}
 		$toAdd
 		if($loaded -ne $null)
 		{

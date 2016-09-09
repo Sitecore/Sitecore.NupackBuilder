@@ -1,8 +1,119 @@
 $TypeDefinitionSource = @"
-  namespace NupackBuilder
+namespace NupackBuilder
 {
 	using System;
 	using System.Linq;
+	using System.Collections.Generic;
+	using System.Collections.Concurrent;
+
+	public class Modules
+	{
+		public ConcurrentDictionary<string, ModulePlatformSupportInfo> ModulePlatformSupportInfos { get; protected set; }
+
+		public Modules()
+		{
+			ModulePlatformSupportInfos = new ConcurrentDictionary<string, ModulePlatformSupportInfo>();
+		}
+
+		public void AddModulePlatformSupportInfo(ModulePlatformSupportInfo modulePlatformSupportInfo)
+		{
+			if (string.IsNullOrEmpty(modulePlatformSupportInfo.ModuleName) || string.IsNullOrEmpty(modulePlatformSupportInfo.ModuleVersion))
+			{
+				return;
+			}
+
+			if (!ModulePlatformSupportInfos.ContainsKey(modulePlatformSupportInfo.ModuleName + modulePlatformSupportInfo.ModuleVersion))
+			{
+				ModulePlatformSupportInfos.TryAdd(modulePlatformSupportInfo.ModuleName + modulePlatformSupportInfo.ModuleVersion, modulePlatformSupportInfo);
+			}
+		}
+
+		public void RemoveModulePlatformSupportInfo(ModulePlatformSupportInfo modulePlatformSupportInfo)
+		{
+			if (string.IsNullOrEmpty(modulePlatformSupportInfo.ModuleName) || string.IsNullOrEmpty(modulePlatformSupportInfo.ModuleVersion))
+			{
+				return;
+			}
+
+			if (!ModulePlatformSupportInfos.ContainsKey(modulePlatformSupportInfo.ModuleName + modulePlatformSupportInfo.ModuleVersion))
+			{
+				return;
+			}
+
+			ModulePlatformSupportInfo removePackage;
+			ModulePlatformSupportInfos.TryRemove(modulePlatformSupportInfo.ModuleName + modulePlatformSupportInfo.ModuleVersion, out removePackage);
+		}
+
+		public void UpdateModulePlatformSupportInfo(ModulePlatformSupportInfo modulePlatformSupportInfo)
+		{
+			if (string.IsNullOrEmpty(modulePlatformSupportInfo.ModuleName) || string.IsNullOrEmpty(modulePlatformSupportInfo.ModuleVersion))
+			{
+				return;
+			}
+
+			if (ModulePlatformSupportInfos.ContainsKey(modulePlatformSupportInfo.ModuleName + modulePlatformSupportInfo.ModuleVersion))
+			{
+				RemoveModulePlatformSupportInfo(modulePlatformSupportInfo);
+			}
+
+			AddModulePlatformSupportInfo(modulePlatformSupportInfo);
+		}
+
+		public ModulePlatformSupportInfo FindModulePlatformVersionsByModuleNameAndModuleVersion(string moduleName, string moduleVersion)
+		{
+			var modulePlatformSupportInfo = ModulePlatformSupportInfos.FirstOrDefault(
+				pModuleInfo => 
+					pModuleInfo.Value.ModuleName.Equals(moduleName, StringComparison.InvariantCultureIgnoreCase)
+					&& pModuleInfo.Value.ModuleVersion.Equals(moduleVersion, StringComparison.InvariantCultureIgnoreCase)
+				);
+
+
+			return modulePlatformSupportInfo.Value;
+		}
+
+		public ModulePlatformSupportInfo FindModulePlatformVersionsByFullName(string fullName)
+		{
+			var modulePlatformSupportInfo = ModulePlatformSupportInfos.FirstOrDefault(
+				pModuleInfo =>
+					pModuleInfo.Value.FullName.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)
+				);
+
+
+			return modulePlatformSupportInfo.Value;
+		}
+
+	}
+
+	public class ModulePlatformSupportInfo
+	{
+		public string FullName { get; protected set; }
+		public string ModuleName { get; protected set; }
+
+		public string ModuleVersion { get; protected set; }
+
+		public string MinimumPlatformVersion { get; protected set; }
+
+		public string MaximumPlatformVersion { get; protected set; }
+
+		public bool OpenMaxRangeAllowed { get; protected set; }
+
+		public bool SpecificVersion { get; protected set; }
+
+		public ModulePlatformSupportInfo(string fullName, string moduleName, string moduleVersion, string minimumPlatformVersion, bool openMaxRangeAllowed, bool specificVersion) : this(fullName, moduleName, moduleVersion, minimumPlatformVersion, string.Empty, openMaxRangeAllowed, specificVersion)
+		{
+		}
+
+		public ModulePlatformSupportInfo(string fullName, string moduleName, string moduleVersion, string minimumPlatformVersion, string maximumPlatformVersion, bool openMaxRangeAllowed, bool specificVersion)
+		{
+			FullName = fullName;
+			MinimumPlatformVersion = minimumPlatformVersion;
+			ModuleName = moduleName;
+			ModuleVersion = moduleVersion;
+			MaximumPlatformVersion = maximumPlatformVersion;
+			OpenMaxRangeAllowed = openMaxRangeAllowed;
+			SpecificVersion = specificVersion;
+		}
+	}
 
 	public class PackageAssembly
 	{
@@ -26,11 +137,11 @@ $TypeDefinitionSource = @"
 		public string PackageVersion { get; protected set; }
 		public bool PreRelease { get; protected set; }
 
-		public System.Collections.Generic.List<PackageAssembly> PackageAssemblies { get; protected set; }
+		public List<PackageAssembly> PackageAssemblies { get; protected set; }
 
 		public PackageInfo(string packageName, string packageVersion, bool preRelease)
 		{
-			PackageAssemblies = new System.Collections.Generic.List<PackageAssembly>();
+			PackageAssemblies = new List<PackageAssembly>();
 			PackageName = packageName;
 			PackageVersion = packageVersion;
 			PreRelease = preRelease;
@@ -49,11 +160,11 @@ $TypeDefinitionSource = @"
 
 	public class Packages
 	{
-		public System.Collections.Concurrent.ConcurrentDictionary<string, PackageInfo> PackageInfos { get; protected set; }
+		public ConcurrentDictionary<string, PackageInfo> PackageInfos { get; protected set; }
 
 		public Packages()
 		{
-			PackageInfos = new System.Collections.Concurrent.ConcurrentDictionary<string, PackageInfo>();
+			PackageInfos = new ConcurrentDictionary<string, PackageInfo>();
 		}
 
 		public void AddPackageInfo(PackageInfo packageInfo)
@@ -213,6 +324,60 @@ Function Add-ThirdPartyComponent(
 
 }
 
+Function Add-ModulePlatformSupportInfo()
+{
+	$modules = [NupackBuilder.Modules]::new()
+
+	# Data Exchange Framework 1.0 rev. 160625
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.0 rev. 160625", "Data Exchange Framework", "1.0.150625", "8.1.151003", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	# Data Exchange Framework 1.1.0 rev. 160817
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.1.0 rev. 160817", "Data Exchange Framework", "1.1.160817", "8.1.151003", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Data Exchange Framework Remote SDK 1.0 rev. 160625
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.0 rev. 160625", "Data Exchange Framework Remote SDK", "1.0.150625", "8.1.151003", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Data Exchange Framework Remote SDK 1.1.0 rev. 160817
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.1.0 rev. 160817", "Data Exchange Framework Remote SDK", "1.1.160817", "8.1.151003", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Sitecore Provider for Data Exchange Framework 1.0 rev. 160625
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Provider for Data Exchange Framework 1.0 rev. 160625", "Sitecore Provider for Data Exchange Framework", "1.0.160625", "8.1.151003", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Sitecore Provider for Data Exchange Framework 1.1.0 rev. 160817
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Provider for Data Exchange Framework 1.1.0 rev. 160817", "Sitecore Provider for Data Exchange Framework", "1.1.160817", "8.1.151003", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Sitecore Media Framework 21 rev 150625
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 21 rev 150625", "Sitecore Media Framework", "2.1.150625", "8.1.151003", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.141217", "8.0.141212", "8.0.150121", $false, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms for Marketers 8.0 rev. 150224 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150224 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.150224", "8.0.150223", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms for Marketers 8.0 rev. 150429 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150429 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.150429", "8.0.150427", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms for Marketers 8.0 rev. 150625 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150625 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.150625", "8.0.150621", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Web Forms for Marketers 8.0 rev. 151127 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 151127 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.151127", "8.0.151127", "8.0.160115", $false, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	return $modules
+}
 
 Function Add-PlatformThirdPartyPackages()
 {
@@ -477,22 +642,6 @@ Function Add-ModulesThirdPartyPackages()
 	return $packages
 }
 
-Function UnzipDLLFilesFromPackageZip(
-  [Parameter(Mandatory=$true)][string]$installPath,
-  [Parameter(Mandatory=$true)][string]$ArchivePath,  
-  [Parameter(Mandatory=$true)][string]$TargetPath, 
-  [Parameter(Mandatory=$true)][string]$Filter,  
-  [Parameter(Mandatory=$true)][string]$nugetFullPath,
-  [switch]$doNotDeleteTargetPath
-)
-{
-	$deleteTargetPath = $true
-	if($doNotDeleteTargetPath)
-	{
-		$deleteTargetPath = $false
-	}
-}
-
 Function UnZipDLLFiles (
   [Parameter(Mandatory=$true)][string]$installPath,
   [Parameter(Mandatory=$true)][string]$ArchivePath,  
@@ -534,13 +683,11 @@ Function UnZipDLLFiles (
   $unzipargs = ' e -r "' + $ArchivePath + '" "' + $Filter + '" -o"' + $TargetPath + '" -y'
   $unzipcommand = "& '$pathTo7z'" + $unzipargs
 
-  Write-Host "$unzipcommand" -ForegroundColor Cyan
-  
   if ($SuppressOutput)
   {
-	Write-Log -Message "Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
+	# Write-Log -Message "Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
 	iex $unzipcommand | Out-Null
-	Write-Log -Message "Done Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
+	# Write-Log -Message "Done Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
   }
   else
   {
