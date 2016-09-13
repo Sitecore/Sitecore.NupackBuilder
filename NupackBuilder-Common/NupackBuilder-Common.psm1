@@ -400,7 +400,7 @@ Function Add-ModulePlatformSupportInfo()
 	$modules = [NupackBuilder.Modules]::new()
 
 	# Data Exchange Framework 1.0 rev. 160625
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.0 rev. 160625", "Data-Exchange-Framework", "1.0.150625", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.0 rev. 160625", "Data-Exchange-Framework", "1.0.160625", "8.1.151003", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	# Data Exchange Framework 1.1.0 rev. 160817
@@ -408,7 +408,7 @@ Function Add-ModulePlatformSupportInfo()
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Data Exchange Framework Remote SDK 1.0 rev. 160625
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.0 rev. 160625", "Data-Exchange-Framework-Remote-SDK", "1.0.150625", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.0 rev. 160625", "Data-Exchange-Framework-Remote-SDK", "1.0.160625", "8.1.151003", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Data Exchange Framework Remote SDK 1.1.0 rev. 160817
