@@ -13,6 +13,165 @@ if ($CommonModule -eq $null)
 	Import-Module $NugetModuleRoot\NupackBuilder-Common -DisableNameChecking
 }
 
+Function CreateModulePackage(
+	[Parameter(Mandatory=$true)][string]$readDirectory,
+	[Parameter(Mandatory=$true)][string]$nuspecDirectory,
+	[Parameter(Mandatory=$true)][string]$packageDirectory,
+	[Parameter(Mandatory=$true)][string]$ModuleVersion,
+	[Parameter(Mandatory=$true)][string]$ModuleName,
+	[Parameter(Mandatory=$false)][bool]$resolveDependencies = $true,
+	[Parameter(Mandatory=$true)][string]$nugetFullPath,
+	[Parameter(Mandatory=$true)][string]$frameworkVersion,
+	[Parameter(Mandatory=$false)][bool]$uploadPackages = $false,
+	[Parameter(Mandatory=$true)][string]$uploadFeed,
+	[Parameter(Mandatory=$true)][string]$uploadAPIKey,
+	[Parameter(Mandatory=$false)][bool]$createFileVersionPackages = $false
+)
+{
+	$frameWorkVersionLong = ".NETFramework4.5"
+	switch ($frameworkVersion)
+	{
+		"NET45" {$frameWorkVersionLong = ".NETFramework4.5"}
+		"NET451" {$frameWorkVersionLong = ".NETFramework4.5.1"}
+		"NET452" {$frameWorkVersionLong = ".NETFramework4.5.2"}
+		"NET46" {$frameWorkVersionLong = ".NETFramework4.6"}
+		"NET461" {$frameWorkVersionLong = ".NETFramework4.6.1"}
+		default {$frameWorkVersionLong = ".NETFramework4.5"}
+	}  
+
+	$moduleDependencies = @()
+	$excludeArray = @()
+	$excludeArray += "Sitecore.*.dll.*.nupkg"
+	$excludeArray += "Sitecore.*.NoReferences.*.nupkg"
+	$excludeArray += "Sitecore.*.NoReferences"
+
+	Get-ChildItem $packageDirectory -recurse -exclude $excludeArray| % {
+		if (!$_.Name.Contains(".NoReferences"))
+		{
+			$moduleObject ='' | select ModuleName, ModuleVersion
+			$moduleObject.ModuleName = [string]$_.Name.Replace(".$ModuleVersion.nupkg", "")
+			$moduleObject.ModuleVersion = $ModuleVersion
+			$moduleDependencies += $moduleObject
+		}
+	}
+
+	if($moduleDependencies -ne $null) 
+	{
+		if (($moduleDependencies.Count -gt 0))
+		{
+			CreateMetaPackage `
+				-nugetFullPath $nugetFullPath `
+				-frameworkVersion $frameworkVersion `
+				-frameWorkVersionLong $frameWorkVersionLong `
+				-moduleName $ModuleName `
+				-Version $ModuleVersion `
+				-title $ModuleName `
+				-description $ModuleName `
+				-summary $ModuleName `
+				-nuspecDirectory $nuspecDirectory `
+				-packageDirectory $packageDirectory `
+				-moduleDependencies $moduleDependencies `
+				-uploadPackages $uploadPackages `
+				-uploadFeed $uploadFeed `
+				-uploadAPIKey $uploadAPIKey
+		}
+	}
+}
+
+Function CreateModuleNuGetPackages(
+	[Parameter(Mandatory=$true)][string]$readDirectory,
+	[Parameter(Mandatory=$true)][string]$nuspecDirectory,
+	[Parameter(Mandatory=$true)][string]$packageDirectory,
+	[Parameter(Mandatory=$true)][string]$moduleVersion,
+	[Parameter(Mandatory=$true)][string]$moduleName,
+	[Parameter(Mandatory=$false)][bool]$resolveDependencies = $true,
+	[Parameter(Mandatory=$true)][string]$nugetFullPath,
+	[Parameter(Mandatory=$true)][string]$frameworkVersion,
+	[Parameter(Mandatory=$false)][bool]$uploadPackages = $false,
+	[Parameter(Mandatory=$true)][string]$uploadFeed,
+	[Parameter(Mandatory=$true)][string]$uploadAPIKey,
+	[Parameter(Mandatory=$false)][bool]$createFileVersionPackages = $false,
+	[Parameter(Mandatory=$true)][NupackBuilder.Packages]$thirdpartycomponents,
+	[Parameter(Mandatory=$false)][bool]$addThirdPartyReferences = $true,
+	[Parameter(Mandatory=$true)][NupackBuilder.ModulePlatformSupportInfo]$modulePlatformSupportInfo
+)
+{
+	if((Test-Path -Path $packageDirectory ))
+	{
+		$child_items = ([array] (Get-ChildItem -Path $packageDirectory -Recurse -Force))
+		if ($child_items) {
+			$null = $child_items | Remove-Item -Force -Recurse | Out-Null
+		}
+		$null = Remove-Item $packageDirectory -Force | Out-Null
+	}
+
+	if((Test-Path -Path $nuspecDirectory ))
+	{
+		$child_items = ([array] (Get-ChildItem -Path $nuspecDirectory -Recurse -Force))
+		if ($child_items) {
+			$null = $child_items | Remove-Item -Force -Recurse | Out-Null
+		}
+		$null = Remove-Item $nuspecDirectory -Force | Out-Null
+	}
+
+	if (!(Test-Path -Path $nuspecDirectory))
+	{
+		New-Item $nuspecDirectory -type directory | Out-Null
+	}
+
+	if (!(Test-Path -Path $packageDirectory))
+	{
+		New-Item $packageDirectory -type directory | Out-Null
+	}
+
+	$assemblies=Get-ChildItem $readDirectory -Recurse -Force |
+	ForEach-Object {
+		try {
+			$_ | Add-Member NoteProperty FileVersion ($_.VersionInfo.FileVersion)
+			$_ | Add-Member NoteProperty AssemblyVersion ([Reflection.AssemblyName]::GetAssemblyName($_.FullName).Version)
+		} catch {}
+		$_
+	}
+
+	Get-ChildItem $readDirectory -Recurse -Force -Filter "sitecore.*" | % {
+			CreateAssembliesNuspecFile  -fileName $_.FullName `
+							  -readDirectory $readDirectory `
+							  -nuspecDirectory $nuspecDirectory `
+							  -SitecoreVersion $ModuleVersion `
+							  -resolveDependencies $resolveDependencies `
+							  -packageDirectory $packageDirectory `
+							  -nugetFullPath $nugetFullPath `
+							  -frameworkVersion $frameworkVersion `
+							  -uploadPackages $uploadPackages `
+							  -uploadFeed $uploadFeed `
+							  -uploadAPIKey $uploadAPIKey `
+							  -createFileVersionPackages $createFileVersionPackages `
+							  -assemblies $assemblies `
+							  -thirdpartycomponents $thirdpartycomponents `
+							  -addThirdPartyReferences $addThirdPartyReferences `
+							  -isSitecoreModule $true `
+							  -modulePlatformSupportInfo $modulePlatformSupportInfo
+			
+			CreateAssembliesNuspecFile  -fileName $_.FullName `
+							  -readDirectory $readDirectory `
+							  -nuspecDirectory $nuspecDirectory `
+							  -SitecoreVersion $ModuleVersion `
+							  -resolveDependencies $false `
+							  -packageDirectory $packageDirectory `
+							  -nugetFullPath $nugetFullPath `
+							  -frameworkVersion $frameworkVersion `
+							  -uploadPackages $uploadPackages `
+							  -uploadFeed $uploadFeed `
+							  -uploadAPIKey $uploadAPIKey `
+							  -createFileVersionPackages $createFileVersionPackages `
+							  -assemblies $assemblies `
+							  -thirdpartycomponents $thirdpartycomponents `
+							  -addThirdPartyReferences $addThirdPartyReferences `
+							  -isSitecoreModule $true `
+							  -modulePlatformSupportInfo $modulePlatformSupportInfo
+	}
+}
+
 Function CreateModulePackages(
   [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
   [Parameter(Mandatory=$true)][string]$sitecoreRepositoryFolder,
@@ -99,8 +258,8 @@ Function CreateModulePackages(
 			$ModuleVersion = $moduleInfo.ModuleVersion
 			$frameworVersion = "NET45"
 
-			Write-Host "ModuleName : $ModuleName" -ForegroundColor Red
-			Write-Host "ModuleVersion : $ModuleVersion" -ForegroundColor Red
+			#Write-Host "ModuleName : $ModuleName" -ForegroundColor Red
+			#Write-Host "ModuleVersion : $ModuleVersion" -ForegroundColor Red
 
 			UnZipDLLFiles -installPath $root `
 			  -ArchivePath $archivePath `
@@ -285,9 +444,37 @@ Function CreateModulePackages(
 					}
 				}
 
-				Write-Host $frameworVersion -ForegroundColor Yellow
+				#Write-Host $frameworVersion -ForegroundColor Yellow
 
 				# Create packages here
+				CreateModuleNuGetPackages -readDirectory $targetDirectory `
+					-nuspecDirectory $nuspecDirectory `
+					-packageDirectory $packageDirectory `
+					-ModuleVersion $moduleVersion `
+					-ModuleName $moduleName `
+					-resolveDependencies $true `
+					-nugetFullPath $nugetExecutable `
+					-frameworkVersion $frameworVersion `
+					-uploadPackages $uploadPackages `
+					-uploadFeed $uploadFeed `
+					-uploadAPIKey $uploadAPIKey `
+					-createFileVersionPackages $createFileVersionPackages `
+					-thirdpartycomponents $thirdpartycomponents `
+					-addThirdPartyReferences $addThirdPartyReferences `
+					-modulePlatformSupportInfo $moduleInfo
+
+				CreateModulePackage -readDirectory $targetDirectory `
+					-nuspecDirectory $nuspecDirectory `
+					-packageDirectory $packageDirectory `
+					-ModuleVersion $ModuleVersion `
+					-ModuleName $ModuleName `
+					-resolveDependencies $true `
+					-nugetFullPath $nugetExecutable `
+					-frameworkVersion $frameworVersion `
+					-uploadPackages $uploadPackages `
+					-uploadFeed $uploadFeed `
+					-uploadAPIKey $uploadAPIKey `
+					-createFileVersionPackages $createFileVersionPackages
 				
 				$frameworkDisplayNameArg = $null
 				$targetFramework = $null

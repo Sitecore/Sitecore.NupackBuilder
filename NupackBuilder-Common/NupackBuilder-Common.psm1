@@ -86,6 +86,8 @@ namespace NupackBuilder
 
 	public class ModulePlatformSupportInfo
 	{
+		public ConcurrentDictionary<string, PackageInfo> PackageInfos { get; protected set; }
+
 		public string FullName { get; protected set; }
 		public string ModuleName { get; protected set; }
 
@@ -105,6 +107,7 @@ namespace NupackBuilder
 
 		public ModulePlatformSupportInfo(string fullName, string moduleName, string moduleVersion, string minimumPlatformVersion, string maximumPlatformVersion, bool openMaxRangeAllowed, bool specificVersion)
 		{
+			PackageInfos = new ConcurrentDictionary<string, PackageInfo>();
 			FullName = fullName;
 			MinimumPlatformVersion = minimumPlatformVersion;
 			ModuleName = moduleName;
@@ -112,6 +115,74 @@ namespace NupackBuilder
 			MaximumPlatformVersion = maximumPlatformVersion;
 			OpenMaxRangeAllowed = openMaxRangeAllowed;
 			SpecificVersion = specificVersion;
+		}
+
+		public void AddPackageInfo(PackageInfo packageInfo)
+		{
+			if (string.IsNullOrEmpty(packageInfo.PackageName) || string.IsNullOrEmpty(packageInfo.PackageVersion))
+			{
+				return;
+			}
+
+			if (!PackageInfos.ContainsKey(packageInfo.PackageName + packageInfo.PackageVersion))
+			{
+				PackageInfos.TryAdd(packageInfo.PackageName + packageInfo.PackageVersion, packageInfo);
+			}
+		}
+
+		public void RemovePackageInfo(PackageInfo packageInfo)
+		{
+			if (string.IsNullOrEmpty(packageInfo.PackageName) || string.IsNullOrEmpty(packageInfo.PackageVersion))
+			{
+				return;
+			}
+
+			if (!PackageInfos.ContainsKey(packageInfo.PackageName + packageInfo.PackageVersion))
+			{
+				return;
+			}
+
+			PackageInfo removePackage;
+			PackageInfos.TryRemove(packageInfo.PackageName + packageInfo.PackageVersion, out removePackage);
+		}
+
+		public void UpdatePackageInfo(PackageInfo packageInfo)
+		{
+			if (string.IsNullOrEmpty(packageInfo.PackageName) || string.IsNullOrEmpty(packageInfo.PackageVersion))
+			{
+				return;
+			}
+
+			if (PackageInfos.ContainsKey(packageInfo.PackageName + packageInfo.PackageVersion))
+			{
+				RemovePackageInfo(packageInfo);
+			}
+
+			AddPackageInfo(packageInfo);
+		}
+
+		public PackageInfo FindPackageInfoByAssemblyNameAndAssemblyVersion(string assemblyName, string assemblyVersion)
+		{
+			var packageInfo = PackageInfos.FirstOrDefault(
+				pInfo =>
+					pInfo.Value.PackageAssemblies.Find(
+						pAssembly =>
+							pAssembly.AssemblyName.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase) &&
+							pAssembly.AssemblyVersion.Equals(assemblyVersion,
+								StringComparison.InvariantCultureIgnoreCase)) != null);
+
+			return packageInfo.Value;
+		}
+
+		public PackageInfo FindPackageInfoByAssemblyName(string assemblyName)
+		{
+			var packageInfo = PackageInfos.FirstOrDefault(
+				pInfo =>
+					pInfo.Value.PackageAssemblies.Find(
+						pAssembly =>
+							pAssembly.AssemblyName.Equals(assemblyName, StringComparison.InvariantCultureIgnoreCase)) != null);
+
+			return packageInfo.Value;
 		}
 	}
 
@@ -329,71 +400,97 @@ Function Add-ModulePlatformSupportInfo()
 	$modules = [NupackBuilder.Modules]::new()
 
 	# Data Exchange Framework 1.0 rev. 160625
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.0 rev. 160625", "Data Exchange Framework", "1.0.150625", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.0 rev. 160625", "Data-Exchange-Framework", "1.0.150625", "8.1.151003", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	# Data Exchange Framework 1.1.0 rev. 160817
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.1.0 rev. 160817", "Data Exchange Framework", "1.1.160817", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.1.0 rev. 160817", "Data-Exchange-Framework", "1.1.160817", "8.1.151003", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Data Exchange Framework Remote SDK 1.0 rev. 160625
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.0 rev. 160625", "Data Exchange Framework Remote SDK", "1.0.150625", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.0 rev. 160625", "Data-Exchange-Framework-Remote-SDK", "1.0.150625", "8.1.151003", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Data Exchange Framework Remote SDK 1.1.0 rev. 160817
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.1.0 rev. 160817", "Data Exchange Framework Remote SDK", "1.1.160817", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.1.0 rev. 160817", "Data-Exchange-Framework-Remote-SDK", "1.1.160817", "8.1.151003", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Sitecore Provider for Data Exchange Framework 1.0 rev. 160625
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Provider for Data Exchange Framework 1.0 rev. 160625", "Sitecore Provider for Data Exchange Framework", "1.0.160625", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Provider for Data Exchange Framework 1.0 rev. 160625", "Sitecore-Provider-for-Data-Exchange-Framework", "1.0.160625", "8.1.151003", $true, $false)
+	
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange", "1.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange", "1.0.160625", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.DataAccess", "1.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.DataAccess", "1.0.160625", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.Local", "1.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.Local", "1.0.160625", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+	
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Sitecore Provider for Data Exchange Framework 1.1.0 rev. 160817
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Provider for Data Exchange Framework 1.1.0 rev. 160817", "Sitecore Provider for Data Exchange Framework", "1.1.160817", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Provider for Data Exchange Framework 1.1.0 rev. 160817", "Sitecore-Provider-for-Data-Exchange-Framework", "1.1.160817", "8.1.151003", $true, $false)
+	
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange", "1.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange", "1.1.160817", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.DataAccess", "1.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.DataAccess", "1.1.160817", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.Local", "1.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.Local", "1.1.160817", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+	
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Sitecore Media Framework 21 rev 150625
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 21 rev 150625", "Sitecore Media Framework", "2.1.150625", "8.1.151003", $true, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 21 rev 150625", "Sitecore-Media-Framework", "2.1.150625", "8.0.141212", "8.1.160519", $false, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.141217", "8.0.141212", "8.0.150121", $false, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.141217", "8.0.141212", "8.0.150121", $false, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.0 rev. 150224 NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150224 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.150224", "8.0.150223", $false, $true)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150224 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.150224", "8.0.150223", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.0 rev. 150429 NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150429 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.150429", "8.0.150427", $false, $true)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150429 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.150429", "8.0.150427", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.0 rev. 150625 NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150625 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.150625", "8.0.150621", $false, $true)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150625 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.150625", "8.0.150621", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.0 rev. 151127 NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 151127 NOT SC PACKAGE", "Web Forms for Marketers", "8.0.151127", "8.0.151127", "8.0.160115", $false, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 151127 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.151127", "8.0.151127", "8.0.160115", $false, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms For Marketers 8.1 rev. 151008 Initial NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 151008 Initial NOT SC PACKAGE", "Web Forms for Marketers", "8.1.151008", "8.1.151003", $false, $true)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 151008 Initial NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.1.151008", "8.1.151003", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms For Marketers 8.1 rev. 151217 Update-1 NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 151217 Update-1 NOT SC PACKAGE", "Web Forms for Marketers", "8.1.151217", "8.1.151207", $false, $true)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 151217 Update-1 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.1.151217", "8.1.151207", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms For Marketers 8.1 rev. 160304 Update-2 NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 160304 Update-2 NOT SC PACKAGE", "Web Forms for Marketers", "8.1.160304", "8.1.160302", $false, $true)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 160304 Update-2 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.1.160304", "8.1.160302", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.1 rev. 160523 NOT SC PACKAGE-
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.1 rev. 160523 NOT SC PACKAGE-", "Web Forms for Marketers", "8.1.160523", "8.1.160519", $false, $true)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.1 rev. 160523 NOT SC PACKAGE-", "Web-Forms-for-Marketers", "8.1.160523", "8.1.160519", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.2 rev. 160801 NOT SC PACKAGE
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.2 rev. 160801 NOT SC PACKAGE", "Web Forms for Marketers", "8.2.160801", "8.2.160729", $false, $true)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.2 rev. 160801 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.2.160801", "8.2.160729", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	return $modules
@@ -657,7 +754,12 @@ Function Add-PlatformThirdPartyPackages()
 
 Function Add-ModulesThirdPartyPackages()
 {
-	$packages  = [NupackBuilder.Packages]::new()
+	$packages  = Add-PlatformThirdPartyPackages
+
+	# WebGrease 1.6.0
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("WebGrease", "1.6.5135.21930", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("WebGrease", "1.6.0", $false, $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
 
 	return $packages
 }

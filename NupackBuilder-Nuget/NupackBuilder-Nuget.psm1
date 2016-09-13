@@ -172,8 +172,9 @@ Function CreateAssembliesNuspecFile(
 	[Parameter(Mandatory=$false)][bool]$createFileVersionPackages = $false,
 	[Parameter(Mandatory=$true)][System.Array]$assemblies,
 	[Parameter(Mandatory=$true)][NupackBuilder.Packages]$thirdpartycomponents,
-	[Parameter(Mandatory=$false)][bool]$addThirdPartyReferences = $true
-
+	[Parameter(Mandatory=$false)][bool]$addThirdPartyReferences = $true,
+	[Parameter(Mandatory=$false)][bool]$isSitecoreModule = $false,
+	[Parameter(Mandatory=$false)][NupackBuilder.ModulePlatformSupportInfo]$modulePlatformSupportInfo
 )
 {
 	
@@ -185,7 +186,9 @@ Function CreateAssembliesNuspecFile(
 	$bytes   = [System.IO.File]::ReadAllBytes($fileName)
 	$loaded  = [System.Reflection.Assembly]::Load($bytes)
 	$filenameOnly = [io.path]::GetFileName($_.FullName)
+
 	$moduleName = [io.path]::GetFileNameWithoutExtension($fileName)
+
 	$metaModuleName = $moduleName
 	if($createFileVersionPackages -eq $true)
 	{
@@ -198,7 +201,15 @@ Function CreateAssembliesNuspecFile(
 	}
 	
 	$pathToFile = [io.path]::GetDirectoryName($fileName)
-	$version = $SitecoreVersion
+	if($isSitecoreModule -eq $false)
+	{
+		$version = $SitecoreVersion
+	}
+	else
+	{
+		$version = $modulePlatformSupportInfo.ModuleVersion
+	}
+
 	$frameWorkVersionLong = ".NETFramework4.5"
 	switch ($frameworkVersion)
 	{
@@ -221,6 +232,8 @@ Function CreateAssembliesNuspecFile(
 
 	$dependencies = $null
 	$dependencies = @()
+	$scdependencies = $null
+	$scdependencies = @()
 	$frameworkAssemblies = $null
 	$frameworkAssemblies = @()
 	$notIncludedDependencies = $null
@@ -324,9 +337,136 @@ Function CreateAssembliesNuspecFile(
 			}
 			else
 			{
-				# assemblies that are not part of our zip - normally these are referenced through the .NET framework, GAC or abstractions references for the .NET version
-				if(($dep.Name.ToLower().StartsWith("system.")) -or ($dep.Name.ToLower().Equals("windowsbase")) -or ($dep.Name.ToLower().Equals("system")) -or ($dep.Name.ToLower().Equals("mscorlib")) -or ($dep.Name.ToLower().Equals("sysglobl")) -or ($dep.Name.ToLower().StartsWith("microsoft.")))
+				if(($isSitecoreModule -eq $true) -and ($dep.Name.ToLower().StartsWith("sitecore.")))
 				{
+					$assemblyItemVersion = $dep.Version
+					$assemblyItemName = $dep.Name
+					$addeddAssembly = $false
+					if(($modulePlatformSupportInfo -ne $null) -and ($modulePlatformSupportInfo.PackageInfos.Count -ne 0))
+					{
+						$existingPackage = $null
+						$existingPackage = $modulePlatformSupportInfo.FindPackageInfoByAssemblyName($assemblyItemName)
+						if(($existingPackage -ne $null) -and ($existingPackage.PreRelease -ne $true))
+						{
+							$objComponent = New-Object System.Object
+							$objComponent | Add-Member -type NoteProperty -name PackageName -value $existingPackage.PackageName
+							$objComponent | Add-Member -type NoteProperty -name Version -value $existingPackage.PackageVersion
+
+
+							$packageNameExists = $false
+							for ($j=0; $j -lt $dependencies.Count; $j++)
+							{
+								if ($dependencies[$j].PackageName.ToLower() -eq $existingPackage.PackageName.ToLower()) 
+								{
+									$addeddAssembly = $true
+									$packageNameExists = $true                            
+									$j = $dependencies.Count
+								}
+							}
+
+							if($packageNameExists -eq $false)
+							{
+								$addeddAssembly = $true
+								$dependencies += $objComponent
+							}
+						}
+					}
+					if($addeddAssembly -eq $false)
+					{
+						# most likely this is the Sitecore platform dependencies in modules
+						$objComponent = New-Object System.Object
+						$objComponent | Add-Member -type NoteProperty -name PackageName -value $someName
+						$objComponent | Add-Member -type NoteProperty -name MinimumPlatformVersion -value $modulePlatformSupportInfo.MinimumPlatformVersion
+						$objComponent | Add-Member -type NoteProperty -name MaximumPlatformVersion -value $modulePlatformSupportInfo.MaximumPlatformVersion
+						$objComponent | Add-Member -type NoteProperty -name OpenMaxRangeAllowed -value $modulePlatformSupportInfo.OpenMaxRangeAllowed
+						$objComponent | Add-Member -type NoteProperty -name SpecificVersion -value $modulePlatformSupportInfo.SpecificVersion
+						$packageNameExists = $false
+
+						for ($n=0; $n -lt $scdependencies.Count; $n++)
+						{
+							if ($scdependencies[$n].PackageName.ToLower() -eq $someName.ToLower()) 
+							{
+								$packageNameExists = $true
+								$n = $scdependencies.Count                            
+							}
+						}
+					
+						if($packageNameExists -eq $false)
+						{
+							$scdependencies += $objComponent
+						}
+					}
+				}
+				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
+				{
+					## Sorting out the commercial ones
+					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")))
+					{
+						$depFileName ="$readDirectory$someName.dll"
+						$assemblyItemVersion = $dep.Version
+						$assemblyItemName = $dep.Name
+						$addeddAssembly = $false
+
+						if(($thirdpartycomponents -ne $null) -and ($thirdpartycomponents.PackageInfos.Count -ne 0))
+						{
+							$existingPackage = $null
+							$existingPackage = $thirdpartycomponents.FindPackageInfoByAssemblyNameAndAssemblyVersion($assemblyItemName, $assemblyItemVersion)
+							if(($existingPackage -ne $null) -and ($existingPackage.PreRelease -ne $true))
+							{
+								$objComponent = New-Object System.Object
+								$objComponent | Add-Member -type NoteProperty -name PackageName -value $existingPackage.PackageName
+								$objComponent | Add-Member -type NoteProperty -name Version -value $existingPackage.PackageVersion
+
+
+								$packageNameExists = $false
+								for ($j=0; $j -lt $dependencies.Count; $j++)
+								{
+									if ($dependencies[$j].PackageName.ToLower() -eq $existingPackage.PackageName.ToLower()) 
+									{
+										$addeddAssembly = $true
+										$packageNameExists = $true                            
+										$j = $dependencies.Count
+									}
+								}
+
+								if($packageNameExists -eq $false)
+								{
+									$addeddAssembly = $true
+									$dependencies += $objComponent
+								}
+							}
+						}
+						if($addeddAssembly -eq $false)
+						{
+							if(($dep.Name.ToLower().StartsWith("system.")) -or ($dep.Name.ToLower().Equals("windowsbase")) -or ($dep.Name.ToLower().Equals("system")) -or ($dep.Name.ToLower().Equals("mscorlib")) -or ($dep.Name.ToLower().Equals("sysglobl")) -or ($dep.Name.ToLower().StartsWith("microsoft.")))
+							{
+								# assemblies that are not part of our zip - normally these are referenced through the .NET framework, GAC or abstractions references for the .NET version
+								# It's GAC GAC :-)
+								# We would not add frameworkassemblies, since it is not always needed
+								$frameworkAssemblies += $someName
+							}
+							else
+							{
+								$notIncludedDependencies += "$someName.dll"
+							}
+						}
+
+					}
+					elseif(($dep.Name.ToLower().StartsWith("system.")) -or ($dep.Name.ToLower().Equals("windowsbase")) -or ($dep.Name.ToLower().Equals("system")) -or ($dep.Name.ToLower().Equals("mscorlib")) -or ($dep.Name.ToLower().Equals("sysglobl")) -or ($dep.Name.ToLower().StartsWith("microsoft.")))
+					{
+						# assemblies that are not part of our zip - normally these are referenced through the .NET framework, GAC or abstractions references for the .NET version
+						# It's GAC GAC :-)
+						# We would not add frameworkassemblies, since it is not always needed
+						$frameworkAssemblies += $someName
+					}
+					else
+					{
+						$notIncludedDependencies += "$someName.dll"
+					}
+				}
+				elseif(($dep.Name.ToLower().StartsWith("system.")) -or ($dep.Name.ToLower().Equals("windowsbase")) -or ($dep.Name.ToLower().Equals("system")) -or ($dep.Name.ToLower().Equals("mscorlib")) -or ($dep.Name.ToLower().Equals("sysglobl")) -or ($dep.Name.ToLower().StartsWith("microsoft.")))
+				{
+					# assemblies that are not part of our zip - normally these are referenced through the .NET framework, GAC or abstractions references for the .NET version
 					# It's GAC GAC :-)
 					# We would not add frameworkassemblies, since it is not always needed
 					$frameworkAssemblies += $someName
@@ -388,7 +528,7 @@ $nuspecMetadata += @"
 
 if($resolveDependencies -eq $true)
 {
-	if($dependencies.Count -gt 0)
+	if(($dependencies.Count -gt 0) -or (($isSitecoreModule -eq $true) -and ($scdependencies.Count -gt 0)))
 	{
 		$nuspecMetadata += $nl + '        <dependencies>' + $nl
 		$nuspecMetadata +=       '                <group targetFramework="'+$frameWorkVersionLong+'">' + $nl
@@ -414,9 +554,38 @@ if($resolveDependencies -eq $true)
 				$nuspecMetadata += '                        <dependency id="'+$dependencyPackageName+'" version="['+$uniqueDependeny.Version+']" />' + $nl
 			}
 		}
+
+		if(($isSitecoreModule -eq $true) -and ($scdependencies.Count -gt 0))
+		{
+			foreach($scuniqueDependeny in $scdependencies)
+			{
+				$scdependencyPackageName = $scuniqueDependeny.PackageName
+				if(($scdependencyPackageName.ToLower().StartsWith("sitecore.")))
+				{
+					if($scuniqueDependeny.SpecificVersion -eq $true)
+					{
+						$nuspecMetadata += '                        <dependency id="'+$scdependencyPackageName+'" version="['+$scuniqueDependeny.MinimumPlatformVersion+']" />' + $nl
+					}
+					elseif(($scuniqueDependeny.SpecificVersion -eq $false) -and ($scuniqueDependeny.OpenMaxRangeAllowed -eq $true))
+					{
+						#[1.0,)
+						$versionString = '['+$scuniqueDependeny.MinimumPlatformVersion+',)'
+						$nuspecMetadata += '                        <dependency id="'+$scdependencyPackageName+'" version="'+$versionString+'" />' + $nl
+					}
+					elseif(($scuniqueDependeny.SpecificVersion -eq $false) -and ($scuniqueDependeny.OpenMaxRangeAllowed -eq $false))
+					{
+						#[1.0,2.0]
+						$versionString = '['+$scuniqueDependeny.MinimumPlatformVersion+','+$scuniqueDependeny.MaximumPlatformVersion+']'
+						$nuspecMetadata += '                        <dependency id="'+$scdependencyPackageName+'" version="'+$versionString+'" />' + $nl
+					}
+				}
+			}
+		}
+
 		$nuspecMetadata += '                </group>' + $nl
 		$nuspecMetadata += '        </dependencies>' + $nl
 	}
+	
 }
 $nuspecMetadata += @" 
 </metadata>
