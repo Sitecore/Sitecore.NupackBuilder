@@ -455,42 +455,127 @@ Function Add-ModulePlatformSupportInfo()
 
 	#Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.141217", "8.0.141212", "8.0.150121", $false, $false)
+	
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.0.141215,3.0.150126", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.0 rev. 150224 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150224 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.150224", "8.0.150223", $false, $true)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.0.150223", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.0 rev. 150429 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150429 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.150429", "8.0.150427", $false, $true)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.0.150429,3.1.150703", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.0 rev. 150625 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 150625 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.150625", "8.0.150621", $false, $true)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.1.150811", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.0 rev. 151127 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.0 rev. 151127 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.151127", "8.0.151127", "8.0.160115", $false, $false)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.1.151213", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms For Marketers 8.1 rev. 151008 Initial NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 151008 Initial NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.1.151008", "8.1.151003", $false, $true)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.2.151020", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms For Marketers 8.1 rev. 151217 Update-1 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 151217 Update-1 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.1.151217", "8.1.151207", $false, $true)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.2.160127", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms For Marketers 8.1 rev. 160304 Update-2 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms For Marketers 8.1 rev. 160304 Update-2 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.1.160304", "8.1.160302", $false, $true)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.2.160127", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.1 rev. 160523 NOT SC PACKAGE-
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.1 rev. 160523 NOT SC PACKAGE-", "Web-Forms-for-Marketers", "8.1.160523", "8.1.160519", $false, $true)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.EmailCampaign", "3.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.EmailCampaign", "3.3.160527", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers 8.2 rev. 160801 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.2 rev. 160801 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.2.160801", "8.2.160729", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Email Experience Manager 3.0 rev. 141215
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.0 rev. 141215", "Email-Experience-Manager", "3.0.141215", "8.0.141212", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Email Experience Manager 3.0 rev. 150126
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.0 rev. 150126", "Email-Experience-Manager", "3.0.150126", "8.0.150121", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Email Experience Manager 3.0 rev.150223 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.0 rev.150223 NOT SC PACKAGE", "Email-Experience-Manager", "3.0.150223", "8.0.150223", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Email Experience Manager 3.0 rev.150429 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.0 rev.150429 NOT SC PACKAGE", "Email-Experience-Manager", "3.0.150429", "8.0.150427", "8.0.160115", $false, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#EXM 3.1 rev. 150703
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("EXM 3.1 rev. 150703", "Email-Experience-Manager", "3.1.150703", "8.0.150427", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#EXM 3.1 rev. 150811 (Update-1)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("EXM 3.1 rev. 150811 (Update-1)", "Email-Experience-Manager", "3.1.150811", "8.0.150621", "8.0.150812", $false, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Email Experience Manager 3.1.2 rev. 151213 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.1.2 rev. 151213 NOT SC PACKAGE", "Email-Experience-Manager", "3.1.151213", "8.0.151127", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Email Experience Manager 3.2.0 rev. 151020 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.2.0 rev. 151020 NOT SC PACKAGE", "Email-Experience-Manager", "3.2.151020", "8.1.151003", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Email Experience Manager 3.2.1 rev. 160127 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.2.1 rev. 160127 NOT SC PACKAGE", "Email-Experience-Manager", "3.2.160127", "8.1.151207", "8.1.160302", $false, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Email Experience Manager 3.3.0 rev. 160527 (not sc package)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.3.0 rev. 160527 (not sc package)", "Email-Experience-Manager", "3.3.160527", "8.1.160519", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	return $modules
@@ -499,6 +584,11 @@ Function Add-ModulePlatformSupportInfo()
 Function Add-PlatformThirdPartyPackages()
 {
 	$packages  = [NupackBuilder.Packages]::new()
+
+	# Newtonsoft.Json 3.5.8
+	#$packageAssembly = [NupackBuilder.PackageAssembly]::new("Newtonsoft.Json", "3.5.0.0", "neutral", "30ad4fe6b2a6aeed")
+	#$packageInfo = [NupackBuilder.PackageInfo]::new("Newtonsoft.Json", "3.5.8", $false, $packageAssembly)
+	#$packages.AddPackageInfo($packageInfo)
 
 	# Newtonsoft.Json 4.5.9
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Newtonsoft.Json", "4.5.0.0", "neutral", "30ad4fe6b2a6aeed")
@@ -759,6 +849,29 @@ Function Add-ModulesThirdPartyPackages()
 	# WebGrease 1.6.0
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("WebGrease", "1.6.5135.21930", "neutral", "31bf3856ad364e35")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("WebGrease", "1.6.0", $false, $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	# Heijden.Dns 1.0.0
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Heijden.Dns", "1.0.0.1", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Heijden.Dns", "1.0.0", $false, $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#AntiXssLibrary 4.2.1
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("AntiXssLibrary", "4.2.0.0", "neutral", "d127efab8a9c114f")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("antixss", "4.2.1", $false, $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("HtmlSanitizationLibrary", "4.2.0.0", "neutral", "d127efab8a9c114f")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packages.AddPackageInfo($packageInfo)
+
+	#AntiXssLibrary 4.3.0
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("AntiXssLibrary", "4.3.0.0", "neutral", "d127efab8a9c114f")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("antixss", "4.3.0", $false, $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("HtmlSanitizationLibrary", "4.3.0.0", "neutral", "d127efab8a9c114f")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
 	$packages.AddPackageInfo($packageInfo)
 
 	return $packages

@@ -273,7 +273,7 @@ Function CreateAssembliesNuspecFile(
 				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
 				{
 					## Sorting out the commercial ones
-					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")))
+					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2"))) 
 					{
 						$depFileName ="$readDirectory$someName.dll"
 
@@ -371,7 +371,7 @@ Function CreateAssembliesNuspecFile(
 							}
 						}
 					}
-					if($addeddAssembly -eq $false)
+					if(($addeddAssembly -eq $false) -and (!($dep.Name.ToLower().StartsWith("sitecore.emailcampaign"))))
 					{
 						# most likely this is the Sitecore platform dependencies in modules
 						$objComponent = New-Object System.Object
@@ -400,7 +400,7 @@ Function CreateAssembliesNuspecFile(
 				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
 				{
 					## Sorting out the commercial ones
-					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")))
+					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2")))
 					{
 						$depFileName ="$readDirectory$someName.dll"
 						$assemblyItemVersion = $dep.Version
