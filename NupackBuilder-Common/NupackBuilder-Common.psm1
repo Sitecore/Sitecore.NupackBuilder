@@ -449,8 +449,42 @@ Function Add-ModulePlatformSupportInfo()
 	
 	$modules.AddModulePlatformSupportInfo($module)
 
+	#Dynamics CRM Provider for Data Exchange Framework 1.0 rev. 160625
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Dynamics CRM Provider for Data Exchange Framework 1.0 rev. 160625", "Dynamics-CRM-Provider-for-Data-Exchange-Framework", "1.0.160625", "8.1.151003", $true, $false)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange", "1.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange", "1.0.160625", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.DataAccess", "1.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.DataAccess", "1.0.160625", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.Local", "1.0.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.Local", "1.0.160625", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Dynamics CRM Provider for Data Exchange Framework 1.1.0 rev. 160817
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Dynamics CRM Provider for Data Exchange Framework 1.1.0 rev. 160817", "Dynamics-CRM-Provider-for-Data-Exchange-Framework", "1.1.160817", "8.1.151003", $true, $false)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange", "1.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange", "1.1.160817", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.DataAccess", "1.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.DataAccess", "1.1.160817", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.Local", "1.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.Local", "1.1.160817", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$modules.AddModulePlatformSupportInfo($module)
+
 	#Sitecore Media Framework 21 rev 150625
-	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 21 rev 150625", "Sitecore-Media-Framework", "2.1.150625", "8.0.141212", "8.1.160519", $false, $false)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 21 rev 150625", "Sitecore-Media-Framework", "2.1.150625", "8.0.141212", "8.0.160115", $false, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE
@@ -715,6 +749,20 @@ Function Add-PlatformThirdPartyPackages()
 	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Razor", "3.2.3", $false, $packageAssembly)
 	$packages.AddPackageInfo($packageInfo)
 
+	#Microsoft.AspNet.WebPages 3.2.3
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Helpers", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebPages", "3.2.3", $false, $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages.Deployment", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages.Razor", "3.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
 	#Microsoft.AspNet.WebApi.Client 5.1.2
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Net.Http.Formatting", "5.1.0.0", "neutral", "31bf3856ad364e35")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Client", "5.1.2", $false, $packageAssembly)
@@ -743,20 +791,6 @@ Function Add-PlatformThirdPartyPackages()
 	#Microsoft.AspNet.WebApi.WebHost 5.2.3
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.WebHost", "5.2.3.0", "neutral", "31bf3856ad364e35")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.WebHost", "5.2.3", $false, $packageAssembly)
-	$packages.AddPackageInfo($packageInfo)
-
-	#Microsoft.AspNet.WebPages 3.2.3
-	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Helpers", "3.0.0.0", "neutral", "31bf3856ad364e35")
-	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebPages", "3.2.3", $false, $packageAssembly)
-
-	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages.Deployment", "3.0.0.0", "neutral", "31bf3856ad364e35")
-	$packageInfo.AddPackageAssembly($packageAssembly)
-
-	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages", "3.0.0.0", "neutral", "31bf3856ad364e35")
-	$packageInfo.AddPackageAssembly($packageAssembly)
-
-	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages.Razor", "3.0.0.0", "neutral", "31bf3856ad364e35")
-	$packageInfo.AddPackageAssembly($packageAssembly)
 	$packages.AddPackageInfo($packageInfo)
 
 	#Microsoft.Web.Infrastructure 1.0.0.0
@@ -870,6 +904,35 @@ Function Add-ModulesThirdPartyPackages()
 	$packageInfo = [NupackBuilder.PackageInfo]::new("antixss", "4.3.0", $false, $packageAssembly)
 
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("HtmlSanitizationLibrary", "4.3.0.0", "neutral", "d127efab8a9c114f")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packages.AddPackageInfo($packageInfo)
+
+	#microsoft.crmsdk.coreassemblies 7.1.1
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Crm.Sdk.Proxy", "7.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.CoreAssemblies", "7.1.1", $false, $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Sdk", "7.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packages.AddPackageInfo($packageInfo)
+
+	# Microsoft.CrmSdk.Deployment 7.1.1
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Sdk.Deployment", "7.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.Deployment", "7.1.1", $false, $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	# Microsoft.CrmSdk.Extensions 7.1.0.1
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Client.CodeGeneration", "7.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.Extensions", "7.1.0.1", $false, $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Client", "7.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Portal", "7.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Portal.Files", "7.0.0.0", "neutral", "31bf3856ad364e35")
 	$packageInfo.AddPackageAssembly($packageAssembly)
 
 	$packages.AddPackageInfo($packageInfo)

@@ -294,6 +294,24 @@ Function CreateAssembliesNuspecFile(
 						{
 							$existingPackage = $null
 							$existingPackage = $thirdpartycomponents.FindPackageInfoByAssemblyNameAndAssemblyVersion($assemblyItemName, $assemblyItemVersion)
+
+							if(($isSitecoreModule -eq $false) -and ($existingPackage.PackageName -eq "Microsoft.AspNet.WebPages") -and (($SitecoreVersion.StartsWith("7.2.")) -or ($SitecoreVersion.StartsWith("8.0."))))
+							{
+								$existingPackage = $null
+								$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Helpers", "3.0.0.0", "neutral", "31bf3856ad364e35")
+								$existingPackage = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebPages", "3.1.2", $false, $packageAssembly)
+
+								$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages.Deployment", "3.0.0.0", "neutral", "31bf3856ad364e35")
+								$existingPackage.AddPackageAssembly($packageAssembly)
+
+								$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages", "3.0.0.0", "neutral", "31bf3856ad364e35")
+								$existingPackage.AddPackageAssembly($packageAssembly)
+
+								$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.WebPages.Razor", "3.0.0.0", "neutral", "31bf3856ad364e35")
+								$existingPackage.AddPackageAssembly($packageAssembly)
+								
+							}
+
 							if(($existingPackage -ne $null) -and ($existingPackage.PreRelease -ne $true))
 							{
 								$objComponent = New-Object System.Object
