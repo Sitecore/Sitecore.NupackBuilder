@@ -246,9 +246,9 @@ Function CreateAssembliesNuspecFile(
 		foreach($dep in $loadeddependencies)
 		{
 			$someName = $dep.Name
-			if((Test-Path -Path "$readDirectory$someName.dll")) 
+			if(((Test-Path -Path "$readDirectory$someName.dll") -and ($isSitecoreModule -eq $false)) -or ((Test-Path -Path "$readDirectory$someName.dll") -and ($isSitecoreModule -eq $true) -and (!$dep.Name.ToLower().StartsWith("sitecore.experienceeditor"))) )
 			{
-				if($dep.Name.ToLower().StartsWith("sitecore."))
+				if($dep.Name.ToLower().StartsWith("sitecore.")) 
 				{
 					$objComponent = New-Object System.Object
 					$objComponent | Add-Member -type NoteProperty -name PackageName -value $someName
@@ -355,7 +355,7 @@ Function CreateAssembliesNuspecFile(
 			}
 			else
 			{
-				if(($isSitecoreModule -eq $true) -and ($dep.Name.ToLower().StartsWith("sitecore.")))
+				if(($isSitecoreModule -eq $true) -and ($dep.Name.ToLower().StartsWith("sitecore.")) )
 				{
 					$assemblyItemVersion = $dep.Version
 					$assemblyItemName = $dep.Name
