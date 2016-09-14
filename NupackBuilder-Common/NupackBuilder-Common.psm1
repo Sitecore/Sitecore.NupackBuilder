@@ -829,9 +829,9 @@ Function Add-PlatformThirdPartyPackages()
 	$packages.AddPackageInfo($packageInfo)
 
 	#Microsoft.AspNet.WebApi.Cors 5.1.2
-	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.Cors", "5.1.0.0", "neutral", "31bf3856ad364e35")
-	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Cors", "5.1.2", $false, $packageAssembly)
-	$packages.AddPackageInfo($packageInfo)
+	#$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.Cors", "5.1.0.0", "neutral", "31bf3856ad364e35")
+	#$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Cors", "5.1.2", $false, $packageAssembly)
+	#$packages.AddPackageInfo($packageInfo)
 
 	#Microsoft.AspNet.WebApi.Cors 5.2.3
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.Cors", "5.2.3.0", "neutral", "31bf3856ad364e35")
