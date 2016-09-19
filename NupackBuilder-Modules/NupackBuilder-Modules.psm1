@@ -133,7 +133,7 @@ Function CreateModuleNuGetPackages(
 		$_
 	}
 
-	$excluded = @("MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll")
+	$excluded = @("MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll")
 
 	Get-ChildItem -Path "$readDirectory*" -Recurse -Force -Filter "*.dll" -Exclude $excluded | % {
 			CreateAssembliesNuspecFile  -fileName $_.FullName `
@@ -396,7 +396,7 @@ Function CreateModulePackages(
 
 			$dlls = $null
 			$dllCount = 0
-			$excluded = @("MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll")
+			$excluded = @("MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll")
 			$dll = Get-ChildItem -Path "$targetDirectory*" -Filter "*.dll" -Exclude $excluded | Select-Object -First 1
 			$dllCount = (Get-ChildItem $targetDirectory -Filter "*.dll" | measure).Count
 				
