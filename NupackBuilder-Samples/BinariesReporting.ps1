@@ -85,10 +85,10 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 
 			if($assembly -ne $null)
 			{
-				#if($_.Version -ne $assembly.AssemblyVersion)
-				#{
+				if($_.Version -ne $assembly.AssemblyVersion)
+				{
 					$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
-				#}
+				}
 			}         
 				
 		}
