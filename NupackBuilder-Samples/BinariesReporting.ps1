@@ -76,26 +76,47 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 	$bytes   = [System.IO.File]::ReadAllBytes($_.FullName)
 	$loaded  = [System.Reflection.Assembly]::Load($bytes)
 	$name    = $loaded.ManifestModule
-	$loaded.GetReferencedAssemblies() | % {
-		$toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe
-		if($_.FullName.ToLower().StartsWith("sitecore."))
-		{
-			$matchValue = $_.Name
-			$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
+	$loadedAssemblyName = $loaded.GetName()
 
-			if($assembly -ne $null)
+	if (1 -eq 2)
+	{
+		# Check for correct referenced version
+		$loaded.GetReferencedAssemblies() | % {
+			$toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe
+			if($_.FullName.ToLower().StartsWith("sitecore."))
 			{
-				if($_.Version -ne $assembly.AssemblyVersion)
+				$matchValue = $_.Name
+				$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
+
+				if($assembly -ne $null)
 				{
-					$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
-				}
-			}         
+					if($_.Version -ne $assembly.AssemblyVersion)
+					{
+						$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
+					}
+				}         
 				
+			}
+			$toAdd
+			if($loaded -ne $null)
+			{
+				$loaded = $null
+			}
 		}
-		$toAdd
-		if($loaded -ne $null)
+	}
+
+	if(1 -eq 1)
+	{
+		# Report wrong Assembly Version
+		if(($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")) -and (!$loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.nexus")))
 		{
-			$loaded = $null
+			$assemblyItemVersion = $loadedAssemblyName.Version
+			$assemblyItemName = $loadedAssemblyName.Name
+			if(!($assemblyItemVersion.toString().EndsWith(".0.0")))
+			{
+				Write-Host "$assemblyItemName, $assemblyItemVersion"
+			}
+
 		}
 	}
 }
