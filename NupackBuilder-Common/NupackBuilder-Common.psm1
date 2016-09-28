@@ -487,6 +487,10 @@ Function Add-ModulePlatformSupportInfo()
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 21 rev 150625", "Sitecore-Media-Framework", "2.1.150625", "8.0.141212", "8.0.160115", $false, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
+	#Sitecore Media Framework 2.2 rev. 160927
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 2.2 rev. 160927", "Sitecore-Media-Framework", "2.2.160927", "8.2.160729", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
 	#Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.141217", "8.0.141212", "8.0.150121", $false, $false)
 	

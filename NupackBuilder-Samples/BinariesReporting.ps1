@@ -78,7 +78,7 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 	$name    = $loaded.ManifestModule
 	$loadedAssemblyName = $loaded.GetName()
 
-	if (1 -eq 2)
+	if (1 -eq 1)
 	{
 		# Check for correct referenced version
 		$loaded.GetReferencedAssemblies() | % {
@@ -105,7 +105,7 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 		}
 	}
 
-	if(1 -eq 1)
+	if(1 -eq 2)
 	{
 		# Report wrong Assembly Version
 		if(($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")) -and (!$loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.nexus")))

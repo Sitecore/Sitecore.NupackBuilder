@@ -586,8 +586,8 @@ if($resolveDependencies -eq $true)
 					}
 					elseif(($scuniqueDependeny.SpecificVersion -eq $false) -and ($scuniqueDependeny.OpenMaxRangeAllowed -eq $true))
 					{
-						#[1.0,)
-						$versionString = '['+$scuniqueDependeny.MinimumPlatformVersion+',)'
+						# 1.0
+						$versionString = $scuniqueDependeny.MinimumPlatformVersion
 						$nuspecMetadata += '                        <dependency id="'+$scdependencyPackageName+'" version="'+$versionString+'" />' + $nl
 					}
 					elseif(($scuniqueDependeny.SpecificVersion -eq $false) -and ($scuniqueDependeny.OpenMaxRangeAllowed -eq $false))
