@@ -29,6 +29,7 @@
   </PropertyGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="DiffReporting.ps1" />
     <Compile Include="BinariesReporting.ps1" />
     <Compile Include="DeleteAllPackages.ps1" />
     <Compile Include="GenerateModulePackages.ps1" />

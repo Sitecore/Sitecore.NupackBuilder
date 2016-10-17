@@ -119,6 +119,18 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 
 		}
 	}
+
+	if(1 -eq 2)
+	{
+		if(($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")))
+		{
+			$assemblyItemVersion = $loadedAssemblyName.Version
+			$assemblyItemName = $loadedAssemblyName.Name
+			
+			Write-Host "$assemblyItemName, $assemblyItemVersion"
+			
+		}
+	}
 }
 	
 $references | 
