@@ -616,6 +616,10 @@ Function Add-ModulePlatformSupportInfo()
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.3.0 rev. 160527 (not sc package)", "Email-Experience-Manager", "3.3.160527", "8.1.160519", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
+	#Email Experience Manager 3.4.0 rev. 161028 (not sc package)
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.4.0 rev. 161028 (not sc package)", "Email-Experience-Manager", "3.4.161028", "8.2.160729", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
 	return $modules
 }
 

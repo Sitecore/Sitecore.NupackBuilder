@@ -78,7 +78,7 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 	$name    = $loaded.ManifestModule
 	$loadedAssemblyName = $loaded.GetName()
 
-	if (1 -eq 1)
+	if (1 -eq 2)
 	{
 		# Check for correct referenced version
 		$loaded.GetReferencedAssemblies() | % {
@@ -105,7 +105,61 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 		}
 	}
 
-	if(1 -eq 2)
+	if (1 -eq 2)
+	{
+		# Report on referenced 3rd party components
+		$loaded.GetReferencedAssemblies() | % {
+			$toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe
+			if(!$_.FullName.ToLower().StartsWith("sitecore."))
+			{
+				$matchValue = $_.Name
+				$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
+
+				if($assembly -ne $null)
+				{
+					if($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore."))
+					{
+						$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
+					}
+				}         
+				
+			}
+			$toAdd
+			if($loaded -ne $null)
+			{
+				$loaded = $null
+			}
+		}
+	}
+
+	if (1 -eq 2)
+	{
+		# Check for correct referenced version
+		$loaded.GetReferencedAssemblies() | % {
+			$toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe
+			if($_.FullName.ToLower().StartsWith("sitecore.update"))
+			{
+				$matchValue = $_.Name
+				$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
+
+				if($assembly -ne $null)
+				{
+					#if($_.Version -ne $assembly.AssemblyVersion)
+					#{
+						$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
+					#}
+				}         
+				
+			}
+			$toAdd
+			if($loaded -ne $null)
+			{
+				$loaded = $null
+			}
+		}
+	}
+
+	if(1 -eq 1)
 	{
 		# Report wrong Assembly Version
 		if(($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")) -and (!$loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.nexus")))
@@ -131,10 +185,27 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 			
 		}
 	}
+
+	if(1 -eq 2)
+	{
+		# reporting of usage of 3rd party components in Sitecore assemblies
+		if((!$loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")))
+		{
+			$toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe
+			$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$loaded.FullName,$loaded.Name,$loadedAssemblyName.Version, $original, ""
+				
+			
+			$toAdd
+			if($loaded -ne $null)
+			{
+				$loaded = $null
+			}						
+		}
+	}
 }
 	
 $references | 
-	Group-Object Original, FullName, ShouldBe | 
+	Group-Object Original, Version | 
 	Select-Object -expand Name | 
 	Sort-Object
 }
