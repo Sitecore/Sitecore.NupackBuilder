@@ -159,7 +159,7 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 		}
 	}
 
-	if(1 -eq 1)
+	if(1 -eq 2)
 	{
 		# Report wrong Assembly Version
 		if(($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")) -and (!$loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.nexus")))
@@ -186,7 +186,7 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 		}
 	}
 
-	if(1 -eq 2)
+	if(1 -eq 1)
 	{
 		# reporting of usage of 3rd party components in Sitecore assemblies
 		if((!$loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")))

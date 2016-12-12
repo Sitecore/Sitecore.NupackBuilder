@@ -491,6 +491,31 @@ Function Add-ModulePlatformSupportInfo()
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 2.2 rev. 160927", "Sitecore-Media-Framework", "2.2.160927", "8.2.160729", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
+	#Microsoft Dynamics CRM Security Provider-2.3.0 rev. 160829
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Microsoft Dynamics CRM Security Provider-2.3.0 rev. 160829", "Dynamics-CRM-Security-Provider", "2.3.160829", "8.2.160729", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Dynamics CRM Campaign Integration for WFFM 2.3 rev. 160829
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Dynamics CRM Campaign Integration for WFFM 2.3 rev. 160829", "Dynamics-CRM-Campaign-Integration-for-WFFM", "2.3.160829", "8.2.160729", $false, $true)
+	
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("CRMSecurityProvider", "2.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("CRMSecurityProvider", "2.3.160829", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.Forms.Core", "8.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.Forms.Core", "8.2.160801", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.WFFM.Abstractions", "8.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.WFFM.Abstractions", "8.2.160801", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.WFFM.Actions", "8.1.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.WFFM.Actions", "8.2.160801", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$modules.AddModulePlatformSupportInfo($module)
+
 	#Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers  8.0 rev. 141217 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.0.141217", "8.0.141212", "8.0.150121", $false, $false)
 	
@@ -877,10 +902,8 @@ Function Add-PlatformThirdPartyPackages()
 
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Net.Http.Extensions.Compression.Core", "2.0.0.0", "neutral", "null")
 	$packageInfo.AddPackageAssembly($packageAssembly)
-
 	$packages.AddPackageInfo($packageInfo)
-
-
+		
 	return $packages
 }
 
@@ -928,6 +951,20 @@ Function Add-ModulesThirdPartyPackages()
 	# Microsoft.CrmSdk.Deployment 7.1.1
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Sdk.Deployment", "7.0.0.0", "neutral", "31bf3856ad364e35")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.Deployment", "7.1.1", $false, $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+		
+	#Microsoft.IdentityModel 6.1.7600.16394
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.IdentityModel", "3.5.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.IdentityModel", "6.1.7600.16394", $false, $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	#unity.2.1.505.2
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.Unity", "2.1.505.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Practices.Unity", "2.1.505.2", $false, $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.Unity.Configuration", "2.1.505.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
 	$packages.AddPackageInfo($packageInfo)
 
 	# Microsoft.CrmSdk.Extensions 7.1.0.1

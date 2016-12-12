@@ -355,7 +355,7 @@ Function CreateAssembliesNuspecFile(
 			}
 			else
 			{
-				if(($isSitecoreModule -eq $true) -and ($dep.Name.ToLower().StartsWith("sitecore.")) )
+				if(($isSitecoreModule -eq $true) -and (($dep.Name.ToLower().StartsWith("sitecore.")) -or ($dep.Name.ToLower().StartsWith("crmsecurityprovider")))) 
 				{
 					$assemblyItemVersion = $dep.Version
 					$assemblyItemName = $dep.Name
