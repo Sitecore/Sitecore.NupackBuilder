@@ -601,6 +601,10 @@ Function Add-ModulePlatformSupportInfo()
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.2 rev. 160801 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.2.160801", "8.2.160729", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
+	#Web Forms for Marketers 8.2 rev. 161129 NOT SC PACKAGE
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.2 rev. 161129 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.2.161129", "8.2.161115", $false, $true)
+	$modules.AddModulePlatformSupportInfo($module)
+
 	#Email Experience Manager 3.0 rev. 141215
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.0 rev. 141215", "Email-Experience-Manager", "3.0.141215", "8.0.141212", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
