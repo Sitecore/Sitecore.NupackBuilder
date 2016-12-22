@@ -407,12 +407,20 @@ Function Add-ModulePlatformSupportInfo()
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.1.0 rev. 160817", "Data-Exchange-Framework", "1.1.160817", "8.1.151003", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
+	# Data Exchange Framework 1.2.0 rev. 161212
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework 1.2.0 rev. 161212", "Data-Exchange-Framework", "1.2.161212", "8.1.151207", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
 	#Data Exchange Framework Remote SDK 1.0 rev. 160625
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.0 rev. 160625", "Data-Exchange-Framework-Remote-SDK", "1.0.160625", "8.1.151003", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Data Exchange Framework Remote SDK 1.1.0 rev. 160817
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.1.0 rev. 160817", "Data-Exchange-Framework-Remote-SDK", "1.1.160817", "8.1.151003", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Data Exchange Framework Remote SDK 1.2.0 rev. 161212
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework Remote SDK 1.2.0 rev. 161212", "Data-Exchange-Framework-Remote-SDK", "1.2.161212", "8.1.151207", $true, $false)
 	$modules.AddModulePlatformSupportInfo($module)
 
 	#Sitecore Provider for Data Exchange Framework 1.0 rev. 160625
@@ -449,6 +457,23 @@ Function Add-ModulePlatformSupportInfo()
 	
 	$modules.AddModulePlatformSupportInfo($module)
 
+	#Sitecore Provider for Data Exchange Framework 1.2.0 rev. 161212
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Provider for Data Exchange Framework 1.2.0 rev. 161212", "Sitecore-Provider-for-Data-Exchange-Framework", "1.2.161212", "8.1.151207", $true, $false)
+	
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange", "1.2.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange", "1.2.161212", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.DataAccess", "1.2.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.DataAccess", "1.2.161212", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.Local", "1.2.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.Local", "1.2.161212", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+	
+	$modules.AddModulePlatformSupportInfo($module)
+
 	#Dynamics CRM Provider for Data Exchange Framework 1.0 rev. 160625
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Dynamics CRM Provider for Data Exchange Framework 1.0 rev. 160625", "Dynamics-CRM-Provider-for-Data-Exchange-Framework", "1.0.160625", "8.1.151003", $true, $false)
 
@@ -479,6 +504,23 @@ Function Add-ModulePlatformSupportInfo()
 
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.Local", "1.1.0.0", "neutral", "null")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.Local", "1.1.160817", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Dynamics CRM Provider for Data Exchange Framework 1.2.0 rev. 161212
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Dynamics CRM Provider for Data Exchange Framework 1.2.0 rev. 161212", "Dynamics-CRM-Provider-for-Data-Exchange-Framework", "1.2.161212", "8.1.151207", $true, $false)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange", "1.2.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange", "1.2.161212", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.DataAccess", "1.2.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.DataAccess", "1.2.161212", $false, $packageAssembly)
+	$module.AddPackageInfo($packageInfo)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.Local", "1.2.0.0", "neutral", "null")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.Local", "1.2.161212", $false, $packageAssembly)
 	$module.AddPackageInfo($packageInfo)
 
 	$modules.AddModulePlatformSupportInfo($module)
@@ -952,9 +994,23 @@ Function Add-ModulesThirdPartyPackages()
 
 	$packages.AddPackageInfo($packageInfo)
 
+	#microsoft.crmsdk.coreassemblies 8.2.0
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Crm.Sdk.Proxy", "8.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.CoreAssemblies", "8.2.0", $false, $packageAssembly)
+
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Sdk", "8.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo.AddPackageAssembly($packageAssembly)
+
+	$packages.AddPackageInfo($packageInfo)
+
 	# Microsoft.CrmSdk.Deployment 7.1.1
 	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Sdk.Deployment", "7.0.0.0", "neutral", "31bf3856ad364e35")
 	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.Deployment", "7.1.1", $false, $packageAssembly)
+	$packages.AddPackageInfo($packageInfo)
+
+	# Microsoft.CrmSdk.Deployment 8.2.0
+	$packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Sdk.Deployment", "8.0.0.0", "neutral", "31bf3856ad364e35")
+	$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.Deployment", "8.2.0", $false, $packageAssembly)
 	$packages.AddPackageInfo($packageInfo)
 		
 	#Microsoft.IdentityModel 6.1.7600.16394

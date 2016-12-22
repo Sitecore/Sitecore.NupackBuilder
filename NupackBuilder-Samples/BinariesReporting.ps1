@@ -137,17 +137,17 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 		# Check for correct referenced version
 		$loaded.GetReferencedAssemblies() | % {
 			$toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe
-			if($_.FullName.ToLower().StartsWith("sitecore.update"))
+			if($_.FullName.ToLower().StartsWith("sitecore"))
 			{
 				$matchValue = $_.Name
 				$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
 
 				if($assembly -ne $null)
 				{
-					#if($_.Version -ne $assembly.AssemblyVersion)
-					#{
+					if($_.Version -ne $assembly.AssemblyVersion)
+					{
 						$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
-					#}
+					}
 				}         
 				
 			}
@@ -186,7 +186,7 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 		}
 	}
 
-	if(1 -eq 1)
+	if(1 -eq 2)
 	{
 		# reporting of usage of 3rd party components in Sitecore assemblies
 		if((!$loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")))
@@ -205,7 +205,10 @@ $references = Get-ChildItem $targetDirectory -rec | % {
 }
 	
 $references | 
-	Group-Object Original, Version | 
+	#Group-Object Original, Version | 
+	#Select-Object -expand Name | 
+	#Sort-Object
+	Group-Object Original, FullName, ShouldBe | 
 	Select-Object -expand Name | 
 	Sort-Object
 }
