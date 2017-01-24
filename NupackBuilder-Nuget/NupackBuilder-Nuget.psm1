@@ -584,10 +584,16 @@ if($resolveDependencies -eq $true)
 					{
 						$nuspecMetadata += '                        <dependency id="'+$scdependencyPackageName+'" version="['+$scuniqueDependeny.MinimumPlatformVersion+']" />' + $nl
 					}
-					elseif(($scuniqueDependeny.SpecificVersion -eq $false) -and ($scuniqueDependeny.OpenMaxRangeAllowed -eq $true))
+					elseif(($scuniqueDependeny.SpecificVersion -eq $false) -and ($scuniqueDependeny.OpenMaxRangeAllowed -eq $true) -and ([string]::IsNullOrEmpty($scuniqueDependeny.MaximumPlatformVersion)))
 					{
 						# 1.0
 						$versionString = $scuniqueDependeny.MinimumPlatformVersion
+						$nuspecMetadata += '                        <dependency id="'+$scdependencyPackageName+'" version="'+$versionString+'" />' + $nl
+					}
+					elseif(($scuniqueDependeny.SpecificVersion -eq $false) -and ($scuniqueDependeny.OpenMaxRangeAllowed -eq $true) -and (![string]::IsNullOrEmpty($scuniqueDependeny.MaximumPlatformVersion)))
+					{
+						#[1.0,2.0)
+						$versionString = '['+$scuniqueDependeny.MinimumPlatformVersion+','+$scuniqueDependeny.MaximumPlatformVersion+')'
 						$nuspecMetadata += '                        <dependency id="'+$scdependencyPackageName+'" version="'+$versionString+'" />' + $nl
 					}
 					elseif(($scuniqueDependeny.SpecificVersion -eq $false) -and ($scuniqueDependeny.OpenMaxRangeAllowed -eq $false))

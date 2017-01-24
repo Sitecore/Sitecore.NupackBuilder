@@ -537,6 +537,18 @@ Function Add-ModulePlatformSupportInfo()
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Microsoft Dynamics CRM Security Provider-2.3.0 rev. 160829", "Dynamics-CRM-Security-Provider", "2.3.160829", "8.2.160729", $false, $true)
 	$modules.AddModulePlatformSupportInfo($module)
 
+	#Microsoft Dynamics CRM Security Provider 2.1.2 rev. 170118
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Microsoft Dynamics CRM Security Provider 2.1.2 rev. 170118", "Dynamics-CRM-Security-Provider", "2.1.170118", "8.0.141212", "8.1.0", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Microsoft Dynamics CRM Security Provider 2.2.3 rev. 170118
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Microsoft Dynamics CRM Security Provider 2.2.3 rev. 170118", "Dynamics-CRM-Security-Provider", "2.2.170118", "8.1.151003", "8.2.0", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
+	#Microsoft Dynamics CRM Security Provider 2.3.2 rev. 170118
+	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Microsoft Dynamics CRM Security Provider 2.3.2 rev. 170118", "Dynamics-CRM-Security-Provider", "2.3.170118", "8.2.160729", "8.3.0", $true, $false)
+	$modules.AddModulePlatformSupportInfo($module)
+
 	#Dynamics CRM Campaign Integration for WFFM 2.3 rev. 160829
 	$module = [NupackBuilder.ModulePlatformSupportInfo]::new("Dynamics CRM Campaign Integration for WFFM 2.3 rev. 160829", "Dynamics-CRM-Campaign-Integration-for-WFFM", "2.3.160829", "8.2.160729", $false, $true)
 	
