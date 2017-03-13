@@ -218,6 +218,7 @@ Function CreateAssembliesNuspecFile(
 		"NET452" {$frameWorkVersionLong = ".NETFramework4.5.2"}
 		"NET46" {$frameWorkVersionLong = ".NETFramework4.6"}
 		"NET461" {$frameWorkVersionLong = ".NETFramework4.6.1"}
+        "NET462" {$frameWorkVersionLong = ".NETFramework4.6.2"}
 		default {$frameWorkVersionLong = ".NETFramework4.5"}
 	}    
 	if($createFileVersionPackages)
