@@ -1148,6 +1148,8 @@ Function UnZipDLLFiles (
   $unzipargs = ' e -r "' + $ArchivePath + '" "' + $Filter + '" -o"' + $TargetPath + '" -y'
   $unzipcommand = "& '$pathTo7z'" + $unzipargs
 
+  Write-Log "$unzipcommand"
+
   if ($SuppressOutput)
   {
 	# Write-Log -Message "Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
