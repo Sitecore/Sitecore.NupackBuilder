@@ -122,6 +122,60 @@ $references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name -match 
         }
     }
 
+    if (1 -eq 2)
+    {
+        # Report on referenced 3rd party components
+        $loaded.GetReferencedAssemblies() | % {
+            $toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe, CultureName, PublicKeyToken
+            if($_.FullName.ToLower().StartsWith("sitecore.analytics.mongodb"))
+            {
+                $matchValue = $_.Name
+                #$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
+
+                #if($assembly -ne $null)
+                #{
+                    #if($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore."))
+                    #{
+                        $cultureName = ""
+                        if ([string]::IsNullOrEmpty($loadedAssemblyName.CultureName)) { $cultureName = "neutral" } else {$cultureName = $loadedAssemblyName.CultureName}
+
+                        [byte[]] $bytePublicKeyToken = $loadedAssemblyName.GetPublicKeyToken()
+                        
+                       
+                        $pbt = ""
+                        for ([int] $i=0;$i -le $bytePublicKeyToken.GetLength(0);$i++)
+ 		                {
+                            if($i -ne $null -and $bytePublicKeyToken -ne $null)
+                            { 
+                                $tempByte = $bytePublicKeyToken[$i]
+                                if ($tempByte -ne $null)
+                                {
+                                    $pbt += [string]::format("{0:x2}", $bytePublicKeyToken[$i])
+                                }
+                            }
+                        }
+                        $name = $loadedAssemblyName.Name
+                        $version = $loadedAssemblyName.Version
+
+                        if([string]::IsNullOrEmpty($pbt))
+                        {
+                            $pbt = "null"
+                        }
+
+                        Write-Host "$name,$version,$cultureName,$pbt"
+                        #$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe, $toAdd.CultureName, $toAdd.PublicKeyToken = $loaded,$_.FullName,$_.Name,$_.Version, $original, "", $cultureName, $pbt
+                    #}
+                #}         
+                
+            }
+            #$toAdd
+            if($loaded -ne $null)
+            {
+                $loaded = $null
+            }
+        }
+    }
+
     if (1 -eq 1)
     {
         # Report on referenced 3rd party components
