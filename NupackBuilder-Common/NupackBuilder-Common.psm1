@@ -757,6 +757,10 @@ Function Add-ModulePlatformSupportInfo()
     $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Print Experience Manager 8.0 rev. 150202", "Print-Experience-Manager", "8.0.150202", "8.0.141212", "8.2.161221", $false, $false)
     $modules.AddModulePlatformSupportInfo($module)
 
+    #Sitecore Print Experience Manager 8.2 rev. 170509
+    $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Print Experience Manager 8.2 rev. 170509", "Print-Experience-Manager", "8.2.170509", "8.2.170407", $false, $true)
+    $modules.AddModulePlatformSupportInfo($module)
+
     return $modules
 }
 
@@ -1106,6 +1110,11 @@ Function Add-ModulesThirdPartyPackages()
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Portal.Files", "7.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo.AddPackageAssembly($packageAssembly)
 
+    $packages.AddPackageInfo($packageInfo)
+
+    #ZXing 2.1.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("zxing", "1.0.4727.18517", "neutral", "null")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("ZXing", "2.1.1", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
     return $packages
