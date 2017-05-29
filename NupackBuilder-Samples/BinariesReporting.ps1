@@ -72,6 +72,8 @@ UnZipDLLFiles -installPath $root `
 
 $fileFilter = "(Sitecore.*\.(dll|exe)|maengine\.exe|XConnectSearchIndexer.exe)$"
 
+#$fileFilter = "(*\.(dll|exe)|maengine\.exe|XConnectSearchIndexer.exe)$"
+
 # Reporting
 $assemblies=Get-ChildItem $targetDirectory -rec |
 ForEach-Object {
@@ -84,8 +86,9 @@ ForEach-Object {
 }
 
 #$fileNames = Get-ChildItem $folderPath -rec | Where-Object {$_.Name -match "$fileFilter"} |Select-Object -ExpandProperty FullName
+#Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name.ToLower().EndsWith("dll")} | % {
 
-$references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name -match "$fileFilter"} | % {
+$references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name.ToLower().EndsWith("dll")} | % {
     $fullName = $_.FullName
     #Write-Host "Original is <$fullName>...."
     $original = [io.path]::GetFileName($_.FullName)
@@ -95,7 +98,7 @@ $references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name -match 
     $name    = $loaded.ManifestModule
     $loadedAssemblyName = $loaded.GetName()
 
-    if (1 -eq 2)
+    if (1 -eq 1)
     {
         # Check for correct referenced version
         $loaded.GetReferencedAssemblies() | % {
@@ -127,7 +130,7 @@ $references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name -match 
         # Report on referenced 3rd party components
         $loaded.GetReferencedAssemblies() | % {
             $toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe, CultureName, PublicKeyToken
-            if($_.FullName.ToLower().StartsWith("sitecore.analytics.mongodb"))
+            if($_.FullName.ToLower().StartsWith("webactivator"))
             {
                 $matchValue = $_.Name
                 #$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
@@ -176,7 +179,7 @@ $references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name -match 
         }
     }
 
-    if (1 -eq 1)
+    if (1 -eq 2)
     {
         # Report on referenced 3rd party components
         $loaded.GetReferencedAssemblies() | % {
@@ -304,11 +307,11 @@ $references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name -match 
 
 
     
-#$references | 
-    #Group-Object Original, Version | 
+$references | 
+    Group-Object Original, Version | 
+    Select-Object -expand Name | 
+    Sort-Object
+    #Group-Object Name, Version, CultureName, PublicKeyToken | 
     #Select-Object -expand Name | 
     #Sort-Object
-#    Group-Object Name, Version, CultureName, PublicKeyToken | 
-#    Select-Object -expand Name | 
-#    Sort-Object
 }
