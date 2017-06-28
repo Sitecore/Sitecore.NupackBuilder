@@ -705,6 +705,10 @@ Function Add-ModulePlatformSupportInfo()
     $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.2 rev. 170413 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.2.170413", "8.2.170407", $false, $true)
     $modules.AddModulePlatformSupportInfo($module)
 
+    #Web Forms for Marketers 8.2 rev. 170518 NOT SC PACKAGE
+    $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Web Forms for Marketers 8.2 rev. 170518 NOT SC PACKAGE", "Web-Forms-for-Marketers", "8.2.170518", "8.2.170614", $false, $true)
+    $modules.AddModulePlatformSupportInfo($module)
+
     #Email Experience Manager 3.0 rev. 141215
     $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Email Experience Manager 3.0 rev. 141215", "Email-Experience-Manager", "3.0.141215", "8.0.141212", $false, $true)
     $modules.AddModulePlatformSupportInfo($module)
@@ -758,7 +762,7 @@ Function Add-ModulePlatformSupportInfo()
     $modules.AddModulePlatformSupportInfo($module)
 
     #Sitecore Print Experience Manager 8.2 rev. 170509
-    $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Print Experience Manager 8.2 rev. 170509", "Print-Experience-Manager", "8.2.170509", "8.2.170407", $false, $true)
+    $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Print Experience Manager 8.2 rev. 170509", "Print-Experience-Manager", "8.2.170509", "8.2.170407", "8.2.170614", $false, $false)
     $modules.AddModulePlatformSupportInfo($module)
 
     return $modules
@@ -1159,6 +1163,73 @@ Function UnZipDLLFiles (
   $FileNameNoExtension = [io.path]::GetFileNameWithoutExtension($ArchivePath)
   [string]$pathTo7z = $(Get-7z -installPath $installPath -nugetFullPath $nugetFullPath -NugetFeed $NugetFeed)
   $unzipargs = ' e -r "' + $ArchivePath + '" "' + $Filter + '" -o"' + $TargetPath + '" -y'
+  $unzipcommand = "& '$pathTo7z'" + $unzipargs
+
+  Write-Log "$unzipcommand"
+
+  if ($SuppressOutput)
+  {
+    # Write-Log -Message "Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
+    iex $unzipcommand | Out-Null
+    # Write-Log -Message "Done Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
+  }
+  else
+  {
+    iex $unzipcommand
+  }  
+}
+
+Function UnZipFiles (
+  [Parameter(Mandatory=$true)][string]$installPath,
+  [Parameter(Mandatory=$true)][string]$ArchivePath,  
+  [Parameter(Mandatory=$true)][string]$TargetPath, 
+  [switch]$SuppressOutput,
+  [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
+  [Parameter(Mandatory=$true)][string]$nugetFullPath,
+  [switch]$doNotDeleteTargetPath
+)
+{
+    $deleteTargetPath = $true
+    if($doNotDeleteTargetPath)
+    {
+        $deleteTargetPath = $false
+    }
+  
+  if (!(Test-Path -Path $ArchivePath))
+  {
+    Write-Log -Message "The archive to extract was not found: $ArchivePath" -Level "Error"
+  }
+    
+  if(($deleteTargetPath -eq $true) -and (Test-Path -Path $TargetPath ))
+  {
+    $child_items = ([array] (Get-ChildItem -Path $TargetPath -Recurse -Force))
+        if ($child_items) 
+        {
+            #$null = $child_items | Remove-Item -Force -Recurse | Out-Nul
+            foreach($child_item in $child_items)
+            {
+                if(Test-Path -Path $child_item)
+                {
+                    $null = Remove-Item $child_item -Force -Recurse | Out-Null
+                }       
+            }
+
+
+        }
+        if(Test-Path -Path $TargetPath)
+        {
+            $null = Remove-Item $TargetPath -Force -Recurse | Out-Null
+        }
+  }
+  
+  if (!(Test-Path -Path $TargetPath))
+  {
+    New-Item -Path $TargetPath -ItemType directory | Out-Null
+  }
+  
+  $FileNameNoExtension = [io.path]::GetFileNameWithoutExtension($ArchivePath)
+  [string]$pathTo7z = $(Get-7z -installPath $installPath -nugetFullPath $nugetFullPath -NugetFeed $NugetFeed)
+  $unzipargs = ' x "' + $ArchivePath + '" -o"' + $TargetPath + '" -y'
   $unzipcommand = "& '$pathTo7z'" + $unzipargs
 
   Write-Log "$unzipcommand"

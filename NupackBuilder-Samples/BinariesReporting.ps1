@@ -46,49 +46,76 @@ Get-ChildItem $sitecoreRepositoryFolder -Filter "*.zip" | % {
     $sitecorezipFileNameOnly = $_.Name    
 $FileNameNoExtension = [io.path]::GetFileNameWithoutExtension($sitecorezipFileNameOnly)
 $archivePath = "$sitecoreRepositoryFolder$sitecorezipFileNameOnly"
-$targetDirectory = "$sitecoreRepositoryFolder$FileNameNoExtension\bin\"
+$targetDirectory = "$sitecoreRepositoryFolder$FileNameNoExtension\"
 $nuspecDirectory = "$sitecoreRepositoryFolder$FileNameNoExtension\nuspec\"
 $packageDirectory = "$sitecoreRepositoryFolder$FileNameNoExtension\nupack\"
+
+$SitecoreVersionWithRev = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(".zip","").Trim()
+
 $SitecoreVersion = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(" rev. ",".").Replace("rev. ",".").Replace(" rev.",".").Replace(".zip","").Trim()
 $nugetExecutable = $sitecoreRepositoryFolder + "nuget.exe"
-$frameworVersion = "NET45"
+$frameworVersion = "NET462"
 
-UnZipDLLFiles -installPath $root `
+Write-Host $SitecoreVersionWithRev
+
+UnZipFiles -installPath $root `
     -ArchivePath $archivePath `
     -TargetPath $targetDirectory `
     -SuppressOutput `
     -nugetFullPath $nugetExecutable `
-    -NugetFeed $NugetFeed `
-    -Filter "*.dll"
+    -NugetFeed $NugetFeed
 
-UnZipDLLFiles -installPath $root `
-    -ArchivePath $archivePath `
-    -TargetPath $targetDirectory `
-    -SuppressOutput `
-    -nugetFullPath $nugetExecutable `
-    -NugetFeed $NugetFeed `
-    -Filter "*.exe" `
-    -doNotDeleteTargetPath
+#UnZipDLLFiles -installPath $root `
+#    -ArchivePath $archivePath `
+#    -TargetPath $targetDirectory `
+#    -SuppressOutput `
+#    -nugetFullPath $nugetExecutable `
+#    -NugetFeed $NugetFeed `
+#    -Filter "*.exe" `
+#    -doNotDeleteTargetPath
+
+#exit
 
 $fileFilter = "(Sitecore.*\.(dll|exe)|maengine\.exe|XConnectSearchIndexer.exe)$"
 
-#$fileFilter = "(*\.(dll|exe)|maengine\.exe|XConnectSearchIndexer.exe)$"
+#$fileFilter = "(*.(dll|exe)|maengine\.exe|XConnectSearchIndexer.exe)$"
+
+$xconnectServer = "Sitecore XConnect Server $SitecoreVersionWithRev\Website\bin"
+$MarketingAutomationService = "Sitecore Marketing Automation Service $SitecoreVersionWithRev\"
+$xconnectIndexingService = "Sitecore XConnect Index Service $SitecoreVersionWithRev\"
+$sitecorePlatform = "$FileNameNoExtension\Website\bin\"
+
+
+#$newTargetDirectory = "$targetDirectory$xconnectServer"
+#$newTargetDirectory = "$targetDirectory$MarketingAutomationService"
+#$newTargetDirectory = "$targetDirectory$xconnectIndexingService"
+$newTargetDirectory = "$targetDirectory$sitecorePlatform"
 
 # Reporting
-$assemblies=Get-ChildItem $targetDirectory -rec |
+$assemblies=Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name.ToLower().EndsWith("dll")} |
 ForEach-Object {
     try {
         $_ | Add-Member NoteProperty FileVersion ($_.VersionInfo.FileVersion)
-        $_ | Add-Member NoteProperty AssemblyVersion ([Reflection.AssemblyName]::GetAssemblyName($_.FullName).Version)
+        $_ | Add-Member NoteProperty AssemblyVersion ([Reflection.AssemblyName]::GetAssemblyName($_.FullName).Version.ToString())
         $_ | Add-Member NoteProperty AssemblyFullName ([Reflection.AssemblyName]::GetAssemblyName($_.FullName).FullName)
+        $_ | Add-Member NoteProperty AssemblyFileName ($_.Name)
     } catch {}
     $_
 }
 
-#$fileNames = Get-ChildItem $folderPath -rec | Where-Object {$_.Name -match "$fileFilter"} |Select-Object -ExpandProperty FullName
-#Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name.ToLower().EndsWith("dll")} | % {
+#$fileNames = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -match $fileFilter} |Select-Object -ExpandProperty FullName
 
-$references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name.ToLower().EndsWith("dll")} | % {
+#foreach($polle in $assemblies)
+#{
+#    $polleTest = $polle.AssemblyFileName
+#    Write-Host "po = $polleTest"
+#}
+
+#exit
+
+#Get-ChildItem $newTargetDirectory -rec| Where-Object {$_.Name.ToLower().EndsWith("dll")} | % {
+
+$references = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -match $fileFilter} | % {
     $fullName = $_.FullName
     #Write-Host "Original is <$fullName>...."
     $original = [io.path]::GetFileName($_.FullName)
@@ -103,20 +130,27 @@ $references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name.ToLower
         # Check for correct referenced version
         $loaded.GetReferencedAssemblies() | % {
             $toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe
-            if($_.FullName.ToLower().StartsWith("sitecore."))
-            {
+            #if($_.FullName.ToLower().StartsWith("sitecore."))
+            #{
                 $matchValue = $_.Name
-                $assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
+                $assembly = $null
+                foreach($testAssembly in $assemblies)
+                {
+                    if($testAssembly.AssemblyFileName -eq "$matchValue.dll")
+                    {
+                        $assembly = $testAssembly
+                    }
+                }
 
                 if($assembly -ne $null)
-                {
+                {   
                     if($_.Version -ne $assembly.AssemblyVersion)
                     {
                         $toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
                     }
                 }         
                 
-            }
+            #}
             $toAdd
             if($loaded -ne $null)
             {
@@ -308,10 +342,10 @@ $references = Get-ChildItem $targetDirectory -rec| Where-Object {$_.Name.ToLower
 
     
 $references | 
-    Group-Object Original, Version | 
-    Select-Object -expand Name | 
-    Sort-Object
-    #Group-Object Name, Version, CultureName, PublicKeyToken | 
+    #Group-Object Original, Version | 
     #Select-Object -expand Name | 
     #Sort-Object
+    Group-Object Original,Name,Version,ShouldBe | 
+    Select-Object -expand Name | 
+    Sort-Object
 }
