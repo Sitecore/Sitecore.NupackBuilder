@@ -610,6 +610,15 @@ Function Add-ModulePlatformSupportInfo()
 
     $modules.AddModulePlatformSupportInfo($module)
 
+    #Data Exchange Framework SDK 1.4.0 rev. 170419
+    $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Data Exchange Framework SDK 1.4.0 rev. 170419", "Data-Exchange-Framework-SDK", "1.4.170419", "8.1.151207", $true, $false)
+    
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Sitecore.DataExchange.Local", "1.4.0.0", "neutral", "null")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Sitecore.DataExchange.Local", "1.4.170419", $false, $packageAssembly)
+    $module.AddPackageInfo($packageInfo)
+    
+    $modules.AddModulePlatformSupportInfo($module)
+
     #Sitecore Media Framework 21 rev 150625
     $module = [NupackBuilder.ModulePlatformSupportInfo]::new("Sitecore Media Framework 21 rev 150625", "Sitecore-Media-Framework", "2.1.150625", "8.0.141212", "8.0.160115", $false, $false)
     $modules.AddModulePlatformSupportInfo($module)
