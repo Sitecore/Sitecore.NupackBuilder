@@ -125,7 +125,7 @@ $references = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -ma
     $name    = $loaded.ManifestModule
     $loadedAssemblyName = $loaded.GetName()
 
-    if (1 -eq 1)
+    if (1 -eq 2)
     {
         # Check for correct referenced version
         $loaded.GetReferencedAssemblies() | % {
@@ -159,12 +159,12 @@ $references = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -ma
         }
     }
 
-    if (1 -eq 2)
+    if (1 -eq 1)
     {
         # Report on referenced 3rd party components
         $loaded.GetReferencedAssemblies() | % {
             $toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe, CultureName, PublicKeyToken
-            if($_.FullName.ToLower().StartsWith("webactivator"))
+            if($_.FullName.ToLower().StartsWith("system.io.abstractions"))
             {
                 $matchValue = $_.Name
                 #$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"

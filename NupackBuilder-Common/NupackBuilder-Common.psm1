@@ -903,6 +903,31 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo.AddPackageAssembly($packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
+    #mongocsharpdriver 2.4.4
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Driver.Legacy", "2.4.4.0", "neutral", "null")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("mongocsharpdriver", "2.4.4", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #MongoDB.Bson 2.4.4
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Bson", "2.4.4.0", "neutral", "null")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("MongoDB.Bson", "2.4.4", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #MongoDB.Driver 2.4.4
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Driver", "2.4.4.0", "neutral", "null")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("MongoDB.Driver", "2.4.4", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #MongoDB.Driver.Core 2.4.4
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Driver.Core", "2.4.4.0", "neutral", "null")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("MongoDB.Driver.Core", "2.4.4", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.Runtime.InteropServices.RuntimeInformation.4.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Runtime.InteropServices.RuntimeInformation", "4.0.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Runtime.InteropServices.RuntimeInformation", "4.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
     #SolrNet 0.4.0.4001
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("SolrNet", "0.4.0.4001", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("SolrNet", "0.4.0.4001", $false, $packageAssembly)
