@@ -164,15 +164,15 @@ $references = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -ma
         # Report on referenced 3rd party components
         $loaded.GetReferencedAssemblies() | % {
             $toAdd='' | select Who,FullName,Name,Version, Original, ShouldBe, CultureName, PublicKeyToken
-            if($_.FullName.ToLower().StartsWith("system.io.abstractions"))
+            if(!$_.FullName.ToLower().StartsWith("sitecore."))
             {
                 $matchValue = $_.Name
                 #$assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
 
                 #if($assembly -ne $null)
                 #{
-                    #if($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore."))
-                    #{
+                    if($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore."))
+                    {
                         $cultureName = ""
                         if ([string]::IsNullOrEmpty($loadedAssemblyName.CultureName)) { $cultureName = "neutral" } else {$cultureName = $loadedAssemblyName.CultureName}
 
@@ -199,13 +199,13 @@ $references = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -ma
                             $pbt = "null"
                         }
 
-                        Write-Host "$name,$version,$cultureName,$pbt"
-                        #$toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe, $toAdd.CultureName, $toAdd.PublicKeyToken = $loaded,$_.FullName,$_.Name,$_.Version, $original, "", $cultureName, $pbt
-                    #}
+                        #Write-Host "$name,$version,$cultureName,$pbt"
+                        $toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe, $toAdd.CultureName, $toAdd.PublicKeyToken = $loaded,$_.FullName,$_.Name,$_.Version, $original, "", $cultureName, $pbt
+                    }
                 #}         
                 
             }
-            #$toAdd
+            $toAdd
             if($loaded -ne $null)
             {
                 $loaded = $null
@@ -345,7 +345,7 @@ $references |
     #Group-Object Original, Version | 
     #Select-Object -expand Name | 
     #Sort-Object
-    Group-Object Original,Name,Version,ShouldBe | 
+    Group-Object Original,Name,Version | 
     Select-Object -expand Name | 
     Sort-Object
 }
