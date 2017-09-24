@@ -1,7 +1,8 @@
 param
 (
-  [Parameter(Mandatory=$false,helpmessage="The feed to get packages from during processing")][string]$NugetFeed = "https://www.nuget.org/api/v2/",
-  [Parameter(Mandatory=$true,helpmessage="The folder to read Sitecore zip files from")][ValidateNotNullOrEmpty()][string]$sitecoreRepositoryFolder  
+    [Parameter(Mandatory=$true,helpmessage="The zip file to analyze")][ValidateNotNullOrEmpty()][string]$sitecoreZipFile,
+    [Parameter(Mandatory=$false,helpmessage="The feed to get packages from during processing")][string]$NugetFeed = "https://www.nuget.org/api/v2/",
+    [Parameter(Mandatory=$false,helpmessage="Folder to save reports in")][string]$reportoutputfolder = ""
 )
 
 Function Get-7z
@@ -25,6 +26,33 @@ Function Get-7z
         return $zipFileLocation
 }
 
+Function Get-PublicKeyToken
+{
+    param(
+        [byte[]] $bytePublicKeyToken
+    )
+    [string]$pbt = ""
+    if($bytePublicKeyToken -ne $null)
+    {
+        for ([int] $i=0;$i -le $bytePublicKeyToken.GetLength(0);$i++)
+        {
+            if($i -ne $null -and $bytePublicKeyToken -ne $null)
+            { 
+                $tempByte = $bytePublicKeyToken[$i]
+                if ($tempByte -ne $null)
+                {
+                    $pbt += [string]::format("{0:x2}", $bytePublicKeyToken[$i])
+                }
+            }
+        }
+    }
+    if([string]::IsNullOrEmpty($pbt))
+    {
+        $pbt = "null"
+    }
+    return $pbt
+}
+
 Function UnZipFiles 
 {
     param(
@@ -44,7 +72,8 @@ Function UnZipFiles
     
     if (!(Test-Path -Path $ArchivePath))
     {
-      Write-Log -Message "The archive to extract was not found: $ArchivePath" -Level "Error"
+      Write-Error -Message "The archive to extract was not found: $ArchivePath"
+      exit(-1)
     }
       
     if(($deleteTargetPath -eq $true) -and (Test-Path -Path $TargetPath ))
@@ -94,16 +123,29 @@ Function UnZipFiles
 
 Clear-Host
 
+if(!(Test-Path -Path $sitecoreZipFile))
+{
+    Write-Error "The zip file does not exist at : $sitecoreZipFile"
+    exit -1
+}
+$zipFileInfo = [System.IO.FileInfo]::new($sitecoreZipFile)
+
+$sitecoreRepositoryFolder = $zipFileInfo.DirectoryName
+
 $workingFolder = [System.IO.Path]::Combine($env:TEMP, [System.IO.DirectoryInfo]::new($sitecoreRepositoryFolder).Name)
+
+if([string]::IsNullOrEmpty($reportoutputfolder))
+{
+    $reportoutputfolder = $sitecoreRepositoryFolder
+}
+elseif (!([System.IO.Directory]::Exists($reportoutputfolder))) {
+    $reportoutputfolder = $sitecoreRepositoryFolder
+}
 
 if (!(Test-Path -Path $workingFolder))
 {
     New-Item $workingFolder -type directory -Force | Out-Null
 }
-
-#$root = Split-Path -Parent $MyInvocation.MyCommand.Path
-
-#Set-location -Path $root
 
 if (!(Test-Path -Path "$workingFolder\nuget.exe" -PathType Leaf))
 {
@@ -123,133 +165,295 @@ if ((Test-Path -Path "$workingFolder\nuget.exe.old"))
     Remove-Item -Path "$workingFolder\nuget.exe.old" -Force
 }
 
-$nugetExecutable = $workingFolder + "\nuget.exe"
+$nugetExecutable = [System.IO.Path]::Combine($workingFolder,"nuget.exe")
+$sitecorezipFileNameOnly = [System.IO.Path]::GetFileName($sitecoreZipFile)
+$FileNameNoExtension = [System.IO.Path]::GetFileNameWithoutExtension($sitecorezipFileNameOnly)
+$archivePath = $sitecoreZipFile
+$targetDirectory = [System.IO.Path]::Combine($workingFolder,$FileNameNoExtension)
+$SitecoreVersionWithRev = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(".zip","").Trim()
 
-Get-ChildItem -Path $sitecoreRepositoryFolder -Filter "*.zip" | ForEach-Object {
-    $sitecorezipFileNameOnly = $_.Name    
-    $FileNameNoExtension = [io.path]::GetFileNameWithoutExtension($sitecorezipFileNameOnly)
-    $archivePath = "$sitecoreRepositoryFolder$sitecorezipFileNameOnly"
-    $targetDirectory = "$workingFolder\$FileNameNoExtension\"
+Write-Host $SitecoreVersionWithRev
 
-    $SitecoreVersionWithRev = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(".zip","").Trim()
+UnZipFiles -installPath $workingFolder `
+    -ArchivePath $archivePath `
+    -TargetPath $targetDirectory `
+    -SuppressOutput `
+    -nugetFullPath $nugetExecutable `
+    -NugetFeed $NugetFeed
 
-    $nugetExecutable = $workingFolder + "\nuget.exe"
+$fileFilter = "(Sitecore.*\.(dll|exe)|maengine\.exe|XConnectSearchIndexer.exe)$"
 
-    Write-Host $SitecoreVersionWithRev
+$xconnectServer = [System.IO.Path]::Combine($targetDirectory, "Sitecore XConnect Server $SitecoreVersionWithRev","Website","bin")
+$MarketingAutomationService = [System.IO.Path]::Combine($targetDirectory, "Sitecore Marketing Automation Service $SitecoreVersionWithRev")
+$xconnectIndexingService = [System.IO.Path]::Combine($targetDirectory, "Sitecore XConnect Index Service $SitecoreVersionWithRev")
+$sitecorePlatform = [System.IO.Path]::Combine($targetDirectory, "$FileNameNoExtension","Website","bin")
 
-    UnZipFiles -installPath $workingFolder `
-        -ArchivePath $archivePath `
-        -TargetPath $targetDirectory `
-        -SuppressOutput `
-        -nugetFullPath $nugetExecutable `
-        -NugetFeed $NugetFeed
+$directoriesToSearch = @($xconnectServer,$MarketingAutomationService,$xconnectIndexingService,$sitecorePlatform)
 
-    $fileFilter = "(Sitecore.*\.(dll|exe)|maengine\.exe|XConnectSearchIndexer.exe)$"
-
-    $xconnectServer = "Sitecore XConnect Server $SitecoreVersionWithRev\Website\bin"
-    $MarketingAutomationService = "Sitecore Marketing Automation Service $SitecoreVersionWithRev\"
-    $xconnectIndexingService = "Sitecore XConnect Index Service $SitecoreVersionWithRev\"
-    $sitecorePlatform = "$FileNameNoExtension\Website\bin\"
-
-    $directoriesToSearch = @("$targetDirectory$xconnectServer","$targetDirectory$MarketingAutomationService","$targetDirectory$xconnectIndexingService","$targetDirectory$sitecorePlatform")
-
-    foreach($directoryToSearch in $directoriesToSearch)
+foreach($directoryToSearch in $directoriesToSearch)
+{
+    if(Test-Path -Path $directoryToSearch)
     {
-        if(Test-Path -Path $directoryToSearch)
+        $newTargetDirectory = $directoryToSearch
+        $newTargetDirectoryInfo = [System.IO.DirectoryInfo]::new($newTargetDirectory)
+        $newTargetDirectoryInfoName = $newTargetDirectoryInfo.Name
+        if($newTargetDirectoryInfoName.ToLowerInvariant() -eq "bin")
         {
-            $newTargetDirectory = $directoryToSearch
-            $newTargetDirectoryInfo = [System.IO.DirectoryInfo]::new($newTargetDirectory)
-            $newTargetDirectoryInfoName = $newTargetDirectoryInfo.Name
-            if($newTargetDirectoryInfoName.ToLowerInvariant() -eq "bin")
-            {
-                $newTargetDirectoryInfoName = $newTargetDirectoryInfo.Parent.Name
-            }
+            $newTargetDirectoryInfoName = $newTargetDirectoryInfo.Parent.Name
+        }
 
-            if($newTargetDirectoryInfoName.ToLowerInvariant() -eq "website")
+        if($newTargetDirectoryInfoName.ToLowerInvariant() -eq "website")
+        {
+            $newTargetDirectoryInfoName = $newTargetDirectoryInfo.Parent.Parent.Name
+        }
+        $assemblies=Get-ChildItem $newTargetDirectory | Where-Object {$_.Name.ToLower().EndsWith("dll")} | ForEach-Object {
+            $assemblybytes   = [System.IO.File]::ReadAllBytes($_.FullName)
+            $assemblyloaded  = [System.Reflection.Assembly]::Load($assemblybytes)
+            $assemblyname    = $assemblyloaded.GetName()
+            [byte[]] $assemblybytePublicKeyToken = $assemblyName.GetPublicKeyToken()
+            $publicKeyToken = Get-PublicKeyToken -bytePublicKeyToken $assemblybytePublicKeyToken
+            
+            $cultureName = ""
+            if ([string]::IsNullOrEmpty($assemblyName.CultureName)) 
+            { 
+                $cultureName = "neutral" 
+            }
+            else
             {
-                $newTargetDirectoryInfoName = $newTargetDirectoryInfo.Parent.Parent.Name
+                $cultureName = $assemblyName.CultureName
             }
-            $assemblies=Get-ChildItem $newTargetDirectory | Where-Object {$_.Name.ToLower().EndsWith("dll")} | ForEach-Object {
-                $assemblyName = [Reflection.AssemblyName]::GetAssemblyName($_.FullName)
-                try {
-                    $_ | Add-Member NoteProperty FileVersion ($_.VersionInfo.FileVersion)
-                    $_ | Add-Member NoteProperty AssemblyVersion ($assemblyName.Version.ToString())
-                    $_ | Add-Member NoteProperty AssemblyFullName ($assemblyName.FullName)
-                    $_ | Add-Member NoteProperty AssemblyFileName ($_.Name)
-                } catch {}
-                $_
-            }
+            $_ | Add-Member NoteProperty FileVersion ($_.VersionInfo.FileVersion)
+            $_ | Add-Member NoteProperty AssemblyVersion ($assemblyName.Version.ToString())
+            $_ | Add-Member NoteProperty AssemblyFullName ($assemblyName.FullName)
+            $_ | Add-Member NoteProperty AssemblyFileName ($_.Name)
+            $_ | Add-Member NoteProperty PublicKeyToken ($publicKeyToken)
+            $_ | Add-Member NoteProperty CultureName ($cultureName)
+            $_
+        }
 
-            $nl = [Environment]::NewLine
-            #BOF wrong sitecore references report definition
-            $reportwrongSitecoreReferenceFileName = "wrong Sitecore references $newTargetDirectoryInfoName.txt"
-            $reportwrongSitecoreReferenceFullFileName = [System.IO.Path]::Combine($sitecoreRepositoryFolder,$reportwrongSitecoreReferenceFileName)
-            if(Test-Path -$reportwrongSitecoreReferenceFullFileName)
-            {
-                Remove-Item -Path $reportwrongSitecoreReferenceFullFileName -Force
-            }
-            #EOF wrong sitecore references report definition
+        $nl = [Environment]::NewLine
+        
+        #BOF wrong sitecore references report definition
+        $reportwrongSitecoreReferenceFileName = "wrong Sitecore references $newTargetDirectoryInfoName.csv"
+        $reportwrongSitecoreReferenceFullFileName = [System.IO.Path]::Combine($reportoutputfolder,$reportwrongSitecoreReferenceFileName)
+        if(Test-Path -$reportwrongSitecoreReferenceFullFileName)
+        {
+            Remove-Item -Path $reportwrongSitecoreReferenceFullFileName -Force
+        }
+        #EOF wrong sitecore references report definition
 
-            $wrongReferencesReportLine = ""
-            Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -match $fileFilter} | ForEach-Object {
-                $original = [io.path]::GetFileName($_.FullName)
-                $bytes   = [System.IO.File]::ReadAllBytes($_.FullName)
-                $loaded  = [System.Reflection.Assembly]::Load($bytes)
-                
-                # Check for correct referenced Sitecore version
-                $loaded.GetReferencedAssemblies() | ForEach-Object {
-                    if($_.FullName.ToLower().StartsWith("sitecore"))
+        #BOF wrong 3rd party references from Sitecore report definition
+        $reportwrongThirdPartyReferenecesInSitecoreAssemblies = "wrong 3rd party references in Sitecore assemblies $newTargetDirectoryInfoName.csv"
+        $reportwrongThirdPartyReferenecesInSitecoreAssembliesFullFileName = [System.IO.Path]::Combine($reportoutputfolder,$reportwrongThirdPartyReferenecesInSitecoreAssemblies)
+        if(Test-Path -$reportwrongThirdPartyReferenecesInSitecoreAssembliesFullFileName)
+        {
+            Remove-Item -Path $reportwrongThirdPartyReferenecesInSitecoreAssembliesFullFileName -Force
+        }
+        #BOF wrong 3rd party references from Sitecore report definition
+
+        #BOF might require assembly bining redirect in web.config or app.config
+        $reportwrongThirdPartyReferenecesInThirdPartyAssemblies = "consider assembly binding redirect in $newTargetDirectoryInfoName.csv"
+        $reportwrongThirdPartyReferenecesInThirdPartyAssembliesFullFileName = [System.IO.Path]::Combine($reportoutputfolder,$reportwrongThirdPartyReferenecesInThirdPartyAssemblies)
+        if(Test-Path -$reportwrongThirdPartyReferenecesInThirdPartyAssembliesFullFileName)
+        {
+            Remove-Item -Path $reportwrongThirdPartyReferenecesInThirdPartyAssembliesFullFileName -Force
+        }
+        #BOF might require assembly bining redirect in web.config or app.config
+
+        #BOF should be in GAC
+        $reportHopeFullyInGACAssemblies = "Assemblies hopefully in GAC $newTargetDirectoryInfoName.csv"
+        $reportHopeFullyInGACAssembliesFullFileName = [System.IO.Path]::Combine($reportoutputfolder,$reportHopeFullyInGACAssemblies)
+        if(Test-Path -$reportHopeFullyInGACAssembliesFullFileName)
+        {
+            Remove-Item -Path $reportHopeFullyInGACAssembliesFullFileName -Force
+        }
+        #BOF should be in GAC
+
+        #BOF consider shipping
+        $reportConsiderShippingTheseAssemblies = "consider shippping these assemblies with $newTargetDirectoryInfoName.csv"
+        $reportConsiderShippingTheseAssembliesFullFileName = [System.IO.Path]::Combine($reportoutputfolder,$reportConsiderShippingTheseAssemblies)
+        if(Test-Path -$reportConsiderShippingTheseAssembliesFullFileName)
+        {
+            Remove-Item -Path $reportConsiderShippingTheseAssembliesFullFileName -Force
+        }
+        #BOF consider shipping
+
+
+        $wrongReferencesReportLine = ""
+        $wrongThirdPartyReferencesInSitecoreAssembliesReportLine = ""
+        $wrongThirdPartyReferencesInThirdPartyAssembliesReportLine = ""
+        $hopeFullyInGACAssembliesReportLine = ""
+        $considerShippingTheseAssembliesReportLine = ""
+        #Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -match $fileFilter} | ForEach-Object {
+        Get-ChildItem $newTargetDirectory | Where-Object {($_.Name.ToLower().EndsWith("dll")) -or ($_.Name.ToLower().EndsWith("exe"))} | ForEach-Object {
+            $original = [io.path]::GetFileName($_.FullName)
+            $bytes   = [System.IO.File]::ReadAllBytes($_.FullName)
+            $loaded  = [System.Reflection.Assembly]::Load($bytes)
+            #$ManifestModule    = $loaded.ManifestModule            
+            $loadedAssemblyName = $loaded.GetName()
+            
+            # Check for correct referenced Sitecore version
+            $loaded.GetReferencedAssemblies() | ForEach-Object {
+                $loadedAssemblyNameReferenced = $_
+                if($_.FullName.ToLower().StartsWith("sitecore"))
+                {
+                    $matchValue = $_.Name
+                    $assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName | Where-Object {$_.Name -eq "$matchValue.dll"})
+                    if($assembly -ne $null)
                     {
-                        $matchValue = $_.Name
-                        $assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName) -match "$matchValue.dll"
-                        if($assembly -ne $null)
+                        if($_.Version -ne $assembly.AssemblyVersion)
                         {
-                            if($_.Version -ne $assembly.AssemblyVersion)
+                            if([string]::IsNullOrEmpty($wrongReferencesReportLine))
                             {
-                                if([string]::IsNullOrEmpty($wrongReferencesReportLine))
+                                $wrongReferencesReportLine = "sep=,$nl"
+                                $wrongReferencesReportLine = $wrongReferencesReportLine + "`"Assembly with wrong reference`",`"Wrong referenced assembly`",`"wrong referenced version`",`"correct referenced version`"$nl"
+                            }
+                            $wrongSitecoreReferenceName = $_.Name
+                            $wrongSitecoreReferenceVersion = $_.Version
+                            $wrongSitecoreReferenceOriginal = $original
+                            $wrongSitecoreReferenceShouldBe = $assembly.AssemblyVersion
+                            $wrongReferencesReportLine = $wrongReferencesReportLine + "`"$wrongSitecoreReferenceOriginal`",`"$wrongSitecoreReferenceName`",`"$wrongSitecoreReferenceVersion`",`"$wrongSitecoreReferenceShouldBe`"$nl"
+                        }
+                    }
+                }
+
+                if(!$_.FullName.ToLower().StartsWith("sitecore."))
+                {
+                    $matchValue = $_.Name
+                    $assembly = ($assemblies | Select-Object Name, FileVersion, AssemblyVersion, AssemblyFullName, PublicKeyToken, CultureName | Where-Object {$_.Name -eq "$matchValue.dll"})
+                    $assemblyWithProblems = $original
+                    if($assembly -ne $null)
+                    {
+                        $loadedCultureName = ""
+                        if ([string]::IsNullOrEmpty($loadedAssemblyNameReferenced.CultureName)) 
+                        { 
+                            $loadedCultureName = "neutral" 
+                        }
+                        else
+                        {
+                            $loadedCultureName = $loadedAssemblyNameReferenced.CultureName
+                        }
+                    
+                        [byte[]] $bytePublicKeyToken = $loadedAssemblyNameReferenced.GetPublicKeyToken()
+
+                        $pbt = Get-PublicKeyToken -bytePublicKeyToken $bytePublicKeyToken
+                        $version = $loadedAssemblyNameReferenced.Version
+
+                        
+                        $assemblyWithProblemsWrongReferenceActualFullName = [string]$assembly.AssemblyFullName
+                        $assemblyWithProblemsWrongReferenceWrongFullName = [string]$loadedAssemblyNameReferenced.FullName
+                        if(($loadedAssemblyName.FullName.ToLower().StartsWith("sitecore.")) -or ($loadedAssemblyName.FullName.ToLower().StartsWith("maengine")) -or ($loadedAssemblyName.FullName.ToLower().StartsWith("xconnectsearchindexer")))
+                        {
+                            if(([string]$pbt -ne [string]$assembly.PublicKeyToken) -or ([string]$version -ne [string]$assembly.AssemblyVersion) -or (([string]$loadedCultureName).ToLowerInvariant() -ne ([string]$assembly.CultureName).ToLowerInvariant()) -or ($assemblyWithProblemsWrongReferenceActualFullName.ToLowerInvariant() -ne $assemblyWithProblemsWrongReferenceWrongFullName.ToLowerInvariant()))
+                            {
+                                if([string]::IsNullOrEmpty($wrongThirdPartyReferencesInSitecoreAssembliesReportLine))
                                 {
-                                    $wrongReferencesReportLine = "Assembly with wrong reference, Wrong referenced assembly, wrong referenced version, correct referenced version$nl"
+                                    $wrongThirdPartyReferencesInSitecoreAssembliesReportLine = "sep=,$nl"
+                                    $wrongThirdPartyReferencesInSitecoreAssembliesReportLine = $wrongThirdPartyReferencesInSitecoreAssembliesReportLine + "`"Assembly with wrong reference`",`"actual shipped assembly fullname`",`"wrong referenced assembly fullname`"$nl"
                                 }
-                                $wrongSitecoreReferenceName = $_.Name
-                                $wrongSitecoreReferenceVersion = $_.Version
-                                $wrongSitecoreReferenceOriginal = $original
-                                $wrongSitecoreReferenceShouldBe = $assembly.AssemblyVersion
-                                $wrongReferencesReportLine = $wrongReferencesReportLine + "$wrongSitecoreReferenceOriginal, $wrongSitecoreReferenceName, $wrongSitecoreReferenceVersion, $wrongSitecoreReferenceShouldBe$nl"
+
+                                $wrongThirdPartyReferencesInSitecoreAssembliesReportLine = $wrongThirdPartyReferencesInSitecoreAssembliesReportLine + "`"$assemblyWithProblems`",`"$assemblyWithProblemsWrongReferenceActualFullName`",`"$assemblyWithProblemsWrongReferenceWrongFullName`"$nl"
+                            }
+                        }
+                        else {
+                            # trying to report on wrong referenced assemblies from 3rd party components, which might require assembly binding redirect, since we have them in our shipped folder
+                            if(([string]$pbt -ne [string]$assembly.PublicKeyToken) -or ([string]$version -ne [string]$assembly.AssemblyVersion) -or (([string]$loadedCultureName).ToLowerInvariant() -ne ([string]$assembly.CultureName).ToLowerInvariant()) -or ($assemblyWithProblemsWrongReferenceActualFullName.ToLowerInvariant() -ne $assemblyWithProblemsWrongReferenceWrongFullName.ToLowerInvariant()))
+                            {
+                                if([string]::IsNullOrEmpty($wrongThirdPartyReferencesInThirdPartyAssembliesReportLine))
+                                {
+                                    $wrongThirdPartyReferencesInThirdPartyAssembliesReportLine = "sep=,$nl"
+                                    $wrongThirdPartyReferencesInThirdPartyAssembliesReportLine = $wrongThirdPartyReferencesInThirdPartyAssembliesReportLine + "`"Assembly with wrong reference`",`"actual shipped assembly fullname`",`"wrong referenced assembly fullname`"$nl"
+                                }
+
+                                $wrongThirdPartyReferencesInThirdPartyAssembliesReportLine = $wrongThirdPartyReferencesInThirdPartyAssembliesReportLine + "`"$assemblyWithProblems`",`"$assemblyWithProblemsWrongReferenceActualFullName`",`"$assemblyWithProblemsWrongReferenceWrongFullName`"$nl"
                             }
                         }
                     }
-                    if($loaded -ne $null)
-                    {
-                        $loaded = $null
-                    }
+                    else {
+                        # Things we don't ship, but that are referenced from assemblies we actually ship - it should be either in GAC, or we need to ship it.
+                        $notShippedAssemblyFullName = [string]$loadedAssemblyNameReferenced.FullName
+                        $reflectionOnlyAssembly = $null
+                        try {
+                            $reflectionOnlyAssembly = [System.Reflection.Assembly]::ReflectionOnlyLoad($notShippedAssemblyFullName)
+                            if($reflectionOnlyAssembly.GlobalAssemblyCache)
+                            {
+                                if([string]::IsNullOrEmpty($hopeFullyInGACAssembliesReportLine))
+                                {
+                                    $hopeFullyInGACAssembliesReportLine = "sep=,$nl"
+                                    $hopeFullyInGACAssembliesReportLine = $hopeFullyInGACAssembliesReportLine + "`"Assembly with reference to assembly hopefully in GAC`",`"Assembly fullname which might be in GAC`"$nl"
+                                }
+                                
+                                $hopeFullyInGACAssembliesReportLine = $hopeFullyInGACAssembliesReportLine + "`"$assemblyWithProblems`",`"$notShippedAssemblyFullName`"$nl"
+                            }
+                            else {
+                                Write-host "Assembly is found SOMEWHERE ELSE ON THE MACHINE - WTF"
+                                Write-Host "`"$assemblyWithProblems`",`"$notShippedAssemblyFullName`"$nl"
+                            }
+                        }
+                        catch {
+                            if([string]::IsNullOrEmpty($considerShippingTheseAssembliesReportLine))
+                            {
+                                $considerShippingTheseAssembliesReportLine = "sep=,$nl"
+                                $considerShippingTheseAssembliesReportLine = $considerShippingTheseAssembliesReportLine + "`"Assembly with reference to nowhere to be found assembly`",`"Assembly fullname which might be worth shipping`"$nl"
+                            }
+
+                            $considerShippingTheseAssembliesReportLine = $considerShippingTheseAssembliesReportLine + "`"$assemblyWithProblems`",`"$notShippedAssemblyFullName`"$nl"
+                        }
+                    }         
+                    
+                }
+
+                if($loaded -ne $null)
+                {
+                    $loaded = $null
                 }
             }
-            if(![string]::IsNullOrEmpty($wrongReferencesReportLine))
-            {
-                $wrongReferencesReportLine | Out-File -FilePath $reportwrongSitecoreReferenceFullFileName -Enc "UTF8"
-            }
+        }
+        if(![string]::IsNullOrEmpty($wrongReferencesReportLine))
+        {
+            $wrongReferencesReportLine | Out-File -FilePath $reportwrongSitecoreReferenceFullFileName -Enc "UTF8"
+        }
+
+        if(![string]::IsNullOrEmpty($wrongThirdPartyReferencesInSitecoreAssembliesReportLine))
+        {
+            $wrongThirdPartyReferencesInSitecoreAssembliesReportLine | Out-File -FilePath $reportwrongThirdPartyReferenecesInSitecoreAssembliesFullFileName -Enc "UTF8"
+        }
+
+        if(![string]::IsNullOrEmpty($wrongThirdPartyReferencesInThirdPartyAssembliesReportLine))
+        {
+            $wrongThirdPartyReferencesInThirdPartyAssembliesReportLine | Out-File -FilePath $reportwrongThirdPartyReferenecesInThirdPartyAssembliesFullFileName -Enc "UTF8"
+        }
+        
+        if(![string]::IsNullOrEmpty($hopeFullyInGACAssembliesReportLine))
+        {
+            $hopeFullyInGACAssembliesReportLine | Out-File -FilePath $reportHopeFullyInGACAssembliesFullFileName -Enc "UTF8"
+        }
+
+        if(![string]::IsNullOrEmpty($considerShippingTheseAssembliesReportLine))
+        {
+            $considerShippingTheseAssembliesReportLine | Out-File -FilePath $reportConsiderShippingTheseAssembliesFullFileName -Enc "UTF8"
         }
     }
+}
 
-    $workingFolderPackage = [System.IO.Path]::Combine($workingFolder, "packages")
+$workingFolderPackage = [System.IO.Path]::Combine($workingFolder, "packages")
 
-    if(Test-Path -Path $workingFolderPackage)
-    {
-        Remove-Item -Path $workingFolderPackage -Recurse -Force 
-    }
+if(Test-Path -Path $workingFolderPackage)
+{
+    Remove-Item -Path $workingFolderPackage -Recurse -Force 
+}
 
-    if(Test-Path -Path $targetDirectory)
-    {
-        Remove-Item -Path $targetDirectory -Recurse -Force 
-    }
+if(Test-Path -Path $targetDirectory)
+{
+    Remove-Item -Path $targetDirectory -Recurse -Force 
+}
 
-    if(Test-Path -Path $nugetExecutable)
-    {
-        Remove-Item $nugetExecutable -Force
-    }
+if(Test-Path -Path $nugetExecutable)
+{
+    Remove-Item $nugetExecutable -Force
+}
 
-    if(Test-Path -Path $workingFolder)
-    {
-        Remove-Item -Path $workingFolder -Recurse -Force 
-    }
+if(Test-Path -Path $workingFolder)
+{
+    Remove-Item -Path $workingFolder -Recurse -Force 
 }
