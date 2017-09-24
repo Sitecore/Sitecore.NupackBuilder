@@ -88,11 +88,11 @@ $sitecorePlatform = "$FileNameNoExtension\Website\bin\"
 
 #$newTargetDirectory = "$targetDirectory$xconnectServer"
 #$newTargetDirectory = "$targetDirectory$MarketingAutomationService"
-#$newTargetDirectory = "$targetDirectory$xconnectIndexingService"
-$newTargetDirectory = "$targetDirectory$sitecorePlatform"
+$newTargetDirectory = "$targetDirectory$xconnectIndexingService"
+#$newTargetDirectory = "$targetDirectory$sitecorePlatform"
 
 # Reporting
-$assemblies=Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name.ToLower().EndsWith("dll")} |
+$assemblies=Get-ChildItem $newTargetDirectory | Where-Object {$_.Name.ToLower().EndsWith("dll")} |
 ForEach-Object {
     try {
         $_ | Add-Member NoteProperty FileVersion ($_.VersionInfo.FileVersion)
@@ -159,7 +159,7 @@ $references = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -ma
         }
     }
 
-    if (1 -eq 1)
+    if (1 -eq 2)
     {
         # Report on referenced 3rd party components
         $loaded.GetReferencedAssemblies() | % {
@@ -267,7 +267,7 @@ $references = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -ma
         }
     }
 
-    if (1 -eq 2)
+    if (1 -eq 1)
     {
         # Check for correct referenced version
         $loaded.GetReferencedAssemblies() | % {
@@ -279,6 +279,8 @@ $references = Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -ma
 
                 if($assembly -ne $null)
                 {
+                    
+
                     if($_.Version -ne $assembly.AssemblyVersion)
                     {
                         $toAdd.Who,$toAdd.FullName,$toAdd.Name,$toAdd.Version, $toAdd.Original, $toAdd.ShouldBe = $loaded,$_.FullName,$_.Name,$_.Version, $original, $assembly.AssemblyVersion
@@ -345,7 +347,7 @@ $references |
     #Group-Object Original, Version | 
     #Select-Object -expand Name | 
     #Sort-Object
-    Group-Object Original,Name,Version | 
+    Group-Object Original,Name,Version,ShouldBe | 
     Select-Object -expand Name | 
     Sort-Object
 }
