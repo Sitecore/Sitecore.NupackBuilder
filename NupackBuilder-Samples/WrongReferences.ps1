@@ -26,6 +26,89 @@ Function Get-7z
         return $zipFileLocation
 }
 
+Function Set-ExitCode {
+    param(
+        [Parameter(Mandatory = $true, helpmessage = "The value to set the exit code to")]
+        [ValidateNotNullOrEmpty()]
+        [string]$ErrorCode
+    )
+
+    $arguments = " /c exit $errorCode"
+    $command = "cmd.exe" + $arguments
+    Invoke-Expression $command
+}
+
+Function Invoke-Robocopy {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true,helpmessage="The arguments for Robocopy")]
+        [ValidateNotNullOrEmpty()]
+        [string]$RobocopyArgs,
+        [Parameter(Mandatory=$false,helpmessage="Verbosity string.")]
+        [string]$Verbosity = "quiet"
+    )
+
+	$command = "robocopy.exe" + $robocopyArgs
+    if(($Verbosity.ToLower() -eq "normal") -or ($Verbosity.ToLower() -eq "detailed"))
+    {
+        Write-Host "calling robocopy with the command : $command"
+	}
+    Invoke-Expression $command | out-null
+	
+	# Check exit code
+	If (($LASTEXITCODE -eq 0)) {
+		$RoboCopyMessage = "ROBOCOPY EXITCODE: $LASTEXITCODE, Succeeded"
+        if(($Verbosity.ToLower() -eq "normal") -or ($Verbosity.ToLower() -eq "detailed"))
+        {            
+		    Write-Host $RoboCopyMessage -ForegroundColor Green
+        }
+		Set-ExitCode -ErrorCode "0"
+	} elseif (($LASTEXITCODE -gt 0) -and ($LASTEXITCODE -lt 16)) {
+		$RoboCopyMessage = "ROBOCOPY EXITCODE: $LASTEXITCODE, Warning"
+        if(($Verbosity.ToLower() -eq "normal") -or ($Verbosity.ToLower() -eq "detailed"))
+        {
+		    Write-Host $RoboCopyMessage -ForegroundColor Yellow
+        }
+		Set-ExitCode -ErrorCode "0"
+	} elseif ($LASTEXITCODE -eq 16) {
+		$RoboCopyMessage = "ROBOCOPY EXITCODE: $LASTEXITCODE, Error"
+		Write-Host $RoboCopyMessage -ForegroundColor Red
+		Set-ExitCode -ErrorCode "-1"
+	} else {
+		$RoboCopyMessage = "Robocopy did not run"
+		Write-Host $RoboCopyMessage -ForegroundColor Red
+		Set-ExitCode -ErrorCode "-1"
+	}
+}
+
+Function Remove-PathToLongDirectory {
+    [CmdletBinding()]
+	param(
+        [ValidateNotNullOrEmpty()]
+        [alias("directory")]
+		[string]$Path
+	)
+
+	# create a temporary (empty) directory
+    $parent = [System.IO.Path]::GetTempPath()
+	[string] $name = [System.Guid]::NewGuid()
+	$tempDirectory = New-Item -ItemType Directory -Path (Join-Path $parent $name)
+
+	$tempDirectoryFullName = $tempDirectory.FullName
+    $datestamp = get-date -Format yyyyMMddHHmmss
+    $logfile = "$env:TEMP\robocopy_$datestamp.log"
+
+    if(Test-Path $logfile) {
+        Remove-Item -Path "$logfile" -Force | out-null
+    }
+
+	$robocopyArgs = " `"$tempDirectoryFullName`" `"$Path`" /MIR /R:3 /W:3 /MT:32 /NFL /NDL /NJH /NJS /nc /ns /np /LOG:`"$logfile`""
+	Invoke-Robocopy -robocopyArgs $robocopyArgs
+    if(Test-Path $logfile) { Remove-Item -Path "$logfile" -Force }
+    if(Test-Path $Path) { Remove-Item $Path -Force -Recurse }
+    if(Test-Path $tempDirectory) { Remove-Item $tempDirectory -Force -Recurse }
+}
+
 Function Get-PublicKeyToken
 {
     param(
@@ -107,13 +190,13 @@ Function UnZipFiles
     $unzipargs = ' x "' + $ArchivePath + '" -o"' + $TargetPath + '" -y'
     $unzipcommand = "& '$pathTo7z'" + $unzipargs
   
-    #Write-Log "$unzipcommand"
+    #Write-Host "$unzipcommand"
   
     if ($SuppressOutput)
     {
-      # Write-Log -Message "Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
+      # Write-Host -Message "Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
       Invoke-Expression $unzipcommand | Out-Null
-      # Write-Log -Message "Done Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
+      # Write-Host -Message "Done Extracting files from $ArchivePath to $TargetPath..." -Program "7z"
     }
     else
     {
@@ -440,12 +523,12 @@ $workingFolderPackage = [System.IO.Path]::Combine($workingFolder, "packages")
 
 if(Test-Path -Path $workingFolderPackage)
 {
-    Remove-Item -Path $workingFolderPackage -Recurse -Force 
+    Remove-PathToLongDirectory -Path $workingFolderPackage
 }
 
 if(Test-Path -Path $targetDirectory)
 {
-    Remove-Item -Path $targetDirectory -Recurse -Force 
+    Remove-PathToLongDirectory -Path $targetDirectory
 }
 
 if(Test-Path -Path $nugetExecutable)
@@ -455,5 +538,5 @@ if(Test-Path -Path $nugetExecutable)
 
 if(Test-Path -Path $workingFolder)
 {
-    Remove-Item -Path $workingFolder -Recurse -Force 
+    Remove-PathToLongDirectory -Path $workingFolder
 }
