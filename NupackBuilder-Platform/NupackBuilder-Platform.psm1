@@ -36,6 +36,7 @@ Function CreatePlatformPackage(
 		"NET452" {$frameWorkVersionLong = ".NETFramework4.5.2"}
 		"NET46" {$frameWorkVersionLong = ".NETFramework4.6"}
 		"NET461" {$frameWorkVersionLong = ".NETFramework4.6.1"}
+        "NET462" {$frameWorkVersionLong = ".NETFramework4.6.2"}
 		default {$frameWorkVersionLong = ".NETFramework4.5"}
 	}  
 
@@ -120,6 +121,7 @@ Function CreatePlatformModulePackages(
 		"NET452" {$frameWorkVersionLong = ".NETFramework4.5.2"}
 		"NET46" {$frameWorkVersionLong = ".NETFramework4.6"}
 		"NET461" {$frameWorkVersionLong = ".NETFramework4.6.1"}
+        "NET462" {$frameWorkVersionLong = ".NETFramework4.6.2"}
 		default {$frameWorkVersionLong = ".NETFramework4.5"}
 	}  
 
@@ -303,6 +305,9 @@ Function CreatePlatformPackages(
 							"Sitecore.SessionProvider", `
 							"Sitecore.Social", `
 							"Sitecore.Speak", `
+							"Sitecore.ExperienceForms", `
+							"Sitecore.Framework", `
+							"Sitecore.XConnect", `
 							"Sitecore.Xdb"
 	}
 
@@ -355,6 +360,10 @@ Function CreatePlatformPackages(
 				  }
 			"8.2" {
 					$frameworVersion = "NET452"
+					$createFileVersionPackages = $false
+				  }
+            "9.0" {
+					$frameworVersion = "NET462"
 					$createFileVersionPackages = $false
 				  } 
 			default {

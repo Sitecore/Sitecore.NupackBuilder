@@ -836,27 +836,32 @@ Function Add-PlatformThirdPartyPackages()
 {
     $packages  = [NupackBuilder.Packages]::new()
 
-    # Newtonsoft.Json 3.5.8
+    # Newtonsoft.Json.3.5.8
     #$packageAssembly = [NupackBuilder.PackageAssembly]::new("Newtonsoft.Json", "3.5.0.0", "neutral", "30ad4fe6b2a6aeed")
     #$packageInfo = [NupackBuilder.PackageInfo]::new("Newtonsoft.Json", "3.5.8", $false, $packageAssembly)
     #$packages.AddPackageInfo($packageInfo)
 
-    # Newtonsoft.Json 4.5.9
+    # Newtonsoft.Json.4.5.9
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Newtonsoft.Json", "4.5.0.0", "neutral", "30ad4fe6b2a6aeed")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Newtonsoft.Json", "4.5.9", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    # Newtonsoft.Json 6.0.8
+    # Newtonsoft.Json.6.0.8
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Newtonsoft.Json", "6.0.0.0", "neutral", "30ad4fe6b2a6aeed")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Newtonsoft.Json", "6.0.8", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    # Lucene.Net 3.0.3
+    #Newtonsoft.Json.9.0.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Newtonsoft.Json", "9.0.0.0", "neutral", "30ad4fe6b2a6aeed")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Newtonsoft.Json", "9.0.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    # Lucene.Net.3.0.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net", "3.0.3.0", "neutral", "85089178b9ac3181")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Lucene.Net", "3.0.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    # Lucene.Net.Contrib 3.0.3
+    # Lucene.Net.Contrib.3.0.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Analyzers", "3.0.3.0", "neutral", "85089178b9ac3181")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Lucene.Net.Contrib", "3.0.3", $false, $packageAssembly)
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Lucene.Net.Contrib.Core", "3.0.3.0", "neutral", "85089178b9ac3181")
@@ -879,12 +884,78 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo.AddPackageAssembly($packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #HtmlAgilityPack 1.4.6
+    #51Degrees.mobi-core.3.2.17.2
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("FiftyOne.Foundation", "3.2.17.2", "neutral", "e0b3a8da0bbce49c")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("51Degrees.mobi-core", "3.2.17.2", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Antlr.3.5.0.2
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Antlr3.Runtime", "3.5.0.2", "neutral", "eb42632606e9261f")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Antlr", "3.5.0.2", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #CommonServiceLocator.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Antlr3.Runtime", "1.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("CommonServiceLocator", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #EnterpriseLibrary.Common.6.0.1304.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.EnterpriseLibrary.Common", "6.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("EnterpriseLibrary.Common", "6.0.1304.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #EnterpriseLibrary.TransientFaultHandling.6.0.1304.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling", "6.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("EnterpriseLibrary.TransientFaultHandling", "6.0.1304.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #EnterpriseLibrary.TransientFaultHandling.Caching.6.0.1304.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Caching", "6.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("EnterpriseLibrary.TransientFaultHandling.Caching", "6.0.1304.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #EnterpriseLibrary.TransientFaultHandling.Configuration.6.0.1304.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Configuration", "6.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("EnterpriseLibrary.TransientFaultHandling.Configuration", "6.0.1304.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.Data", "6.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("EnterpriseLibrary.TransientFaultHandling.Data", "6.0.1304.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #EnterpriseLibrary.TransientFaultHandling.ServiceBus.6.0.1304.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.ServiceBus", "6.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("EnterpriseLibrary.TransientFaultHandling.ServiceBus", "6.0.1304.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #EnterpriseLibrary.TransientFaultHandling.WindowsAzure.Storage.6.0.1304.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.EnterpriseLibrary.TransientFaultHandling.WindowsAzure.Storage", "6.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("EnterpriseLibrary.TransientFaultHandling.WindowsAzure.Storage", "6.0.1304.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+
+    #HtmlAgilityPack.1.4.9.5
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("HtmlAgilityPack", "1.4.9.5", "neutral", "bd319b19eaf3b43a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("HtmlAgilityPack", "1.4.9.5", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #HtmlAgilityPack.1.4.6
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("HtmlAgilityPack", "1.4.6.0", "neutral", "bd319b19eaf3b43a")
     $packageInfo = [NupackBuilder.PackageInfo]::new("HtmlAgilityPack", "1.4.6", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #YUICompressor.NET 2.1.1
+    #Microsoft.AspNet.Cors.5.2.3
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Cors", "5.2.3.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Cors", "5.2.3", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.AspNet.Identity.Core.2.2.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.AspNet.Identity.Core", "2.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Identity.Core", "2.2.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #YUICompressor.NET.2.1.1
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Yahoo.Yui.Compressor", "2.1.1.0", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("YUICompressor.NET", "2.1.1", $false, $packageAssembly)
 
@@ -895,7 +966,7 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo.AddPackageAssembly($packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #mongocsharpdriver 1.10.0
+    #mongocsharpdriver.1.10.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Bson", "1.10.0.62", "neutral", "f686731cfb9cc103")
     $packageInfo = [NupackBuilder.PackageInfo]::new("mongocsharpdriver", "1.10.0", $false, $packageAssembly)
 
@@ -903,7 +974,7 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo.AddPackageAssembly($packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #mongocsharpdriver 1.8.3
+    #mongocsharpdriver.1.8.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Bson", "1.8.3.9", "neutral", "f686731cfb9cc103")
     $packageInfo = [NupackBuilder.PackageInfo]::new("mongocsharpdriver", "1.8.3", $false, $packageAssembly)
 
@@ -911,87 +982,95 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo.AddPackageAssembly($packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #mongocsharpdriver 2.4.4
+    #mongocsharpdriver.2.4.4
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Driver.Legacy", "2.4.4.0", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("mongocsharpdriver", "2.4.4", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #MongoDB.Bson 2.4.4
+    #MongoDB.Bson.2.4.4
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Bson", "2.4.4.0", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("MongoDB.Bson", "2.4.4", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #MongoDB.Driver 2.4.4
+    #MongoDB.Driver.2.4.4
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Driver", "2.4.4.0", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("MongoDB.Driver", "2.4.4", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #MongoDB.Driver.Core 2.4.4
+    #MongoDB.Driver.Core.2.4.4
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("MongoDB.Driver.Core", "2.4.4.0", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("MongoDB.Driver.Core", "2.4.4", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #System.Runtime.InteropServices.RuntimeInformation.4.0.0
-    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Runtime.InteropServices.RuntimeInformation", "4.0.0.0", "neutral", "b03f5f7f11d50a3a")
-    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Runtime.InteropServices.RuntimeInformation", "4.0.0", $false, $packageAssembly)
-    $packages.AddPackageInfo($packageInfo)
+    
 
-    #SolrNet 0.4.0.4001
+    #SolrNet.0.4.0.4001
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("SolrNet", "0.4.0.4001", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("SolrNet", "0.4.0.4001", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #SolrNet 0.4.0-beta2 - can't be used since nuget doesn't allow creation of final packages with prereleases - and this is the one we use.
+    #SolrNet.0.4.0-beta2 - can't be used since nuget doesn't allow creation of final packages with prereleases - and this is the one we use.
     #$packageAssembly = [NupackBuilder.PackageAssembly]::new("SolrNet", "0.4.0.2002", "neutral", "bc21753e8aa334cb")
     #$packageInfo = [NupackBuilder.PackageInfo]::new("SolrNet", "0.4.0-beta2", $true, $packageAssembly)
     #$packages.AddPackageInfo($packageInfo)
 
-    #RazorGenerator.Mvc 2.4.2
+    #RazorGenerator.Mvc.2.4.9
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("RazorGenerator.Mvc", "2.0.0.0", "neutral", "7b26dc2a43f6a0d4")
-    $packageInfo = [NupackBuilder.PackageInfo]::new("RazorGenerator.Mvc", "2.4.2", $false, $packageAssembly)
+    $packageInfo = [NupackBuilder.PackageInfo]::new("RazorGenerator.Mvc", "2.4.9", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #protobuf-net 2.0.0.668
+    #protobuf-net.2.0.0.668
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("protobuf-net", "2.0.0.668", "neutral", "257b51d87d2e4d67")
     $packageInfo = [NupackBuilder.PackageInfo]::new("protobuf-net", "2.0.0.668", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Ninject 3.2.2
+    #Ninject.3.2.2
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Ninject", "3.2.0.0", "neutral", "c7192dc5380945e7")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Ninject", "3.2.2", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #WebActivatorEx 2.0.6
+    #WebActivatorEx.2.0.6
+    #$packageAssembly = [NupackBuilder.PackageAssembly]::new("WebActivatorEx", "2.0.0.0", "neutral", "7b26dc2a43f6a0d4")
+    #$packageInfo = [NupackBuilder.PackageInfo]::new("WebActivatorEx", "2.0.6", $false, $packageAssembly)
+    #$packages.AddPackageInfo($packageInfo)
+
+    #WebActivatorEx.2.2.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("WebActivatorEx", "2.0.0.0", "neutral", "7b26dc2a43f6a0d4")
-    $packageInfo = [NupackBuilder.PackageInfo]::new("WebActivatorEx", "2.0.6", $false, $packageAssembly)
+    $packageInfo = [NupackBuilder.PackageInfo]::new("WebActivatorEx", "2.2.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Markdown 1.14.6
+
+    #Markdown.1.14.6
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("MarkdownSharp", "1.14.5.0", "neutral", "eb89951a0d41ab86")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Markdown", "1.14.6", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Facebook 5.4.1
+    #Facebook.5.4.1
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Facebook", "5.4.1.0", "neutral", "58cb4f2111d1e6de")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Facebook", "5.4.1", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.Mvc 5.1.3
+    #Microsoft.AspNet.Identity.Owin.2.2.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.AspNet.Identity.Owin", "2.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Identity.Owin", "2.2.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.AspNet.Mvc.5.1.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Mvc", "5.1.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Mvc", "5.1.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.Mvc 5.2.3
+    #Microsoft.AspNet.Mvc.5.2.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Mvc", "5.2.3.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Mvc", "5.2.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.Razor 3.2.3
+    #Microsoft.AspNet.Razor.3.2.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Razor", "3.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Razor", "3.2.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebPages 3.2.3
+    #Microsoft.AspNet.WebPages.3.2.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Helpers", "3.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebPages", "3.2.3", $false, $packageAssembly)
 
@@ -1005,132 +1084,380 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo.AddPackageAssembly($packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.Client 5.1.2
+    #Microsoft.AspNet.WebApi.5.2.3
+
+    #Microsoft.AspNet.WebApi.Client.5.1.2
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Net.Http.Formatting", "5.1.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Client", "5.1.2", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.Client 5.2.3
+    #Microsoft.AspNet.WebApi.Client.5.2.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Net.Http.Formatting", "5.2.3.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Client", "5.2.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.Core 5.1.2
+    #Microsoft.AspNet.WebApi.Core.5.1.2
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http", "5.1.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Core", "5.1.2", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.Core 5.2.3
+    #Microsoft.AspNet.WebApi.Core.5.2.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http", "5.2.3.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Core", "5.2.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.WebHost 5.1.2
+    #Microsoft.AspNet.WebApi.WebHost.5.1.2
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.WebHost", "5.1.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.WebHost", "5.1.2", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.WebHost 5.2.3
+    #Microsoft.AspNet.WebApi.WebHost.5.2.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.WebHost", "5.2.3.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.WebHost", "5.2.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.Web.Infrastructure 1.0.0.0
+    #Microsoft.Web.Infrastructure.1.0.0.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Web.Infrastructure", "1.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Web.Infrastructure", "1.0.0.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.OData 5.9.0
+    #Microsoft.AspNet.OData.5.9.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.OData", "5.9.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.OData", "5.9.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.OData.Core 6.15.0
+     #Microsoft.AspNet.OData.6.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.OData", "6.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.OData", "6.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.OData.Core.6.15.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Core", "6.15.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Core", "6.15.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.OData.Edm 6.15.0
+    #Microsoft.OData.Core.7.2.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Core", "7.2.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Core", "7.2.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.OData.Edm.6.15.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Edm", "6.15.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Edm", "6.15.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.Spatial 6.15.0
+    #Microsoft.OData.Edm.7.2.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Edm", "7.2.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Edm", "7.2.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Owin.3.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Owin", "3.1.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Owin", "3.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Owin.Host.SystemWeb.3.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Owin.Host.SystemWeb", "3.1.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Owin.Host.SystemWeb", "3.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Owin.Security.3.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Owin.Security", "3.1.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Owin.Security", "3.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Owin.Security.ActiveDirectory.3.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Owin.Security.ActiveDirectory", "3.1.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Owin.Security.ActiveDirectory", "3.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Owin.Security.Cookies.3.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Owin.Security.Cookies", "3.1.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Owin.Security.Cookies", "3.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Owin.Security.Jwt.3.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Owin.Security.Jwt", "3.1.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Owin.Security.Jwt", "3.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Owin.Security.OAuth.3.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Owin.Security.OAuth", "3.1.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Owin.Security.OAuth", "3.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Spatial.6.15.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Spatial", "6.15.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Spatial", "6.15.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.Extensions.DependencyInjection.Abstractions 1.0.0
+    #Microsoft.Spatial.7.2.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Spatial", "7.2.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Spatial", "7.2.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.DotNet.InternalAbstractions.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.DotNet.InternalAbstractions", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.DotNet.InternalAbstractions", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.CommandLineUtils.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.CommandLineUtils", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.CommandLineUtils", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.Abstractions.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration.Abstractions", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration.Abstractions", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.Binder.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration.Binder", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration.Binder", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.CommandLine.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration.CommandLine", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration.CommandLine", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.EnvironmentVariables.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration.EnvironmentVariables", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration.EnvironmentVariables", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.FileExtensions.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration.FileExtensions", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration.FileExtensions", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.Ini.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration.Ini", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration.Ini", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.Json.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration.Json", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration.Json", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Configuration.Xml.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Configuration.Xml", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Configuration.Xml", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.DependencyInjection.Abstractions.1.0.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.DependencyInjection.Abstractions", "1.0.0.0", "neutral", "adb9793829ddae60")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.DependencyInjection.Abstractions", "1.0.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.Extensions.DependencyInjection 1.0.0
+    #Microsoft.Extensions.DependencyInjection.1.0.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.DependencyInjection", "1.0.0.0", "neutral", "adb9793829ddae60")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.DependencyInjection", "1.0.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.Cors 5.1.2
+    #Microsoft.Extensions.DependencyModel.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.DependencyModel", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.DependencyModel", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.FileProviders.Abstractions.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.FileProviders.Abstractions", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.FileProviders.Abstractions", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.FileProviders.Physical.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.FileProviders.Physical", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.FileProviders.Physical", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.FileSystemGlobbing.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.FileSystemGlobbing", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.FileSystemGlobbing", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Logging.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Logging", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Logging", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Logging.Abstractions.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Logging.Abstractions", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Logging.Abstractions", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Options.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Options", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Options", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.PlatformAbstractions.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.PlatformAbstractions", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.PlatformAbstractions", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Extensions.Primitives.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Primitives", "1.0.0.0", "neutral", "adb9793829ddae60")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Primitives", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #SharpZipLib.0.86.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("ICSharpCode.SharpZipLib", "0.86.0.518", "neutral", "1b03e6acf1164f73")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("SharpZipLib", "0.86.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.AspNet.WebApi.Cors.5.1.2
     #$packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.Cors", "5.1.0.0", "neutral", "31bf3856ad364e35")
     #$packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Cors", "5.1.2", $false, $packageAssembly)
     #$packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.Cors 5.2.3
+    #Microsoft.AspNet.WebApi.Cors.5.2.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Http.Cors", "5.2.3.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Cors", "5.2.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.Web.Optimization 1.1.3
+    #Microsoft.AspNet.Web.Optimization.1.1.3
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Web.Optimization", "1.1.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Web.Optimization", "1.1.3", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)    
+
+    #Microsoft.IdentityModel.Protocol.Extensions.1.0.4.403061554
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.IdentityModel.Protocol.Extensions", "1.0.40306.1554", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.IdentityModel.Protocol.Extensions", "1.0.4.403061554", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #System.IdentityModel.Tokens.Jwt 5.0.0
-    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.IdentityModel.Tokens.Jwt", "5.0.0.127", "neutral", "31bf3856ad364e35")
-    $packageInfo = [NupackBuilder.PackageInfo]::new("System.IdentityModel.Tokens.Jwt", "5.0.0", $false, $packageAssembly)
-    $packages.AddPackageInfo($packageInfo)
-
-    #System.IdentityModel.Tokens.Jwt 4.0.2.206221351
-    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.IdentityModel.Tokens.Jwt", "4.0.20622.1351", "neutral", "31bf3856ad364e35")
-    $packageInfo = [NupackBuilder.PackageInfo]::new("System.IdentityModel.Tokens.Jwt", "4.0.2.206221351", $false, $packageAssembly)
-    $packages.AddPackageInfo($packageInfo)
-
-    #CommonServiceLocation 1.0.0
+    #CommonServiceLocation.1.0.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Practices.ServiceLocation", "1.0.0.0", "neutral", "59d6d24383174ac4")
     $packageInfo = [NupackBuilder.PackageInfo]::new("CommonServiceLocation", "1.0.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #System.Net.Http 4.0.0
+    #System.Collections.NonGeneric.4.0.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Collections.NonGeneric", "4.0.1.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Collections.NonGeneric", "4.0.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.ComponentModel.Primitives.4.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.ComponentModel.Primitives", "4.1.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.ComponentModel.Primitives", "4.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.ComponentModel.TypeConverter.4.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.ComponentModel.TypeConverter", "4.1.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.ComponentModel.TypeConverter", "4.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.Interactive.Async.3.1.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Interactive.Async", "3.0.3000.0", "neutral", "94bc3704cddfc263")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Interactive.Async", "3.1.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.Interactive.Async.Providers.3.1.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Interactive.Async.Providers", "3.0.1000.0", "neutral", "94bc3704cddfc263")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Interactive.Async.Providers", "3.1.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.IO.4.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.IO", "4.1.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.IO", "4.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.Reflection.4.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Reflection", "4.1.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Reflection", "4.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.Runtime.4.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Runtime", "4.1.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Runtime", "4.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.Runtime.Extensions.4.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Runtime.Extensions", "4.1.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Runtime.Extensions", "4.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.Runtime.InteropServices.4.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Runtime.InteropServices", "4.1.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Runtime.InteropServices", "4.1.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.IdentityModel.Tokens.Jwt.4.0.2.206221351
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.IdentityModel.Tokens.Jwt", "4.0.20622.1351", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.IdentityModel.Tokens.Jwt", "4.0.2.206221351", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.IdentityModel.Tokens.Jwt.4.0.4.403061554
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.IdentityModel.Tokens.Jwt", "4.0.40306.1554", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.IdentityModel.Tokens.Jwt", "4.0.4.403061554", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #System.IdentityModel.Tokens.Jwt.5.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.IdentityModel.Tokens.Jwt", "5.0.0.127", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.IdentityModel.Tokens.Jwt", "5.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)    
+
+    #System.Net.Http.4.0.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Net.Http", "4.0.0.0", "neutral", "b03f5f7f11d50a3a")
     $packageInfo = [NupackBuilder.PackageInfo]::new("System.Net.Http", "4.0.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #Microsoft.AspNet.WebApi.Extensions.Compression.Server 2.0.6
+    #System.Runtime.InteropServices.RuntimeInformation.4.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Runtime.InteropServices.RuntimeInformation", "4.0.0.0", "neutral", "b03f5f7f11d50a3a")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("System.Runtime.InteropServices.RuntimeInformation", "4.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.AspNet.WebApi.Extensions.Compression.Server.2.0.6
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.AspNet.WebApi.Extensions.Compression.Server", "2.0.0.0", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.Extensions.Compression.Server", "2.0.6", $false, $packageAssembly)
 
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("System.Net.Http.Extensions.Compression.Core", "2.0.0.0", "neutral", "null")
     $packageInfo.AddPackageAssembly($packageAssembly)
     $packages.AddPackageInfo($packageInfo)
+
+    # WebGrease.1.6.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("WebGrease", "1.6.5135.21930", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("WebGrease", "1.6.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #StackExchange.Redis.StrongName.1.0.488
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("StackExchange.Redis.StrongName", "1.0.316.0", "neutral", "c219ff1ca8c2ce46")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("StackExchange.Redis.StrongName", "1.0.488", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Remotion.Linq.2.1.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Remotion.Linq", "2.1.0.0", "neutral", "fee00910d6e5f53b")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Remotion.Linq", "2.1.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Mvp.Xml.2.3.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Mvp.Xml", "2.3.0.0", "neutral", "6ead800d778c9b9f")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Mvp.Xml", "2.3.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Owin.1.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Owin", "1.0.0.0", "neutral", "f0ebd12fd5e55cc5")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Owin", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
         
     return $packages
 }
 
 Function Add-ModulesThirdPartyPackages()
 {
-    $packages  = Add-PlatformThirdPartyPackages
+    $packages  = Add-PlatformThirdPartyPackages    
 
-    # WebGrease 1.6.0
-    $packageAssembly = [NupackBuilder.PackageAssembly]::new("WebGrease", "1.6.5135.21930", "neutral", "31bf3856ad364e35")
-    $packageInfo = [NupackBuilder.PackageInfo]::new("WebGrease", "1.6.0", $false, $packageAssembly)
-    $packages.AddPackageInfo($packageInfo)
-
-    # Heijden.Dns 1.0.0
+    # Heijden.Dns.1.0.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Heijden.Dns", "1.0.0.1", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Heijden.Dns", "1.0.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    #AntiXssLibrary 4.2.1
+    #AntiXssLibrary.4.2.1
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("AntiXssLibrary", "4.2.0.0", "neutral", "d127efab8a9c114f")
     $packageInfo = [NupackBuilder.PackageInfo]::new("antixss", "4.2.1", $false, $packageAssembly)
 
@@ -1139,7 +1466,7 @@ Function Add-ModulesThirdPartyPackages()
 
     $packages.AddPackageInfo($packageInfo)
 
-    #AntiXssLibrary 4.3.0
+    #AntiXssLibrary.4.3.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("AntiXssLibrary", "4.3.0.0", "neutral", "d127efab8a9c114f")
     $packageInfo = [NupackBuilder.PackageInfo]::new("antixss", "4.3.0", $false, $packageAssembly)
 
@@ -1148,7 +1475,7 @@ Function Add-ModulesThirdPartyPackages()
 
     $packages.AddPackageInfo($packageInfo)
 
-    #microsoft.crmsdk.coreassemblies 7.1.1
+    #microsoft.crmsdk.coreassemblies.7.1.1
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Crm.Sdk.Proxy", "7.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.CoreAssemblies", "7.1.1", $false, $packageAssembly)
 
@@ -1157,7 +1484,7 @@ Function Add-ModulesThirdPartyPackages()
 
     $packages.AddPackageInfo($packageInfo)
 
-    #microsoft.crmsdk.coreassemblies 8.2.0
+    #microsoft.crmsdk.coreassemblies.8.2.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Crm.Sdk.Proxy", "8.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.CoreAssemblies", "8.2.0", $false, $packageAssembly)
 
@@ -1166,17 +1493,17 @@ Function Add-ModulesThirdPartyPackages()
 
     $packages.AddPackageInfo($packageInfo)
 
-    # Microsoft.CrmSdk.Deployment 7.1.1
+    # Microsoft.CrmSdk.Deployment.7.1.1
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Sdk.Deployment", "7.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.Deployment", "7.1.1", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
-    # Microsoft.CrmSdk.Deployment 8.2.0
+    # Microsoft.CrmSdk.Deployment.8.2.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Sdk.Deployment", "8.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.Deployment", "8.2.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
         
-    #Microsoft.IdentityModel 6.1.7600.16394
+    #Microsoft.IdentityModel.6.1.7600.16394
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.IdentityModel", "3.5.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.IdentityModel", "6.1.7600.16394", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
@@ -1190,7 +1517,7 @@ Function Add-ModulesThirdPartyPackages()
 
     $packages.AddPackageInfo($packageInfo)
 
-    # Microsoft.CrmSdk.Extensions 7.1.0.1
+    # Microsoft.CrmSdk.Extensions.7.1.0.1
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Xrm.Client.CodeGeneration", "7.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.CrmSdk.Extensions", "7.1.0.1", $false, $packageAssembly)
 
@@ -1205,7 +1532,7 @@ Function Add-ModulesThirdPartyPackages()
 
     $packages.AddPackageInfo($packageInfo)
 
-    #ZXing 2.1.1
+    #ZXing.2.1.1
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("zxing", "1.0.4727.18517", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("ZXing", "2.1.1", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
