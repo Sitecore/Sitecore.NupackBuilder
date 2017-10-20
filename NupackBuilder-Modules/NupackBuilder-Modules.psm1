@@ -222,6 +222,8 @@ Function CreateModulePackages(
 					"Sitecore.ContentTesting", `
 					"Sitecore.ExperienceAnalytics", `
 					"Sitecore.ExperienceEditor", `
+					"Sitecore.ExperienceExplorer", `
+					"Sitecore.Owin", `
 					"Sitecore.FXM", `
 					"Sitecore.ListManagement", `
 					"Sitecore.Marketing", `

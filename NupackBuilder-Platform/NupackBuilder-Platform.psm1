@@ -296,6 +296,8 @@ Function CreatePlatformPackages(
 							"Sitecore.ContentTesting", `
 							"Sitecore.ExperienceAnalytics", `
 							"Sitecore.ExperienceEditor", `
+							"Sitecore.ExperienceExplorer", `
+							"Sitecore.Owin", `
 							"Sitecore.FXM", `
 							"Sitecore.ListManagement", `
 							"Sitecore.Marketing", `
@@ -324,7 +326,14 @@ Function CreatePlatformPackages(
 		$nuspecDirectory = "$sitecoreRepositoryFolder$FileNameNoExtension\nuspec\"
 		$packageDirectory = "$sitecoreRepositoryFolder$FileNameNoExtension\nupack\"
 		$SitecoreVersion = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(" rev. ",".").Replace("rev. ",".").Replace(" rev.",".").Replace(".zip","").Trim()
-		$frameworVersion = "NET45"
+		switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
+		{
+            "9.0.0" {
+					    $SitecoreVersion = $SitecoreVersion.ToLower().Replace("9.0.0","9.0")
+				  } 
+        }
+        
+        $frameworVersion = "NET45"
 
 		if($SitecoreVersion.StartsWith("6"))
 		{
@@ -373,22 +382,39 @@ Function CreatePlatformPackages(
 
 		}
 
-		UnZipDLLFiles -installPath $root `
-		  -ArchivePath $archivePath `
-		  -TargetPath $targetDirectory `
-		  -nugetFullPath $nugetExecutable `
-		  -NugetFeed $NugetFeed `
-		  -SuppressOutput `
-		  -Filter "*\Website\bin\*.dll"
+        switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
+		{
+            "9.0" {
+                UnZipDLLFiles -installPath $root `
+		          -ArchivePath $archivePath `
+		          -TargetPath $targetDirectory `
+		          -nugetFullPath $nugetExecutable `
+		          -NugetFeed $NugetFeed `
+		          -SuppressOutput `
+		          -Filter "$FileNameNoExtension\Website\bin\*.dll"
+                
+            }
+            default {
+            # default is lover than 9.0
+		    UnZipDLLFiles -installPath $root `
+		      -ArchivePath $archivePath `
+		      -TargetPath $targetDirectory `
+		      -nugetFullPath $nugetExecutable `
+		      -NugetFeed $NugetFeed `
+		      -SuppressOutput `
+		      -Filter "*\Website\bin\*.dll"
 		
-		UnZipDLLFiles -installPath $root `
-		  -ArchivePath $archivePath `
-		  -TargetPath $targetDirectory `
-		  -nugetFullPath $nugetExecutable `
-		  -NugetFeed $NugetFeed `
-		  -SuppressOutput `
-		  -Filter "*\Website\bin\social\*.dll" `
-		  -doNotDeleteTargetPath		  
+		    UnZipDLLFiles -installPath $root `
+		      -ArchivePath $archivePath `
+		      -TargetPath $targetDirectory `
+		      -nugetFullPath $nugetExecutable `
+		      -NugetFeed $NugetFeed `
+		      -SuppressOutput `
+		      -Filter "*\Website\bin\social\*.dll" `
+		      -doNotDeleteTargetPath
+            }
+
+		}
 
 		CreatePlatformNuGetPackages -readDirectory $targetDirectory `
 			-nuspecDirectory $nuspecDirectory `
