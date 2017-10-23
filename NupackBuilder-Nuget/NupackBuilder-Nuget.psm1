@@ -249,7 +249,7 @@ Function CreateAssembliesNuspecFile(
 			$someName = $dep.Name
 			if(((Test-Path -Path "$readDirectory$someName.dll") -and ($isSitecoreModule -eq $false)) -or ((Test-Path -Path "$readDirectory$someName.dll") -and ($isSitecoreModule -eq $true) -and (!$dep.Name.ToLower().StartsWith("sitecore.experienceeditor"))) )
 			{
-				if($dep.Name.ToLower().StartsWith("sitecore.")) 
+				if(($dep.Name.ToLower().StartsWith("sitecore.")) -and (!($dep.Name.ToLower().StartsWith("sitecore.framework")))) 
 				{
 					$objComponent = New-Object System.Object
 					$objComponent | Add-Member -type NoteProperty -name PackageName -value $someName
