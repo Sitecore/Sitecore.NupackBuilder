@@ -1661,3 +1661,24 @@ Function UnZipFiles (
     iex $unzipcommand
   }  
 }
+
+Function Get-FrameworkVersion
+{
+    param(
+	    [Parameter(Mandatory = $true)]
+		[ValidateNotNullOrEmpty()]
+		[string]$frameworkVersion
+	)
+    $frameWorkVersionLong = ".NETFramework4.5"
+    switch ($frameworkVersion)
+    {
+        "NET45" {$frameWorkVersionLong = ".NETFramework4.5"}
+        "NET451" {$frameWorkVersionLong = ".NETFramework4.5.1"}
+        "NET452" {$frameWorkVersionLong = ".NETFramework4.5.2"}
+        "NET46" {$frameWorkVersionLong = ".NETFramework4.6"}
+        "NET461" {$frameWorkVersionLong = ".NETFramework4.6.1"}
+        "NET462" {$frameWorkVersionLong = ".NETFramework4.6.2"}
+        default {$frameWorkVersionLong = ".NETFramework4.5"}
+    }  
+    return $frameWorkVersionLong
+}
