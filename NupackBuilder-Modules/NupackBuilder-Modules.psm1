@@ -210,35 +210,6 @@ Function CreateModulePackages(
 	write-host "             .';';'''''''                                                                           " -foregroundcolor "red" –backgroundcolor "white"
 	write-host "               :'''''''``                                                                            " -foregroundcolor "red" –backgroundcolor "white"
 
-	if(($modules -eq $null) -or ($modules.Count -eq 0))
-	{
-		$modules =	"Sitecore.Analytics", `
-					"Sitecore.Buckets", `
-					"Sitecore.CES", `
-					"Sitecore.Cintel", `
-					"Sitecore.Cloud", `
-					"Sitecore.Commerce", `
-					"Sitecore.ContentSearch", `
-					"Sitecore.ContentTesting", `
-					"Sitecore.ExperienceAnalytics", `
-					"Sitecore.ExperienceEditor", `
-					"Sitecore.ExperienceExplorer", `
-					"Sitecore.Owin", `
-					"Sitecore.FXM", `
-					"Sitecore.ListManagement", `
-					"Sitecore.Marketing", `
-					"Sitecore.Mvc", `
-					"Sitecore.PathAnalyzer", `
-					"Sitecore.Services", `
-					"Sitecore.SessionProvider", `
-					"Sitecore.Social", `
-					"Sitecore.Speak", `
-					"Sitecore.ExperienceForms", `
-					"Sitecore.Framework", `
-					"Sitecore.XConnect", `
-					"Sitecore.Xdb"
-	}
-
 	if(($thirdpartycomponents -eq $null) -or ($thirdpartycomponents.PackageInfos.Count -eq 0))
 	{
 		$thirdpartycomponents = Add-ModulesThirdPartyPackages
@@ -443,6 +414,10 @@ Function CreateModulePackages(
 										$frameworVersion = "NET452"
 										$createFileVersionPackages = $false
 									  }					
+                                ".NETFramework,Version=v4.6.2" {
+										$frameworVersion = "NET462"
+										$createFileVersionPackages = $false
+									  }	
 								default {
 										$frameworVersion = "NET45"
 										$createFileVersionPackages = $false

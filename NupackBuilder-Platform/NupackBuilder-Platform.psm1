@@ -216,37 +216,42 @@ Function CreatePlatformNuGetPackages(
 	} 
 	
 	Get-ChildItem $readDirectory -Recurse -Force -Filter "sitecore.*" | % {
-			CreateAssembliesNuspecFile  -fileName $_.FullName `
-							  -readDirectory $readDirectory `
-							  -nuspecDirectory $nuspecDirectory `
-							  -SitecoreVersion $SitecoreVersion `
-							  -resolveDependencies $resolveDependencies `
-							  -packageDirectory $packageDirectory `
-							  -nugetFullPath $nugetFullPath `
-							  -frameworkVersion $frameworkVersion `
-							  -uploadPackages $uploadPackages `
-							  -uploadFeed $uploadFeed `
-							  -uploadAPIKey $uploadAPIKey `
-							  -createFileVersionPackages $createFileVersionPackages `
-							  -assemblies $assemblies `
-							  -thirdpartycomponents $thirdpartycomponents `
-							  -addThirdPartyReferences $addThirdPartyReferences
+                
+            #Sitecore.Framework stuff is 3rd party dependency, and should be treated like so - BAD
+            if(!($_.Name.ToLower().StartsWith("sitecore.framework")))
+            {
+			    CreateAssembliesNuspecFile  -fileName $_.FullName `
+							      -readDirectory $readDirectory `
+							      -nuspecDirectory $nuspecDirectory `
+							      -SitecoreVersion $SitecoreVersion `
+							      -resolveDependencies $resolveDependencies `
+							      -packageDirectory $packageDirectory `
+							      -nugetFullPath $nugetFullPath `
+							      -frameworkVersion $frameworkVersion `
+							      -uploadPackages $uploadPackages `
+							      -uploadFeed $uploadFeed `
+							      -uploadAPIKey $uploadAPIKey `
+							      -createFileVersionPackages $createFileVersionPackages `
+							      -assemblies $assemblies `
+							      -thirdpartycomponents $thirdpartycomponents `
+							      -addThirdPartyReferences $addThirdPartyReferences
 
-			CreateAssembliesNuspecFile  -fileName $_.FullName `
-							  -readDirectory $readDirectory `
-							  -nuspecDirectory $nuspecDirectory `
-							  -SitecoreVersion $SitecoreVersion `
-							  -resolveDependencies $false `
-							  -packageDirectory $packageDirectory `
-							  -nugetFullPath $nugetFullPath `
-							  -frameworkVersion $frameworkVersion `
-							  -uploadPackages $uploadPackages `
-							  -uploadFeed $uploadFeed `
-							  -uploadAPIKey $uploadAPIKey `
-							  -createFileVersionPackages $createFileVersionPackages `
-							  -assemblies $assemblies `
-							  -thirdpartycomponents $thirdpartycomponents `
-							  -addThirdPartyReferences $addThirdPartyReferences
+			    CreateAssembliesNuspecFile  -fileName $_.FullName `
+							      -readDirectory $readDirectory `
+							      -nuspecDirectory $nuspecDirectory `
+							      -SitecoreVersion $SitecoreVersion `
+							      -resolveDependencies $false `
+							      -packageDirectory $packageDirectory `
+							      -nugetFullPath $nugetFullPath `
+							      -frameworkVersion $frameworkVersion `
+							      -uploadPackages $uploadPackages `
+							      -uploadFeed $uploadFeed `
+							      -uploadAPIKey $uploadAPIKey `
+							      -createFileVersionPackages $createFileVersionPackages `
+							      -assemblies $assemblies `
+							      -thirdpartycomponents $thirdpartycomponents `
+							      -addThirdPartyReferences $addThirdPartyReferences
+            }
 	}
 }
 
@@ -284,34 +289,7 @@ Function CreatePlatformPackages(
 	write-host "             .';';'''''''                                                                           " -foregroundcolor "red" –backgroundcolor "white"
 	write-host "               :'''''''``                                                                            " -foregroundcolor "red" –backgroundcolor "white"
 	
-	if(($platformModules -eq $null) -or ($platformModules.Count -eq 0))
-	{
-		$platformModules = "Sitecore.Analytics", `
-							"Sitecore.Buckets", `
-							"Sitecore.CES", `
-							"Sitecore.Cintel", `
-							"Sitecore.Cloud", `
-							"Sitecore.Commerce", `
-							"Sitecore.ContentSearch", `
-							"Sitecore.ContentTesting", `
-							"Sitecore.ExperienceAnalytics", `
-							"Sitecore.ExperienceEditor", `
-							"Sitecore.ExperienceExplorer", `
-							"Sitecore.Owin", `
-							"Sitecore.FXM", `
-							"Sitecore.ListManagement", `
-							"Sitecore.Marketing", `
-							"Sitecore.Mvc", `
-							"Sitecore.PathAnalyzer", `
-							"Sitecore.Services", `
-							"Sitecore.SessionProvider", `
-							"Sitecore.Social", `
-							"Sitecore.Speak", `
-							"Sitecore.ExperienceForms", `
-							"Sitecore.Framework", `
-							"Sitecore.XConnect", `
-							"Sitecore.Xdb"
-	}
+	
 
 	if(($thirdpartycomponents -eq $null) -or ($thirdpartycomponents.PackageInfos.Count -eq 0))
 	{
@@ -392,9 +370,37 @@ Function CreatePlatformPackages(
 		          -NugetFeed $NugetFeed `
 		          -SuppressOutput `
 		          -Filter "$FileNameNoExtension\Website\bin\*.dll"
+
+                # 9.x can't create modules because of problems with shared components between xConnect, xDB and even commerce - really BAD
+                $platformModules = $null
                 
             }
             default {
+
+            if(($platformModules -eq $null) -or ($platformModules.Count -eq 0))
+	        {
+		        $platformModules = "Sitecore.Analytics", `
+							        "Sitecore.Buckets", `
+							        "Sitecore.CES", `
+							        "Sitecore.Cintel", `
+							        "Sitecore.Cloud", `
+							        "Sitecore.Commerce", `
+							        "Sitecore.ContentSearch", `
+							        "Sitecore.ContentTesting", `
+							        "Sitecore.ExperienceAnalytics", `
+							        "Sitecore.ExperienceEditor", `
+							        "Sitecore.FXM", `
+							        "Sitecore.ListManagement", `
+							        "Sitecore.Marketing", `
+							        "Sitecore.Mvc", `
+							        "Sitecore.PathAnalyzer", `
+							        "Sitecore.Services", `
+							        "Sitecore.SessionProvider", `
+							        "Sitecore.Social", `
+							        "Sitecore.Speak", `
+							        "Sitecore.Xdb"
+	        }
+
             # default is lover than 9.0
 		    UnZipDLLFiles -installPath $root `
 		      -ArchivePath $archivePath `
