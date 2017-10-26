@@ -10,3 +10,5 @@
 /.vs
 /NupackBuilder-Samples/packages/7-Zip.x64
 /NupackBuilder-Samples/obj/Debug/NupackBuilder-Samples.pssprojResolveAssemblyReference.cache
+/NupackBuilder-Nuget/NupackBuilder-Nuget.pssproj.user
+/NupackBuilder-Samples/NupackBuilder-Samples.pssproj.user
