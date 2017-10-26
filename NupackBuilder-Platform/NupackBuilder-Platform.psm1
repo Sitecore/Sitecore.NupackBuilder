@@ -353,6 +353,8 @@ Function CreatePlatformPackages(
 
                 # 9.x can't create modules because of problems with shared components between xConnect, xDB and even commerce - really BAD
                 $platformModules = $null
+
+                $thirdpartycomponents = Add-SitecoreFrameworkThirdPartyPackages -inputDirectory $targetDirectory
                 
             }
             default {

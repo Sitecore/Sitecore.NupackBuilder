@@ -1595,16 +1595,18 @@ Function UnZipDLLFiles (
   }  
 }
 
-Function UnZipFiles (
-  [Parameter(Mandatory=$true)][string]$installPath,
-  [Parameter(Mandatory=$true)][string]$ArchivePath,  
-  [Parameter(Mandatory=$true)][string]$TargetPath, 
-  [switch]$SuppressOutput,
-  [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
-  [Parameter(Mandatory=$true)][string]$nugetFullPath,
-  [switch]$doNotDeleteTargetPath
-)
+Function UnZipFiles 
 {
+    param(
+        [Parameter(Mandatory=$true)][string]$installPath,
+        [Parameter(Mandatory=$true)][string]$ArchivePath,  
+        [Parameter(Mandatory=$true)][string]$TargetPath, 
+        [switch]$SuppressOutput,
+        [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
+        [Parameter(Mandatory=$true)][string]$nugetFullPath,
+        [switch]$doNotDeleteTargetPath
+    )
+
     $deleteTargetPath = $true
     if($doNotDeleteTargetPath)
     {
@@ -1662,6 +1664,33 @@ Function UnZipFiles (
   }  
 }
 
+Function Get-PublicKeyToken
+{
+    param(
+        [byte[]] $bytePublicKeyToken
+    )
+    [string]$pbt = ""
+    if($bytePublicKeyToken -ne $null)
+    {
+        for ([int] $i=0;$i -le $bytePublicKeyToken.GetLength(0);$i++)
+        {
+            if($i -ne $null -and $bytePublicKeyToken -ne $null)
+            { 
+                $tempByte = $bytePublicKeyToken[$i]
+                if ($tempByte -ne $null)
+                {
+                    $pbt += [string]::format("{0:x2}", $bytePublicKeyToken[$i])
+                }
+            }
+        }
+    }
+    if([string]::IsNullOrEmpty($pbt))
+    {
+        $pbt = "null"
+    }
+    return $pbt
+}
+
 Function Get-FrameworkVersion
 {
     param(
@@ -1681,4 +1710,44 @@ Function Get-FrameworkVersion
         default {$frameWorkVersionLong = ".NETFramework4.5"}
     }  
     return $frameWorkVersionLong
+}
+
+Function Add-SitecoreFrameworkThirdPartyPackages
+{
+    param(
+        [Parameter(Mandatory = $true)]
+		[ValidateNotNullOrEmpty()]
+		[string]$inputDirectory
+    )
+    if($inputDirectory.EndsWith("\"))
+	{
+		$inputDirectory = $inputDirectory.Substring(0,$inputDirectory.Length-1)
+	}
+
+    Write-Host "inputDirectory = $inputDirectory"
+
+    $fileFilter = "(Sitecore.Framework.*\.(dll))$"
+    $packages  = Add-PlatformThirdPartyPackages
+    
+    Get-ChildItem -Path "$inputDirectory" -Recurse -Force -Filter "sitecore.framework.*" | ForEach-Object {
+    
+        $assemblyNameType = [Reflection.AssemblyName]::GetAssemblyName($_.FullName)
+        $name = $_.Name
+        $fileVersion = $_.VersionInfo.FileVersion
+        $productVersion = $_.VersionInfo.ProductVersion
+        $assemblyVersion = $assemblyNameType.Version.ToString()
+        $assemblyFullName = $assemblyNameType.FullName
+        $assemblyName = $assemblyNameType.Name
+        $assemblyCultureName = $assemblyNameType.CultureName
+        if ([string]::IsNullOrEmpty($assemblyCultureName)) { $assemblyCultureName = "neutral" }
+
+        [byte[]] $assemblybytePublicKeyToken = $assemblyNameType.GetPublicKeyToken()
+        $assemblyPublicKeyToken = Get-PublicKeyToken -bytePublicKeyToken $assemblybytePublicKeyToken
+
+        $packageAssembly = [NupackBuilder.PackageAssembly]::new("$assemblyName", "$assemblyVersion", "$assemblyCultureName", "$assemblyPublicKeyToken")
+        $packageInfo = [NupackBuilder.PackageInfo]::new("$assemblyName", "$productVersion", $false, $packageAssembly)
+        $packages.AddPackageInfo($packageInfo)
+    }
+    return $packages
+
 }
