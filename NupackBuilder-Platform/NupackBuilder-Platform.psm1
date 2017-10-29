@@ -452,7 +452,7 @@ Function CreatePlatformPackages(
     }
 }
 
-Function CreateXConnectWebPlatformPackages(
+Function CreateXConnectServerPlatformPackages(
   [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
   [Parameter(Mandatory=$true)][string]$sitecoreRepositoryFolder,
   [Parameter(Mandatory=$true)][bool]$uploadPackages,

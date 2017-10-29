@@ -58,7 +58,7 @@ if($DisableThirdPartyReferences)
 	$addThirdPartyReferences = $false
 }
 
-CreateXConnectWebPlatformPackages `
+CreateXConnectServerPlatformPackages `
 	  -NugetFeed $NugetFeed `
 	  -sitecoreRepositoryFolder $SitecoreRepositoryFolder `
 	  -uploadPackages $upload `
