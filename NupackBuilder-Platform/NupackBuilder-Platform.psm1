@@ -25,9 +25,15 @@ Function CreatePlatformPackage(
     [Parameter(Mandatory=$true)][string]$uploadFeed,
     [Parameter(Mandatory=$true)][string]$uploadAPIKey,
     [Parameter(Mandatory=$false)][bool]$createFileVersionPackages = $false,
-    [Parameter(Mandatory=$false)][Array]$platformModules
+    [Parameter(Mandatory=$false)][Array]$platformModules,
+    [Parameter(Mandatory=$false)][string]$platformPackageName = ""
 )
 {
+    if([string]::IsNullOrEmpty($platformPackageName))
+    {
+        $platformPackageName = "Sitecore"
+    }
+
     $frameWorkVersionLong = Get-FrameworkVersion -frameworkVersion $frameworkVersion
 
     $moduleDependencies = @()
@@ -71,11 +77,11 @@ Function CreatePlatformPackage(
                 -nugetFullPath $nugetFullPath `
                 -frameworkVersion $frameworkVersion `
                 -frameWorkVersionLong $frameWorkVersionLong `
-                -moduleName "Sitecore" `
+                -moduleName "$platformPackageName" `
                 -Version $SitecoreVersion `
-                -title "Sitecore" `
-                -description "Sitecore" `
-                -summary "Sitecore" `
+                -title "$platformPackageName" `
+                -description "$platformPackageName" `
+                -summary "$platformPackageName" `
                 -nuspecDirectory $nuspecDirectory `
                 -packageDirectory $packageDirectory `
                 -moduleDependencies $moduleDependencies `
@@ -443,5 +449,131 @@ Function CreatePlatformPackages(
             -uploadAPIKey $uploadAPIKey `
             -createFileVersionPackages $createFileVersionPackages `
             -platformModules $platformModules
+    }
+}
+
+Function CreateXConnectWebPlatformPackages(
+  [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
+  [Parameter(Mandatory=$true)][string]$sitecoreRepositoryFolder,
+  [Parameter(Mandatory=$true)][bool]$uploadPackages,
+  [Parameter(Mandatory=$true)][string]$uploadFeed,
+  [Parameter(Mandatory=$true)][string]$uploadAPIKey,
+  [Parameter(Mandatory=$false)][Array]$platformModules,
+  [Parameter(Mandatory=$false)][NupackBuilder.Packages]$thirdpartycomponents,
+  [Parameter(Mandatory=$false)][bool]$addThirdPartyReferences = $true,
+  [Parameter(Mandatory=$true)][string]$root,
+  [Parameter(Mandatory=$true)][string]$nugetExecutable
+)
+{
+    write-host "                                                                                                    " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "                 ,;':.                                                                              " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "              ``;'';'''''                                                                            " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "             ;';'''''''';.                                                                          " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "            '''',     ;''':                                                                         " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "           ;';'         '''                                                                         " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "           '''           '';                   #'                                       ''          " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "          '''          ;',;'``                  #'                                       ''          " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "          '''         ';'``;;'       ,####  ##  ###   ####;   +###'  ####+   ###  ####+  ``           " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "          ''.         ,''''''       #;     ##  #'   ##  ``#  +#     ##   #; .#   ##   #:             " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "          ';          . '';''       ##``    ##  #'   #``   #+ #+    ``#    ## ,#   #'   ##             " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "          ''          ;.'''''        '##``  ##  #'   ####### #:    :#    ## ,#   #######             " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "          '',         :';;'''          ;#`` ##  #'   #``      #+    .#    ## ,#   #'                  " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "          '''        ;: `` '':           #' ##  ##   ##      ##     #'   #+ ,#   ##                  " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "          :''``     ;``;``';;''        #####  ##  ;###  #####   ##### ``#####  ,#    #####              " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "           ''; ,.::', ';,';'          .                ````      .``     .            ````               " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "           .'';``:';'''.:'''                                                                         " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "            :'''',   :''''                                                                          " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "             .';';'''''''                                                                           " -foregroundcolor "red" –backgroundcolor "white"
+    write-host "               :'''''''``                                                                            " -foregroundcolor "red" –backgroundcolor "white"
+    
+    
+
+    if(($thirdpartycomponents -eq $null) -or ($thirdpartycomponents.PackageInfos.Count -eq 0))
+    {
+        $thirdpartycomponents = Add-PlatformThirdPartyPackages
+    }
+
+    Get-ChildItem $sitecoreRepositoryFolder -Filter "*.zip" | % {
+        $sitecorezipFileNameOnly = $_.Name
+        $FileNameNoExtension = [io.path]::GetFileNameWithoutExtension($sitecorezipFileNameOnly)
+        
+        $xConnectFolderName = $FileNameNoExtension.ToLower().Replace("sitecore ", "Sitecore XConnect Server ").Replace(".zip","").Trim()
+
+        $archivePath = "$sitecoreRepositoryFolder$sitecorezipFileNameOnly"
+        $targetDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\bin\"
+        $nuspecDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\nuspec\"
+        $packageDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\nupack\"
+        
+        $SitecoreVersion = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(" rev. ",".").Replace("rev. ",".").Replace(" rev.",".").Replace(".zip","").Trim()
+        switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
+        {
+            "9.0.0" {
+                        $SitecoreVersion = $SitecoreVersion.ToLower().Replace("9.0.0","9.0")
+                  } 
+        }
+        
+        $frameworVersion = "NET45"
+
+        if($SitecoreVersion.StartsWith("6"))
+        {
+            Write-Log -Message "We don't support Sitecore versions prior to 7.0 - yet" -Program "Powershell" -Level "warn"
+            return
+        }
+
+        switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
+        {
+            
+            "9.0" {
+                    $frameworVersion = "NET462"
+                    $createFileVersionPackages = $false
+                  } 
+            default {
+                    $frameworVersion = "NET462"
+                    $createFileVersionPackages = $false
+                  }
+
+        }
+
+         UnZipDLLFiles -installPath $root `
+                  -ArchivePath $archivePath `
+                  -TargetPath $targetDirectory `
+                  -nugetFullPath $nugetExecutable `
+                  -NugetFeed $NugetFeed `
+                  -SuppressOutput `
+                  -Filter "$xConnectFolderName\Website\bin\*.dll"
+
+                # 9.x can't create modules because of problems with shared components between xConnect, xDB and even commerce - really BAD
+                $platformModules = $null
+
+                $thirdpartycomponents = Add-SitecoreFrameworkThirdPartyPackages -inputDirectory $targetDirectory
+
+       
+        CreatePlatformNuGetPackages -readDirectory $targetDirectory `
+            -nuspecDirectory $nuspecDirectory `
+            -packageDirectory $packageDirectory `
+            -SitecoreVersion $SitecoreVersion `
+            -resolveDependencies $true `
+            -nugetFullPath $nugetExecutable `
+            -frameworkVersion $frameworVersion `
+            -uploadPackages $uploadPackages `
+            -uploadFeed $uploadFeed `
+            -uploadAPIKey $uploadAPIKey `
+            -createFileVersionPackages $createFileVersionPackages `
+            -thirdpartycomponents $thirdpartycomponents `
+            -addThirdPartyReferences $addThirdPartyReferences
+
+        CreatePlatformPackage -readDirectory $targetDirectory `
+            -nuspecDirectory $nuspecDirectory `
+            -packageDirectory $packageDirectory `
+            -SitecoreVersion $SitecoreVersion `
+            -resolveDependencies $true `
+            -nugetFullPath $nugetExecutable `
+            -frameworkVersion $frameworVersion `
+            -uploadPackages $uploadPackages `
+            -uploadFeed $uploadFeed `
+            -uploadAPIKey $uploadAPIKey `
+            -createFileVersionPackages $createFileVersionPackages `
+            -platformModules $platformModules `
+            -platformPackageName "Sitecore-XConnect-Server"
     }
 }
