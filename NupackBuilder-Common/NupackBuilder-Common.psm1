@@ -955,6 +955,11 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.Identity.Core", "2.2.1", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
+    #Microsoft.ApplicationInsights.2.3.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.ApplicationInsights", "2.3.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.ApplicationInsights", "2.3.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
     #YUICompressor.NET.2.1.1
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Yahoo.Yui.Compressor", "2.1.1.0", "neutral", "null")
     $packageInfo = [NupackBuilder.PackageInfo]::new("YUICompressor.NET", "2.1.1", $false, $packageAssembly)
@@ -1116,6 +1121,31 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.AspNet.WebApi.WebHost", "5.2.3", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
+    #Microsoft.Azure.KeyVault.2.0.6
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Azure.KeyVault", "2.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Azure.KeyVault", "2.0.6", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Azure.KeyVault.WebKey.2.0.4
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Azure.KeyVault.WebKey", "2.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Azure.KeyVault.WebKey", "2.0.4", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.Azure.SqlDatabase.ElasticScale.Client.1.3.3
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Azure.SqlDatabase.ElasticScale.Client", "1.3.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Azure.SqlDatabase.ElasticScale.Client", "1.3.3", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.IdentityModel.Clients.ActiveDirectory.3.14.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.IdentityModel.Clients.ActiveDirectory", "3.14.1.10", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.IdentityModel.Clients.ActiveDirectory", "3.14.1", $false, $packageAssembly)
+
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.IdentityModel.Clients.ActiveDirectory.Platform", "3.14.1.10", "neutral", "31bf3856ad364e35")
+    $packageInfo.AddPackageAssembly($packageAssembly)
+
+    $packages.AddPackageInfo($packageInfo)
+
+
     #Microsoft.Web.Infrastructure.1.0.0.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Web.Infrastructure", "1.0.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Web.Infrastructure", "1.0.0.0", $false, $packageAssembly)
@@ -1136,6 +1166,11 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Core", "6.15.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
+    #Microsoft.OData.Core.7.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Core", "7.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Core", "7.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
     #Microsoft.OData.Core.7.2.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Core", "7.2.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Core", "7.2.0", $false, $packageAssembly)
@@ -1144,6 +1179,11 @@ Function Add-PlatformThirdPartyPackages()
     #Microsoft.OData.Edm.6.15.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Edm", "6.15.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Edm", "6.15.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.OData.Edm.7.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.OData.Edm", "7.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.OData.Edm", "7.0.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
     #Microsoft.OData.Edm.7.2.0
@@ -1191,9 +1231,19 @@ Function Add-PlatformThirdPartyPackages()
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Spatial", "6.15.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
+    #Microsoft.Spatial.7.0.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Spatial", "7.0.0.0", "neutral", "31bf3856ad364e35")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Spatial", "7.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
     #Microsoft.Spatial.7.2.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Spatial", "7.2.0.0", "neutral", "31bf3856ad364e35")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Spatial", "7.2.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Microsoft.SqlServer.Management.AlwaysEncrypted.AzureKeyVaultProvider.2.1.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.SqlServer.Management.AlwaysEncrypted.AzureKeyVaultProvider", "14.0.0.0", "neutral", "89845dcd8080cc91")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.SqlServer.Management.AlwaysEncrypted.AzureKeyVaultProvider", "2.1.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
     #Microsoft.DotNet.InternalAbstractions.1.0.0
@@ -1304,6 +1354,36 @@ Function Add-PlatformThirdPartyPackages()
     #Microsoft.Extensions.Primitives.1.0.0
     $packageAssembly = [NupackBuilder.PackageAssembly]::new("Microsoft.Extensions.Primitives", "1.0.0.0", "neutral", "adb9793829ddae60")
     $packageInfo = [NupackBuilder.PackageInfo]::new("Microsoft.Extensions.Primitives", "1.0.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Serilog.2.5.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Serilog", "2.0.0.0", "neutral", "24c2f752a8e58a10")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Serilog", "2.5.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Serilog.Extensions.Logging.1.4.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Serilog.Extensions.Logging", "1.0.0.0", "neutral", "24c2f752a8e58a10")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Serilog.Extensions.Logging", "1.4.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Serilog.Settings.Configuration.2.3.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Serilog.Settings.Configuration", "2.3.1.0", "neutral", "24c2f752a8e58a10")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Serilog.Settings.Configuration", "2.3.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Serilog.Sinks.ApplicationInsights.2.2.1
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Serilog.Sinks.ApplicationInsights", "2.2.1.0", "neutral", "24c2f752a8e58a10")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Serilog.Sinks.ApplicationInsights", "2.2.1", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Serilog.Sinks.File.3.2.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Serilog.Sinks.File", "2.0.0.0", "neutral", "24c2f752a8e58a10")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Serilog.Sinks.File", "3.2.0", $false, $packageAssembly)
+    $packages.AddPackageInfo($packageInfo)
+
+    #Serilog.Sinks.RollingFile.3.3.0
+    $packageAssembly = [NupackBuilder.PackageAssembly]::new("Serilog.Sinks.RollingFile", "2.0.0.0", "neutral", "24c2f752a8e58a10")
+    $packageInfo = [NupackBuilder.PackageInfo]::new("Serilog.Sinks.RollingFile", "3.3.0", $false, $packageAssembly)
     $packages.AddPackageInfo($packageInfo)
 
     #SharpZipLib.0.86.0
