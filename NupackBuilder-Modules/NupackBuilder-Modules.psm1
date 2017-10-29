@@ -124,7 +124,7 @@ Function CreateModuleNuGetPackages(
 		$_
 	}
 
-	$excluded = @("zxing.dll", "MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "ChilkatDotNet46.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll", "Microsoft.IdentityModel.dll", "Microsoft.Practices.Unity.dll")
+	$excluded = @("zxing.dll", "MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll", "Microsoft.IdentityModel.dll", "Microsoft.Practices.Unity.dll")
 
 	Get-ChildItem -Path "$readDirectory*" -Recurse -Force -Filter "*.dll" -Exclude $excluded | % {
 			CreateAssembliesNuspecFile  -fileName $_.FullName `
@@ -209,6 +209,10 @@ Function CreateModulePackages(
 	{
 		$sitecoreModulesInformation = Add-ModulePlatformSupportInfo
 	}
+
+    $MonoCecil = Get-MonoCecil -nugetFullPath $nugetExecutable
+    $MonoCecilBytes = [System.IO.File]::ReadAllBytes($MonoCecil)
+    $MonoCecilLoaded  = [System.Reflection.Assembly]::Load($MonoCecilBytes)
 
 	Get-ChildItem $sitecoreRepositoryFolder -Filter "*.zip" | % {
 		$sitecorezipFileNameOnly = $_.Name
@@ -363,7 +367,7 @@ Function CreateModulePackages(
 
 			$dlls = $null
 			$dllCount = 0
-			$excluded = @("zxing.dll", "MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "ChilkatDotNet46.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll", "Sitecore.Integration.Common.dll", "Microsoft.IdentityModel.dll", "Microsoft.Practices.Unity.dll")
+			$excluded = @("zxing.dll", "MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll", "Sitecore.Integration.Common.dll", "Microsoft.IdentityModel.dll", "Microsoft.Practices.Unity.dll")
 			$dll = Get-ChildItem -Path "$targetDirectory*" -Filter "*.dll" -Exclude $excluded | Select-Object -First 1
 			$dllCount = (Get-ChildItem $targetDirectory -Filter "*.dll" | measure).Count
 				

@@ -136,6 +136,27 @@ Function Get-PublicKeyToken
     return $pbt
 }
 
+Function Get-MonoCecil
+{
+    param(
+        [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
+        [Parameter(Mandatory=$true)][string]$installPath,
+        [Parameter(Mandatory=$true)][string]$nugetFullPath
+        )
+
+        $MonoCecilLocation = "$installPath\packages\Mono.Cecil\lib\net45\Mono.Cecil.dll"
+        $MonoCecilLocation = $MonoCecilLocation.Replace("\\","\")
+        if (!(Test-Path -Path $MonoCecilLocation))
+        {
+            $nugetArgs = ' install Mono.Cecil -ExcludeVersion -o "' + $installPath + '\packages" -Source "' + $NugetFeed + '"'
+            $nugetCommand = "& '$nugetFullPath'" + $nugetArgs
+            Write-Host "Installing Mono.Cecil nuget package to $installPath\packages ..." -ForegroundColor Green
+            Invoke-Expression $nugetCommand -Verbose | Out-Null
+            Write-Host "Done installing Mono.Cecil nuget package to $installPath\packages ..." -ForegroundColor Green
+        }
+        return $MonoCecilLocation
+}
+
 Function UnZipFiles 
 {
     param(
@@ -255,6 +276,12 @@ $archivePath = $sitecoreZipFile
 $targetDirectory = [System.IO.Path]::Combine($workingFolder,$FileNameNoExtension)
 $SitecoreVersionWithRev = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(".zip","").Trim()
 
+$MonoCecil = Get-MonoCecil -installPath $workingFolder -nugetFullPath $nugetExecutable -NugetFeed $NugetFeed
+
+$MonoCecilBytes = [System.IO.File]::ReadAllBytes($MonoCecil)
+$MonoCecilLoaded  = [System.Reflection.Assembly]::Load($MonoCecilBytes)
+
+
 Write-Host $SitecoreVersionWithRev
 
 UnZipFiles -installPath $workingFolder `
@@ -290,24 +317,23 @@ foreach($directoryToSearch in $directoriesToSearch)
             $newTargetDirectoryInfoName = $newTargetDirectoryInfo.Parent.Parent.Name
         }
         $assemblies=Get-ChildItem $newTargetDirectory | Where-Object {$_.Name.ToLower().EndsWith("dll")} | ForEach-Object {
-            $assemblybytes   = [System.IO.File]::ReadAllBytes($_.FullName)
-            $assemblyloaded  = [System.Reflection.Assembly]::Load($assemblybytes)
-            $assemblyname    = $assemblyloaded.GetName()
-            [byte[]] $assemblybytePublicKeyToken = $assemblyName.GetPublicKeyToken()
+            $assemblyDefinition = [Mono.Cecil.AssemblyDefinition]::ReadAssembly($_.FullName)
+            $assemblyNameReference = [Mono.Cecil.AssemblyNameReference]::Parse($assemblyDefinition.FullName)
+            [byte[]] $assemblybytePublicKeyToken = $assemblyNameReference.PublicKeyToken
             $publicKeyToken = Get-PublicKeyToken -bytePublicKeyToken $assemblybytePublicKeyToken
             
             $cultureName = ""
-            if ([string]::IsNullOrEmpty($assemblyName.CultureName)) 
+            if ([string]::IsNullOrEmpty($assemblyNameReference.Culture)) 
             { 
                 $cultureName = "neutral" 
             }
             else
             {
-                $cultureName = $assemblyName.CultureName
+                $cultureName = $assemblyNameReference.Culture
             }
             $_ | Add-Member NoteProperty FileVersion ($_.VersionInfo.FileVersion)
-            $_ | Add-Member NoteProperty AssemblyVersion ($assemblyName.Version.ToString())
-            $_ | Add-Member NoteProperty AssemblyFullName ($assemblyName.FullName)
+            $_ | Add-Member NoteProperty AssemblyVersion ($assemblyNameReference.Version.ToString())
+            $_ | Add-Member NoteProperty AssemblyFullName ($assemblyNameReference.FullName)
             $_ | Add-Member NoteProperty AssemblyFileName ($_.Name)
             $_ | Add-Member NoteProperty PublicKeyToken ($publicKeyToken)
             $_ | Add-Member NoteProperty CultureName ($cultureName)
@@ -370,13 +396,14 @@ foreach($directoryToSearch in $directoriesToSearch)
         #Get-ChildItem $newTargetDirectory -rec | Where-Object {$_.Name -match $fileFilter} | ForEach-Object {
         Get-ChildItem $newTargetDirectory | Where-Object {($_.Name.ToLower().EndsWith("dll")) -or ($_.Name.ToLower().EndsWith("exe"))} | ForEach-Object {
             $original = [io.path]::GetFileName($_.FullName)
-            $bytes   = [System.IO.File]::ReadAllBytes($_.FullName)
-            $loaded  = [System.Reflection.Assembly]::Load($bytes)
-            #$ManifestModule    = $loaded.ManifestModule            
-            $loadedAssemblyName = $loaded.GetName()
+            #$bytes   = [System.IO.File]::ReadAllBytes($_.FullName)
+            #$loaded  = [System.Reflection.Assembly]::Load($bytes)
+            $assemblyDefinition = [Mono.Cecil.AssemblyDefinition]::ReadAssembly($_.FullName)
+            
+            $loadedAssemblyName = [Mono.Cecil.AssemblyNameReference]::Parse($assemblyDefinition.FullName)
             
             # Check for correct referenced Sitecore version
-            $loaded.GetReferencedAssemblies() | ForEach-Object {
+            $assemblyDefinition.MainModule.AssemblyReferences | ForEach-Object {
                 $loadedAssemblyNameReferenced = $_
                 if($_.FullName.ToLower().StartsWith("sitecore"))
                 {
@@ -408,16 +435,16 @@ foreach($directoryToSearch in $directoriesToSearch)
                     if($assembly -ne $null)
                     {
                         $loadedCultureName = ""
-                        if ([string]::IsNullOrEmpty($loadedAssemblyNameReferenced.CultureName)) 
+                        if ([string]::IsNullOrEmpty($loadedAssemblyNameReferenced.Culture)) 
                         { 
                             $loadedCultureName = "neutral" 
                         }
                         else
                         {
-                            $loadedCultureName = $loadedAssemblyNameReferenced.CultureName
+                            $loadedCultureName = $loadedAssemblyNameReferenced.Culture
                         }
                     
-                        [byte[]] $bytePublicKeyToken = $loadedAssemblyNameReferenced.GetPublicKeyToken()
+                        [byte[]] $bytePublicKeyToken = $loadedAssemblyNameReferenced.PublicKeyToken
 
                         $pbt = Get-PublicKeyToken -bytePublicKeyToken $bytePublicKeyToken
                         $version = $loadedAssemblyNameReferenced.Version

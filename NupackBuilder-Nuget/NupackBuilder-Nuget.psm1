@@ -183,8 +183,12 @@ Function CreateAssembliesNuspecFile(
 		New-Item $nuspecDirectory -type directory | Out-Null
 	}
 	
-	$bytes   = [System.IO.File]::ReadAllBytes($fileName)
-	$loaded  = [System.Reflection.Assembly]::Load($bytes)
+    $MonoCecil = Get-MonoCecil -nugetFullPath $nugetFullPath
+    $MonoCecilBytes = [System.IO.File]::ReadAllBytes($MonoCecil)
+    $MonoCecilLoaded  = [System.Reflection.Assembly]::Load($MonoCecilBytes)
+
+
+	$assemblyDefinition = [Mono.Cecil.AssemblyDefinition]::ReadAssembly($fileName)
 	$filenameOnly = [io.path]::GetFileName($_.FullName)
 
 	$moduleName = [io.path]::GetFileNameWithoutExtension($fileName)
@@ -231,7 +235,7 @@ Function CreateAssembliesNuspecFile(
 	$notIncludedDependencies = $null
 	$notIncludedDependencies = @()
 
-	$loadeddependencies =  $loaded.GetReferencedAssemblies()
+	$loadeddependencies =  $assemblyDefinition.MainModule.AssemblyReferences
 
 	if($resolveDependencies -eq $true)
 	{
@@ -265,19 +269,15 @@ Function CreateAssembliesNuspecFile(
 				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
 				{
 					## Sorting out the commercial ones
-					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet46"))) 
+					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2"))) 
 					{
 						$depFileName ="$readDirectory$someName.dll"
 
-						# $assemblyItem = Get-Item -Path $depFileName
-						# $assemblyItemFileVersion = $assemblyItem.VersionInfo.FileVersion
-						# $assemblyItemProductVersion = $assemblyItem.VersionInfo.ProductVersion
 						$readbytes = $null
 						$deploaded = $null
 						$assemblyName = $null
-						$readbytes   = [System.IO.File]::ReadAllBytes($depFileName)
-						$deploaded  = [System.Reflection.Assembly]::Load($readbytes)
-						$assemblyName = $deploaded.GetName()
+						
+						$assemblyName = [Mono.Cecil.AssemblyNameReference]::Parse($dep.FullName)
 						$assemblyItemVersion = $assemblyName.Version
 						$assemblyItemName = $assemblyName.Name
 						$addeddAssembly = $false
@@ -410,7 +410,7 @@ Function CreateAssembliesNuspecFile(
 				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
 				{
 					## Sorting out the commercial ones
-					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet46")))
+					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2")))
 					{
 						$depFileName ="$readDirectory$someName.dll"
 						$assemblyItemVersion = $dep.Version
@@ -640,8 +640,8 @@ $nuspecMetadata += @"
 							  -uploadAPIKey $uploadAPIKey
 	}
 
-	if($loaded -ne $null)
+	if($assemblyDefinition -ne $null)
 	{
-		$loaded = $null
+		$assemblyDefinition = $null
 	}
 }

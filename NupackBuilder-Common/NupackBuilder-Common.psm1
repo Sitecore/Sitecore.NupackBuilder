@@ -379,6 +379,31 @@ Function Get-7z(
     return "$installPath\packages\7-Zip.x64\tools\7z.exe"
 }
 
+Function Get-MonoCecil
+{
+    param(
+        [Parameter(Mandatory=$false)][string]$NugetFeed = "https://www.nuget.org/api/v2/",
+        [Parameter(Mandatory=$false)][string]$installPath = [System.IO.Path]::Combine($env:TEMP, [System.IO.DirectoryInfo]::new("NupackBuilder").Name),
+        [Parameter(Mandatory=$true)][string]$nugetFullPath
+        )
+
+        if (!(Test-Path -Path $installPath))
+        {
+            New-Item $installPath -type directory -Force | Out-Null
+        }
+        $MonoCecilLocation = "$installPath\packages\Mono.Cecil\lib\net45\Mono.Cecil.dll"
+        $MonoCecilLocation = $MonoCecilLocation.Replace("\\","\")
+        if (!(Test-Path -Path $MonoCecilLocation))
+        {
+            $nugetArgs = ' install Mono.Cecil -ExcludeVersion -o "' + $installPath + '\packages" -Source "' + $NugetFeed + '"'
+            $nugetCommand = "& '$nugetFullPath'" + $nugetArgs
+            Write-Host "Installing Mono.Cecil nuget package to $installPath\packages ..." -ForegroundColor Green
+            Invoke-Expression $nugetCommand -Verbose | Out-Null
+            Write-Host "Done installing Mono.Cecil nuget package to $installPath\packages ..." -ForegroundColor Green
+        }
+        return $MonoCecilLocation
+}
+
 Function Add-ThirdPartyComponent(
 [Parameter(Mandatory=$true)][string]$PackageName,
 [Parameter(Mandatory=$true)][Array]$AssemblyNames,
