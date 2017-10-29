@@ -35,7 +35,6 @@
     <Compile Include="DeleteAllPackages.ps1" />
     <Compile Include="GenerateModulePackages.ps1" />
     <Compile Include="GeneratePlatformPackages.ps1" />
-    <Compile Include="GeneratexConnectServerPackages.ps1" />
     <Compile Include="WrongReferences.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
