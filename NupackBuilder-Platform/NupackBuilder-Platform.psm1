@@ -290,12 +290,8 @@ Function CreatePlatformPackages(
         $nuspecDirectory = "$sitecoreRepositoryFolder$FileNameNoExtension\nuspec\"
         $packageDirectory = "$sitecoreRepositoryFolder$FileNameNoExtension\nupack\"
         $SitecoreVersion = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(" rev. ",".").Replace("rev. ",".").Replace(" rev.",".").Replace(".zip","").Trim()
-        switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
-        {
-            "9.0.0" {
-                        $SitecoreVersion = $SitecoreVersion.ToLower().Replace("9.0.0","9.0")
-                  } 
-        }
+        
+        
         
         $frameworVersion = "NET45"
 
@@ -335,21 +331,26 @@ Function CreatePlatformPackages(
                     $frameworVersion = "NET452"
                     $createFileVersionPackages = $false
                   }
-            "9.0" {
+            "9.0.0" {
                     $frameworVersion = "NET462"
                     $createFileVersionPackages = $false
-                  } 
+                  }
+            "9.0.1" {
+                    $frameworVersion = "NET462"
+                    $createFileVersionPackages = $false
+                  }
             default {
                     $frameworVersion = "NET452"
                     $createFileVersionPackages = $false
                   }
-
         }
 
-        switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
+        if($SitecoreVersion.StartsWith("9"))
         {
-            "9.0" {
-                # we need to create xconnect stuff in the following order before the Sitecore platform because ContentTesting has failed BADLY
+            $tempSitecoreVersion = $SitecoreVersion.Remove($SitecoreVersion.LastIndexOf("."))
+            $tempRevision = $SitecoreVersion.Replace($tempSitecoreVersion,"")
+            $SitecoreVersion = $tempSitecoreVersion.Remove($tempSitecoreVersion.LastIndexOf(".")) + "$tempRevision"
+            # we need to create xconnect stuff in the following order before the Sitecore platform because ContentTesting has failed BADLY
 
                 CreateMarketingAutomationServicePlatformPackages `
 	              -NugetFeed $NugetFeed `
@@ -393,10 +394,9 @@ Function CreatePlatformPackages(
                 $platformModules = $null
 
                 $thirdpartycomponents = Add-SitecoreFrameworkThirdPartyPackages -inputDirectory $targetDirectory
-                
-            }
-            default {
-
+        }
+        else
+        {
             if(($platformModules -eq $null) -or ($platformModules.Count -eq 0))
             {
                 $platformModules = "Sitecore.Analytics", `
@@ -438,8 +438,6 @@ Function CreatePlatformPackages(
               -SuppressOutput `
               -Filter "*\Website\bin\social\*.dll" `
               -doNotDeleteTargetPath
-            }
-
         }
 
         CreatePlatformNuGetPackages -readDirectory $targetDirectory `
@@ -506,34 +504,23 @@ Function CreateXConnectServerPlatformPackages(
     Get-ChildItem $sitecoreRepositoryFolder -Filter "*.zip" | % {
         $sitecorezipFileNameOnly = $_.Name
         $FileNameNoExtension = [io.path]::GetFileNameWithoutExtension($sitecorezipFileNameOnly)
-        
         $xConnectFolderName = $FileNameNoExtension.ToLower().Replace("sitecore ", "Sitecore XConnect Server ").Replace(".zip","").Trim()
-
         $archivePath = "$sitecoreRepositoryFolder$sitecorezipFileNameOnly"
         $targetDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\bin\"
         $nuspecDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\nuspec\"
         $packageDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\nupack\"
-        
         $SitecoreVersion = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(" rev. ",".").Replace("rev. ",".").Replace(" rev.",".").Replace(".zip","").Trim()
-        switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
-        {
-            "9.0.0" {
-                        $SitecoreVersion = $SitecoreVersion.ToLower().Replace("9.0.0","9.0")
-                  } 
-        }
         
-        $frameworVersion = "NET45"
-
-        if($SitecoreVersion.StartsWith("6"))
-        {
-            Write-Log -Message "We don't support Sitecore versions prior to 7.0 - yet" -Program "Powershell" -Level "warn"
-            return
-        }
+        $frameworVersion = "NET462"
 
         switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
         {
             
-            "9.0" {
+            "9.0.0" {
+                    $frameworVersion = "NET462"
+                    $createFileVersionPackages = $false
+                  } 
+            "9.0.1" {
                     $frameworVersion = "NET462"
                     $createFileVersionPackages = $false
                   } 
@@ -543,6 +530,10 @@ Function CreateXConnectServerPlatformPackages(
                   }
 
         }
+
+        $tempSitecoreVersion = $SitecoreVersion.Remove($SitecoreVersion.LastIndexOf("."))
+        $tempRevision = $SitecoreVersion.Replace($tempSitecoreVersion,"")
+        $SitecoreVersion = $tempSitecoreVersion.Remove($tempSitecoreVersion.LastIndexOf(".")) + "$tempRevision"
 
          UnZipDLLFiles -installPath $root `
                   -ArchivePath $archivePath `
@@ -554,7 +545,6 @@ Function CreateXConnectServerPlatformPackages(
 
                 # 9.x can't create modules because of problems with shared components between xConnect, xDB and even commerce - really BAD
                 $platformModules = $null
-
                 $thirdpartycomponents = Add-SitecoreFrameworkThirdPartyPackages -inputDirectory $targetDirectory
 
        
@@ -617,36 +607,30 @@ Function CreateXConnectIndexServicePlatformPackages(
         $targetDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\bin\"
         $nuspecDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\nuspec\"
         $packageDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\nupack\"
-        
         $SitecoreVersion = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(" rev. ",".").Replace("rev. ",".").Replace(" rev.",".").Replace(".zip","").Trim()
-        switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
-        {
-            "9.0.0" {
-                        $SitecoreVersion = $SitecoreVersion.ToLower().Replace("9.0.0","9.0")
-                  } 
-        }
-        
-        $frameworVersion = "NET45"
-
-        if($SitecoreVersion.StartsWith("6"))
-        {
-            Write-Log -Message "We don't support Sitecore versions prior to 7.0 - yet" -Program "Powershell" -Level "warn"
-            return
-        }
+        $frameworVersion = "NET462"
 
         switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
         {
             
-            "9.0" {
+            "9.0.0" {
                     $frameworVersion = "NET462"
                     $createFileVersionPackages = $false
-                  } 
+                   } 
+            "9.0.1" {
+                    $frameworVersion = "NET462"
+                    $createFileVersionPackages = $false
+                  }
             default {
                     $frameworVersion = "NET462"
                     $createFileVersionPackages = $false
                   }
 
         }
+
+        $tempSitecoreVersion = $SitecoreVersion.Remove($SitecoreVersion.LastIndexOf("."))
+        $tempRevision = $SitecoreVersion.Replace($tempSitecoreVersion,"")
+        $SitecoreVersion = $tempSitecoreVersion.Remove($tempSitecoreVersion.LastIndexOf(".")) + "$tempRevision"
 
          UnZipDLLFiles -installPath $root `
                   -ArchivePath $archivePath `
@@ -723,34 +707,30 @@ Function CreateMarketingAutomationServicePlatformPackages(
         $packageDirectory = "$sitecoreRepositoryFolder$xConnectFolderName\nupack\"
         
         $SitecoreVersion = $FileNameNoExtension.ToLower().Replace("sitecore ", "").Replace(" rev. ",".").Replace("rev. ",".").Replace(" rev.",".").Replace(".zip","").Trim()
-        switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
-        {
-            "9.0.0" {
-                        $SitecoreVersion = $SitecoreVersion.ToLower().Replace("9.0.0","9.0")
-                  } 
-        }
         
         $frameworVersion = "NET45"
-
-        if($SitecoreVersion.StartsWith("6"))
-        {
-            Write-Log -Message "We don't support Sitecore versions prior to 7.0 - yet" -Program "Powershell" -Level "warn"
-            return
-        }
 
         switch ($SitecoreVersion.Remove($SitecoreVersion.LastIndexOf(".")))
         {
             
-            "9.0" {
+            "9.0.0" {
                     $frameworVersion = "NET462"
                     $createFileVersionPackages = $false
                   } 
+            "9.0.1" {
+                    $frameworVersion = "NET462"
+                    $createFileVersionPackages = $false
+                  }
             default {
                     $frameworVersion = "NET462"
                     $createFileVersionPackages = $false
                   }
 
         }
+
+        $tempSitecoreVersion = $SitecoreVersion.Remove($SitecoreVersion.LastIndexOf("."))
+        $tempRevision = $SitecoreVersion.Replace($tempSitecoreVersion,"")
+        $SitecoreVersion = $tempSitecoreVersion.Remove($tempSitecoreVersion.LastIndexOf(".")) + "$tempRevision"
 
          UnZipDLLFiles -installPath $root `
                   -ArchivePath $archivePath `

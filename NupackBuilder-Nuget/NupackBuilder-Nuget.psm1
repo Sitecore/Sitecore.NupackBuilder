@@ -265,7 +265,7 @@ Function CreateAssembliesNuspecFile(
 				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
 				{
 					## Sorting out the commercial ones
-					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2"))) 
+					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet46"))) 
 					{
 						$depFileName ="$readDirectory$someName.dll"
 
@@ -410,7 +410,7 @@ Function CreateAssembliesNuspecFile(
 				elseif(($addThirdPartyReferences -eq $true) -and (!$dep.Name.ToLower().StartsWith("mscorlib")) -and (!$dep.Name.ToLower().StartsWith("sysglobl")))
 				{
 					## Sorting out the commercial ones
-					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2")))
+					if((!$dep.Name.ToLower().StartsWith("netbiscuits.onpremise")) -and (!$dep.Name.ToLower().StartsWith("oracle.dataaccess")) -and (!$dep.Name.ToLower().StartsWith("ithit.webdav.server")) -and (!$dep.Name.ToLower().StartsWith("telerik")) -and (!$dep.Name.ToLower().StartsWith("stimulsoft")) -and (!$dep.Name.ToLower().StartsWith("componentart")) -and (!$dep.Name.ToLower().StartsWith("radeditor")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet2")) -and (!$dep.Name.ToLower().StartsWith("chilkatdotnet46")))
 					{
 						$depFileName ="$readDirectory$someName.dll"
 						$assemblyItemVersion = $dep.Version
@@ -510,7 +510,7 @@ $nuspecMetadata = @"
 		<title>$moduleName</title>
 		<authors>Sitecore Corporation A/S</authors>
 		<owners>Sitecore Corporation A/S</owners>
-		<iconUrl>https://mygetwwwsitecore.blob.core.windows.net/feedicons/sc-packages.png</iconUrl> 
+		<iconUrl>https://mygetwwwsitecoreeu.blob.core.windows.net/feedicons/sc-packages.png</iconUrl> 
 		<licenseUrl>https://doc.sitecore.net/~/media/C23E989268EC4FA588108F839675A5B6.pdf</licenseUrl>       
 		<projectUrl>http://doc.sitecore.net/</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
