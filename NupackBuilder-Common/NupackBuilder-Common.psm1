@@ -1829,8 +1829,6 @@ Function Add-SitecoreFrameworkThirdPartyPackages
 		$inputDirectory = $inputDirectory.Substring(0,$inputDirectory.Length-1)
 	}
 
-    Write-Host "inputDirectory = $inputDirectory"
-
     $fileFilter = "(Sitecore.Framework.*\.(dll))$"
     $packages  = Add-PlatformThirdPartyPackages
     

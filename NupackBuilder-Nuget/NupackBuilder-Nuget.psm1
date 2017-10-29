@@ -31,7 +31,7 @@ Function UploadNugetPackage(
 	[Parameter(Mandatory=$true)][string]$packageFileName,
 	[Parameter(Mandatory=$true)][string]$uploadFeed,
 	[Parameter(Mandatory=$true)][string]$uploadAPIKey,
-	[Parameter(Mandatory=$false)][string]$verbosity = "normal"
+	[Parameter(Mandatory=$false)][string]$verbosity = "quiet"
 
 )
 {
@@ -73,7 +73,7 @@ Function PackNuspecFile(
 	[Parameter(Mandatory=$true)][string]$nuspecfilename,
 	[Parameter(Mandatory=$true)][string]$packageDirectory,
 	[Parameter(Mandatory=$true)][string]$nugetFullPath,
-	[Parameter(Mandatory=$false)][string]$verbosity = "normal"
+	[Parameter(Mandatory=$false)][string]$verbosity = "quiet"
 )
 {
 	switch ($verbosity)
