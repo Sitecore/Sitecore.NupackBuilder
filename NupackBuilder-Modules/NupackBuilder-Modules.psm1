@@ -369,35 +369,27 @@ Function CreateModulePackages(
 			$dllCount = 0
 			$excluded = @("zxing.dll", "MSCaptcha.dll", "AjaxMin.dll", "ChilkatDotNet2.x32", "ChilkatDotNet2.x32", "ChilkatDotNet2.dll", "Heijden.Dns.dll", "Microsoft.Crm.Sdk.Proxy.dll", "Microsoft.Xrm.Client.dll", "Microsoft.Xrm.Sdk.Deployment.dll", "Microsoft.Xrm.Sdk.dll", "Sitecore.ExperienceEditor.dll", "Sitecore.Integration.Common.dll", "Microsoft.IdentityModel.dll", "Microsoft.Practices.Unity.dll")
 			$dll = Get-ChildItem -Path "$targetDirectory*" -Filter "*.dll" -Exclude $excluded | Select-Object -First 1
-			$dllCount = (Get-ChildItem $targetDirectory -Filter "*.dll" | measure).Count
+			$dllCount = (Get-ChildItem $targetDirectory -Filter "*.dll" -Exclude $excluded | measure).Count
 				
 			if(($dll -ne $null) -or ($dllCount -gt 0))
 			{
 				# There are binaries
-				$original = $null
-				$bytes = $null
 				$loaded = $null
 				$customAttributes = $null
 				$targetFramework = $null
-				$frameworkDisplayNameArg = $null
+                $loaded = [Mono.Cecil.AssemblyDefinition]::ReadAssembly($dll.FullName)
 
-				$original = [io.path]::GetFileName($dll.FullName)
-				$bytes   = [System.IO.File]::ReadAllBytes($dll.FullName)
-				$loaded  = [System.Reflection.Assembly]::Load($bytes)
-
-				$customAttributes = $loaded.GetCustomAttributesData()
+				$customAttributes = $loaded.CustomAttributes
 				if($customAttributes -ne $null)
 				{
 					$targetFramework = $customAttributes | Where-Object {$_.AttributeType -like "System.Runtime.Versioning.TargetFrameworkAttribute"} | Select-Object -First 1
 
-					if($targetFramework -ne $null)
+                    if($targetFramework -ne $null)
 					{
 						$frameworkName = [String]$targetFramework.ConstructorArguments[0].Value;
-						$frameworkDisplayNameArg = $targetFramework.NamedArguments | Where-Object {$_.MemberName -like "FrameworkDisplayName" }| Select-Object -First 1
-						if($frameworkDisplayNameArg -ne $null)
+						
+                        if($frameworkName -ne $null)
 						{
-							$frameworkDisplayName = [String]$frameworkDisplayNameArg.TypedValue.Value;
-				
 							switch ($frameworkName)
 							{
 								".NETFramework,Version=v4.5" {
@@ -453,13 +445,10 @@ Function CreateModulePackages(
 					-uploadAPIKey $uploadAPIKey `
 					-createFileVersionPackages $createFileVersionPackages
 				
-				$frameworkDisplayNameArg = $null
+				
 				$targetFramework = $null
 				$customAttributes = $null
 				$loaded = $null
-				$bytes = $null
-				$original = $null
-				
 			}
 			
 		}
